@@ -1,4 +1,4 @@
 package com.group2.volunteer.repository;
 
-public class DonationRepository {
+public interface DonationRepository {
 }
