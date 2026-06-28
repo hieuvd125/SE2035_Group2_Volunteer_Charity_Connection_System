@@ -1,4 +1,7 @@
 package com.group2.volunteer.repository;
 
-public class ProjectRepository {
+import com.group2.volunteer.entity.Project;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 }
