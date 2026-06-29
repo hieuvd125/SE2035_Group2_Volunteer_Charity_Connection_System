@@ -96,8 +96,8 @@ public class ProjectController {
     }
 
     // Hiển thị danh sách dự án cho Organizer
-    @GetMapping
-    public String listProjects(Model model) {
+    @GetMapping("/organizer")
+    public String listOrganizerProjects(Model model) {
         // Tạm thời dùng organizerId = 2 để demo
         Long organizerId = 2L;
         List<Project> projects = projectService.getProjectsByOrganizer(organizerId);
