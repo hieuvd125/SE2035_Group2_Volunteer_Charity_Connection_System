@@ -106,17 +106,23 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void applyForProject(Long projectId) {
-        Project project = projectRepository.findById(projectId).orElse(null);
-
-        if (project == null || !ProjectStatus.RECRUITING.equals(project.getStatus())) {
-            throw new IllegalArgumentException("The current project is not open for volunteer recruitment!");
+    public void applyForProject(Long projectId, Long userId) {
+        if (registrationRepository.existsByVolunteerIdAndProjectId(userId, projectId)) {
+            throw new BadRequestException("Bạn đã đăng ký dự án này rồi");
         }
 
-        User volunteer = userRepository.findById(4L).orElse(null);
-        if (volunteer == null) {
-            throw new IllegalStateException("Test volunteer account with ID 4 not found!");
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResourceNotFoundException("Dự án không tồn tại"));
+
+        if (!ProjectStatus.RECRUITING.equals(project.getStatus())) {
+            throw new BadRequestException("The current project is not open for volunteer recruitment!");
         }
+
+        long currentRegistrations = registrationRepository.countByProjectId(projectId);
+        if (currentRegistrations >= project.getTargetVolunteers()) {
+            throw new BadRequestException("Dự án đã đủ số lượng tình nguyện viên");
+        }
+
+        User volunteer = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Volunteer không tồn tại"));
 
         ProjectRegistration registration = new ProjectRegistration();
         registration.setVolunteer(volunteer);
