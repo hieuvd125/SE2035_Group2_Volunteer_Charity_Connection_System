@@ -8,6 +8,7 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
+    List<Project> findByTitleContainingAndLocationContainingAndStatus(String title, String location, String status);
     // Tìm tất cả dự án theo status (dùng cho admin duyệt)
     List<Project> findByStatus(String status);
 

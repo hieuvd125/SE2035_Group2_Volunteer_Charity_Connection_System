@@ -1,4 +1,10 @@
 package com.group2.volunteer.repository;
 
-public interface ProjectRegistrationRepository {
+import com.group2.volunteer.entity.ProjectRegistration;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegistration, Long> {
+
 }
