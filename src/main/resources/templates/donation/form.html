@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulated Donation</title>
+</head>
+<body>
+<h1>Simulated Donation</h1>
+
+<p>Project ID: <span th:text="${projectId}"></span></p>
+<p>Total donated amount: <span th:text="${totalDonation}"></span></p>
+
+<p th:if="${param.success}" style="color: green;">Thank you for your donation!</p>
+
+<form th:action="@{/projects/{projectId}/donate(projectId=${projectId})}" method="post">
+    <div>
+        <label for="donorName">Donor name</label>
+        <input id="donorName" name="donorName" type="text" maxlength="100" required>
+    </div>
+
+    <div>
+        <label for="amount">Amount</label>
+        <input id="amount" name="amount" type="number" min="1000" step="1000" required>
+    </div>
+
+    <button type="submit">Donate</button>
+</form>
+
+<p>
+    <a th:href="@{/projects/{projectId}/donations(projectId=${projectId})}">View donation list</a>
+</p>
+</body>
+</html>

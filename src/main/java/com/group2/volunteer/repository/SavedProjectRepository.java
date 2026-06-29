@@ -1,4 +1,4 @@
 package com.group2.volunteer.repository;
 
-public class SavedProjectRepository {
+public interface SavedProjectRepository {
 }

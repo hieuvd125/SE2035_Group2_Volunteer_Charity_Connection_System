@@ -15,4 +15,5 @@ public interface ProjectService {
 
     // Lấy danh sách dự án của một Organizer
     List<Project> getProjectsByOrganizer(Long organizerId);
+    List<Project> getAllProject();
 }

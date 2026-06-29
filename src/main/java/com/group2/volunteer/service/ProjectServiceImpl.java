@@ -77,3 +77,8 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findByOrganizerId(organizerId);
     }
 }
+    @Override
+    public List<Project> getAllProject() {
+        return projectRepository.findAll();
+    }
+}

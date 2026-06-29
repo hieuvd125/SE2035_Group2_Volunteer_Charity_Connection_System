@@ -1,0 +1,17 @@
+<div th:fragment="sidebar-part" style="width: 200px; float: left; background: #eee; height: 100vh; padding: 10px;">
+    <h3>MENU</h3>
+
+    <ul>
+        <li><a th:href="@{/}">Homepage</a></li>
+    </ul>
+
+    <div th:if="${session.loggedUser?.role == 'ROLE_ADMIN'}">
+        <h4>Admin</h4>
+        <li><a href="/admin/approve">Approve project</a></li>
+    </div>
+
+    <div th:if="${session.loggedUser?.role == 'ROLE_ORGANIZER'}">
+        <h4>Organizer</h4>
+        <li><a href="/projects/create">Publish Project</a></li>
+    </div>
+</div>

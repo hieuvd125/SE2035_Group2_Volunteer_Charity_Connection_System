@@ -22,7 +22,7 @@ public class Donation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_donation_user"))
-    private User user; // Bằng NULL nếu khách vãng lai quyên góp ẩn danh
+    private User user;
 
     @Column(name = "donor_name", length = 100)
     private String donorName;
