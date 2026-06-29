@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ hệ thống</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header-part}"></div>
+
+<div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
+
+<div style="margin-left: 220px; padding: 20px;">
+    <h1>Homepage Content</h1>
+
+    <div>
+        <h3>Volunteer campaigns:</h3>
+        <p>(Phần này hôm sau bạn làm chức năng Volunteer sẽ dùng vòng lặp th:each đổ DB ra đây)</p>
+    </div>
+</div>
+
+</body>
+</html>

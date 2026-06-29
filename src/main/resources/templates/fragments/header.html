@@ -1,0 +1,5 @@
+<div th:fragment="header-part" style="background: #2c3e50; color: white; padding: 15px;">
+    <h2>VCPCS System</h2>
+    <span>Hello, <strong th:text="${session.loggedUser.fullName}">User</strong></span>
+    <a href="/logout" style="color: yellow; margin-left: 20px;">Log out</a>
+</div>
