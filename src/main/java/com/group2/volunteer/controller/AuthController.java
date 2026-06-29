@@ -4,6 +4,7 @@ import com.group2.volunteer.dto.LoginDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.service.ProjectService;
+import com.group2.volunteer.service.SavedProjectService;
 import com.group2.volunteer.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,10 +26,23 @@ public class AuthController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private SavedProjectService savedProjectService;
+
     @GetMapping("/")
-    public String showHomepage(Model model) {
-        List<Project> projects =  projectService.getAllProject();
+    public String showHomepage(Model model, HttpSession session) {
+        List<Project> projects = projectService.getAllProject();
         model.addAttribute("projects", projects);
+
+        User loggedUser = (User) session.getAttribute("loggedUser");
+        if (loggedUser != null) {
+            model.addAttribute("currentUserId", loggedUser.getId());
+            List<Long> savedProjectIds = savedProjectService.getSavedProjectIds(loggedUser.getId());
+            model.addAttribute("savedProjectIds", savedProjectIds);
+        } else {
+            model.addAttribute("currentUserId", null);
+            model.addAttribute("savedProjectIds", new ArrayList<>());
+        }
 
         return "common/homepage";
     }
@@ -60,5 +75,4 @@ public class AuthController {
         session.invalidate();
         return "redirect:/";
     }
-
 }

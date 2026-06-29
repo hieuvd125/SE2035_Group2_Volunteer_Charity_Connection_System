@@ -7,34 +7,52 @@
 <body>
 
 <div th:replace="~{fragments/header :: header-part}"></div>
-
 <div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
 
 <div style="margin-left: 220px; padding: 20px;">
     <h1>Homepage Content</h1>
 
+    <div th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></div>
+
     <div>
         <h3>Volunteer campaigns:</h3>
         <table>
             <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Location</th>
-                    <th>Action</th>
-                </tr>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:each="proj : ${projects}">
-                    <td th:text="${proj.id}">1</td>
-                    <td th:text="${proj.title}">Tên dự án mẫu</td>
-                    <td th:text="${proj.location}">Vị trí dự án</td>
-                    <td>
-                        <a th:href="@{/projects/{id}/donate(id=${proj.id})}">
-                            <button style="background: green; color: white; cursor: pointer;">Donate</button>
-                        </a>
-                    </td>
-                </tr>
+            <tr th:each="proj : ${projects}">
+                <td th:text="${proj.id}">1</td>
+                <td th:text="${proj.title}">Tên dự án mẫu</td>
+                <td th:text="${proj.location}">Vị trí dự án</td>
+                <td>
+                    <a th:href="@{/projects/{id}/donate(id=${proj.id})}">
+                        <button style="background: green; color: white; cursor: pointer;">Donate</button>
+                    </a>
+
+                    <th:block th:if="${currentUserId != null}">
+                        <form th:if="${!savedProjectIds.contains(proj.id)}" th:action="@{/projects/save}" method="post" style="display: inline;">
+                            <input type="hidden" name="projectId" th:value="${proj.id}" />
+                            <input type="hidden" name="userId" th:value="${currentUserId}" />
+                            <button type="submit" style="background: orange; color: white; cursor: pointer;">Lưu</button>
+                        </form>
+                        <form th:if="${savedProjectIds.contains(proj.id)}" th:action="@{/projects/unsave}" method="post" style="display: inline;">
+                            <input type="hidden" name="projectId" th:value="${proj.id}" />
+                            <input type="hidden" name="userId" th:value="${currentUserId}" />
+                            <button type="submit" style="background: red; color: white; cursor: pointer;">Bỏ lưu</button>
+                        </form>
+                    </th:block>
+
+                    <a th:href="@{/projects/detail/{id}(id=${proj.id})}">
+                        <button style="background: blue; color: white; cursor: pointer;">Chi tiết</button>
+                    </a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết dự án</title>
+</head>
+<body>
+<h1 th:text="${project.title}">Tên dự án</h1>
+<p th:text="${project.description}">Mô tả</p>
+
+<div th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></div>
+<div th:if="${error}" th:text="${error}" style="color: red;"></div>
+
+<div th:if="${currentUserId != null}">
+    <form th:if="${!isSaved}" th:action="@{/projects/save}" method="post">
+        <input type="hidden" name="projectId" th:value="${project.id}" />
+        <input type="hidden" name="userId" th:value="${currentUserId}" />
+        <button type="submit">Lưu dự án</button>
+    </form>
+    <form th:if="${isSaved}" th:action="@{/projects/unsave}" method="post">
+        <input type="hidden" name="projectId" th:value="${project.id}" />
+        <input type="hidden" name="userId" th:value="${currentUserId}" />
+        <button type="submit">Bỏ lưu</button>
+    </form>
+</div>
+
+<h2>Nhật ký sự kiện</h2>
+<a th:if="${session.loggedUser?.role == 'ROLE_ORGANIZER'}"
+   th:href="@{/projects/detail/{id}/update(id=${project.id})}">
+    Đăng cập nhật mới
+</a>
+
+<div th:if="${updates != null and !updates.isEmpty()}">
+    <div th:each="update : ${updates}">
+        <h3 th:text="${update.title}">Tiêu đề</h3>
+        <p th:text="${update.content}">Nội dung</p>
+        <small th:text="${update.createdAt}">Thời gian</small>
+        <img th:if="${update.imageUrl}" th:src="${update.imageUrl}" alt="Ảnh" width="200"/>
+        <hr>
+    </div>
+</div>
+<div th:if="${updates == null or updates.isEmpty()}">
+    <p>Chưa có cập nhật nào.</p>
+</div>
+</body>
+</html>

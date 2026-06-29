@@ -3,6 +3,9 @@
 
     <ul>
         <li><a th:href="@{/}">Homepage</a></li>
+        <li th:if="${session.loggedUser != null}">
+            <a th:href="@{/projects/saved}">Saved Projects</a>
+        </li>
     </ul>
 
     <div th:if="${session.loggedUser?.role == 'ROLE_ADMIN'}">
