@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trang chủ hệ thống</title>
+    <title>Homepage</title>
 </head>
 <body>
 
@@ -15,7 +15,28 @@
 
     <div>
         <h3>Volunteer campaigns:</h3>
-        <p>(Phần này hôm sau bạn làm chức năng Volunteer sẽ dùng vòng lặp th:each đổ DB ra đây)</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="proj : ${projects}">
+                    <td th:text="${proj.id}">1</td>
+                    <td th:text="${proj.title}">Tên dự án mẫu</td>
+                    <td th:text="${proj.location}">Vị trí dự án</td>
+                    <td>
+                        <a th:href="@{/projects/{id}/donate(id=${proj.id})}">
+                            <button style="background: green; color: white; cursor: pointer;">Donate</button>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
