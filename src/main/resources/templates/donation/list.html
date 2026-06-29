@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Donation List</title>
+</head>
+<body>
+<h1>Donation List</h1>
+
+<p>Project ID: <span th:text="${projectId}"></span></p>
+<p>Total donated amount: <span th:text="${totalDonation}"></span></p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Donor name</th>
+        <th>Amount</th>
+        <th>Donation time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="donation : ${donations}">
+        <td th:text="${donation.id}"></td>
+        <td th:text="${donation.donorName}"></td>
+        <td th:text="${donation.amount}"></td>
+        <td th:text="${donation.donatedAt}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p>
+    <a th:href="@{/projects/{projectId}/donate(projectId=${projectId})}">Back to donation form</a>
+</p>
+</body>
+</html>
