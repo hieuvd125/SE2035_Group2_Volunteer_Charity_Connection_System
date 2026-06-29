@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng cập nhật dự án</title>
+</head>
+<body>
+<h1>Đăng cập nhật cho dự án: <span th:text="${project.title}">Tên dự án</span></h1>
+<form th:action="@{/projects/detail/{id}/update(id=${project.id})}" method="post">
+    <div>
+        <label>Tiêu đề:</label>
+        <input type="text" name="title" required />
+    </div>
+    <div>
+        <label>Nội dung:</label>
+        <textarea name="content" required></textarea>
+    </div>
+    <div>
+        <label>Link ảnh (tùy chọn):</label>
+        <input type="text" name="imageUrl" />
+    </div>
+    <button type="submit">Đăng cập nhật</button>
+</form>
+</body>
+</html>
