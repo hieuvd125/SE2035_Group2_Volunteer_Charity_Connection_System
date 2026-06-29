@@ -2,16 +2,16 @@
     <h3>MENU</h3>
 
     <ul>
-        <li><a href="/common/homepage">Homepage</a></li>
+        <li><a th:href="@{/}">Homepage</a></li>
     </ul>
 
-    <div th:if="${session.loggedUser.role == 'ROLE_ADMIN'}">
+    <div th:if="${session.loggedUser?.role == 'ROLE_ADMIN'}">
         <h4>Admin</h4>
-        <a href="/admin/approve">Duyệt dự án</a>
+        <li><a href="/admin/approve">Approve project</a></li>
     </div>
 
-    <div th:if="${session.loggedUser.role == 'ROLE_ORGANIZER'}">
+    <div th:if="${session.loggedUser?.role == 'ROLE_ORGANIZER'}">
         <h4>Organizer</h4>
-        <a href="/projects/create">Đăng dự án mới</a>
+        <li><a href="/projects/create">Publish Project</a></li>
     </div>
 </div>

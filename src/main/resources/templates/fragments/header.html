@@ -1,5 +1,12 @@
 <div th:fragment="header-part" style="background: #2c3e50; color: white; padding: 15px;">
     <h2>VCPCS System</h2>
-    <span>Hello, <strong th:text="${session.loggedUser.fullName}">User</strong></span>
-    <a href="/logout" style="color: yellow; margin-left: 20px;">Log out</a>
+    <div th:if="${session.loggedUser == null}">
+        <span>You are loggin in as: <strong>Guest</strong></span>
+        <a th:href="@{/login}"><button>Log in</button></a>
+    </div>
+
+    <div th:unless="${session.loggedUser == null}">
+        <span>Hello, <strong th:text="${session.loggedUser?.fullName}">User</strong></span>
+        <a href="/logout" style="color: yellow; margin-left: 20px;">Log out</a>
+    </div>
 </div>
