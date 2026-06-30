@@ -21,6 +21,23 @@ import java.util.List;
 @RequestMapping("/projects")
 public class ProjectController {
 
+    @Autowired
+    private final ProjectService projectService;
+  
+    @Autowired
+    private final SavedProjectService savedProjectService;
+  
+    @Autowired
+    private final EventUpdateService eventUpdateService;
+
+    public ProjectController(ProjectService projectService,
+                             SavedProjectService savedProjectService,
+                             EventUpdateService eventUpdateService) {
+        this.projectService = projectService;
+        this.savedProjectService = savedProjectService;
+        this.eventUpdateService = eventUpdateService;
+    }
+
     private void checkOrganizerAccess(HttpSession session) {
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null || !"ROLE_ORGANIZER".equals(loggedUser.getRole())) {
@@ -41,17 +58,6 @@ public class ProjectController {
             throw new com.group2.volunteer.exception.BadRequestException("Vui lòng đăng nhập bằng tài khoản Tình nguyện viên để thực hiện");
         }
     }
-
-
-
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private SavedProjectService savedProjectService;
-
-    @Autowired
-    private EventUpdateService eventUpdateService;
 
     @GetMapping("/all")
     public String showAllProjects(Model model) {
@@ -128,7 +134,7 @@ public class ProjectController {
         User loggedUser = (User) session.getAttribute("loggedUser");
         Long organizerId = loggedUser.getId();
         try {
-            Project project = projectService.createProject(dto, organizerId);
+            projectService.createProject(dto, organizerId);
             redirectAttributes.addFlashAttribute("successMessage", "Dự án đã được tạo và chờ duyệt!");
             return "redirect:/projects/organizer";
         } catch (com.group2.volunteer.exception.BadRequestException e) {

@@ -1,6 +1,6 @@
 package com.group2.volunteer.service;
 
-import com.group2.volunteer.dto.ProjectDTO; // chúng ta sẽ tạo DTO sau
+import com.group2.volunteer.dto.ProjectDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.ProjectRegistration;
 import com.group2.volunteer.entity.User;
@@ -22,21 +22,25 @@ import java.util.List;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
+    private final ProjectRegistrationRepository registrationRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private ProjectRegistrationRepository registrationRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public ProjectServiceImpl(ProjectRepository projectRepository,
+                              ProjectRegistrationRepository registrationRepository,
+                              UserRepository userRepository) {
+        this.projectRepository = projectRepository;
+        this.registrationRepository = registrationRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<Project> getRecruitingProjects(String keyword, String location) {
-        if ((keyword != null && !keyword.isEmpty()) || (location != null && !location.isEmpty())) {
-            return projectRepository.findByTitleContainingAndLocationContainingAndStatus(keyword, location, ProjectStatus.RECRUITING);
-        }
-        return projectRepository.findByStatus(ProjectStatus.RECRUITING);
+        // Đồng bộ việc gọi hàm search linh hoạt đã viết trong ProjectRepository
+        String searchTitle = (keyword != null && !keyword.isEmpty()) ? keyword : null;
+        String searchLocation = (location != null && !location.isEmpty()) ? location : null;
+
+        return projectRepository.searchProjects(searchTitle, searchLocation, "RECRUITING");
     }
 
     @Override
@@ -46,7 +50,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project createProject(ProjectDTO dto, Long organizerId) {
-        // 1. Validate ngày
         if (dto.getStartDate().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Ngày bắt đầu phải sau thời điểm hiện tại");
         }
@@ -54,11 +57,9 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BadRequestException("Ngày kết thúc phải sau ngày bắt đầu ít nhất 1 giờ");
         }
 
-        // 2. Tìm organizer (tạm thời giả định user tồn tại)
         User organizer = userRepository.findById(organizerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organizer không tồn tại"));
 
-        // 3. Tạo entity Project
         Project project = new Project();
         project.setTitle(dto.getTitle());
         project.setDescription(dto.getDescription());
@@ -67,9 +68,8 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStartDate(dto.getStartDate());
         project.setEndDate(dto.getEndDate());
         project.setTargetVolunteers(dto.getTargetVolunteers());
-        project.setStatus("PENDING"); // mặc định
+        project.setStatus("PENDING");
         project.setOrganizer(organizer);
-
 
         return projectRepository.save(project);
     }
@@ -87,7 +87,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
-
     @Override
     public List<Project> getPendingProjects() {
         return projectRepository.findByStatus("PENDING");
@@ -100,7 +99,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> getAllProject() {
-
         return projectRepository.findAll();
     }
 
@@ -127,7 +125,7 @@ public class ProjectServiceImpl implements ProjectService {
         registration.setVolunteer(volunteer);
         registration.setProject(project);
         registration.setRegistrationDate(LocalDateTime.now());
-        registration.setStatus(RegistrationStatus.PENDING);
+        registration.setStatus("PENDING");
         registration.setConfirmedHours(0);
         registrationRepository.save(registration);
     }
