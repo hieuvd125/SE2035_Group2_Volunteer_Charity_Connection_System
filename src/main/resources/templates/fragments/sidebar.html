@@ -3,15 +3,33 @@
 
     <ul>
         <li><a th:href="@{/}">Homepage</a></li>
+<!--        <li th:if="${session.loggedUser != null}">-->
+<!--            <a th:href="@{/projects/saved}">Saved Projects</a>-->
+<!--        </li>-->
     </ul>
 
     <div th:if="${session.loggedUser?.role == 'ROLE_ADMIN'}">
         <h4>Admin</h4>
-        <li><a href="/admin/approve">Approve project</a></li>
+        <ul>
+            <li><a th:href="@{/projects/admin/approve}">Approve project</a></li>
+        </ul>
+
     </div>
 
     <div th:if="${session.loggedUser?.role == 'ROLE_ORGANIZER'}">
         <h4>Organizer</h4>
-        <li><a href="/projects/create">Publish Project</a></li>
+        <ul>
+            <li><a th:href="@{/projects/create}">Tạo dự án mới</a></li>
+            <li><a th:href="@{/projects/organizer}">Dự án của tôi</a></li>
+             <li><a th:href="@{/projects/saved}">Dự án đã lưu</a></li>
+        </ul>
+    </div>
+
+    <div th:if="${session.loggedUser?.role == 'ROLE_VOLUNTEER'}">
+        <h4>Volunteer</h4>
+        <ul>
+            <li><a th:href="@{/projects/saved}">Dự án đã lưu</a></li>
+            <li><a th:href="@{/projects/registered}">Dự án đã đăng ký</a></li>
+        </ul>
     </div>
 </div>
