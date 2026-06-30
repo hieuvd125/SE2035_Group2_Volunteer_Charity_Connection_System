@@ -20,4 +20,6 @@ public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegi
     Integer sumConfirmedHoursByVolunteerId(@Param("volunteerId") Long volunteerId);
 
     List<ProjectRegistration> findByProjectId(Long projectId);
+
+    long countByProjectId(Long projectId);
 }
