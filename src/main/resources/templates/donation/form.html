@@ -3,31 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Simulated Donation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Simulated Donation</h1>
+<div th:replace="~{fragments/header :: header-part}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
+<div style="margin-left: 220px; padding: 20px;">
+    <h1>Simulated Donation</h1>
 
-<p>Project ID: <span th:text="${projectId}"></span></p>
-<p>Total donated amount: <span th:text="${totalDonation}"></span></p>
+    <p>Project ID: <span th:text="${projectId}"></span></p>
+    <p>Total donated amount: <span th:text="${totalDonation}"></span></p>
 
-<p th:if="${param.success}" style="color: green;">Thank you for your donation!</p>
+    <p th:if="${param.success}" style="color: green;">Thank you for your donation!</p>
 
-<form th:action="@{/projects/{projectId}/donate(projectId=${projectId})}" method="post">
-    <div>
-        <label for="donorName">Donor name</label>
-        <input id="donorName" name="donorName" type="text" maxlength="100" required>
-    </div>
+    <form th:action="@{/projects/{projectId}/donate(projectId=${projectId})}" method="post">
+        <div>
+            <label for="donorName">Donor name</label>
+            <input id="donorName" name="donorName" type="text" maxlength="100" required>
+        </div>
 
-    <div>
-        <label for="amount">Amount</label>
-        <input id="amount" name="amount" type="number" min="1000" step="1000" required>
-    </div>
+        <div>
+            <label for="amount">Amount</label>
+            <input id="amount" name="amount" type="number" min="1000" step="1000" required>
+        </div>
 
-    <button type="submit">Donate</button>
-</form>
+        <button type="submit">Donate</button>
+    </form>
 
-<p>
-    <a th:href="@{/projects/{projectId}/donations(projectId=${projectId})}">View donation list</a>
-</p>
+    <p>
+        <a th:href="@{/projects/{projectId}/donations(projectId=${projectId})}">View donation list</a>
+    </p>
+</div>
 </body>
 </html>

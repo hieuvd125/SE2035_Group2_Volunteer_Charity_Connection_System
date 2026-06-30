@@ -2,43 +2,104 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Homepage</title>
+    <title>Trang chủ - Dự án Tình nguyện</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
-<body>
+<body class="bg-light">
 
 <div th:replace="~{fragments/header :: header-part}"></div>
-
 <div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
 
-<div style="margin-left: 220px; padding: 20px;">
-    <h1>Homepage Content</h1>
+<div style="margin-left: 240px; padding: 30px; min-height: 100vh;">
+    <div class="container-fluid">
 
-    <div>
-        <h3>Volunteer campaigns:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Location</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="proj : ${projects}">
-                    <td th:text="${proj.id}">1</td>
-                    <td th:text="${proj.title}">Tên dự án mẫu</td>
-                    <td th:text="${proj.location}">Vị trí dự án</td>
-                    <td>
-                        <a th:href="@{/projects/{id}/donate(id=${proj.id})}">
-                            <button style="background: green; color: white; cursor: pointer;">Donate</button>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark m-0">🌍 Chiến dịch Tình nguyện Đang Tuyển</h2>
+                <p class="text-muted m-0">Tìm kiếm và tham gia các hoạt động ý nghĩa xã hội</p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4">
+                <form th:action="@{/}" method="get" class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold text-secondary">Khu vực / Địa điểm</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+                            <input type="text" name="location" class="form-control border-start-0" placeholder="Ví dụ: Hà Nội, TP.HCM..." th:value="${location}">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label fw-semibold text-secondary">Lĩnh vực hoạt động</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-tag text-muted"></i></span>
+                            <input type="text" name="category" class="form-control border-start-0" placeholder="Ví dụ: Giáo dục, Môi trường..." th:value="${category}">
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+                            <i class="bi bi-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            <div class="col-12 text-center py-5" th:if="${projects == null || projects.isEmpty()}">
+                <img src="https://cdn-icons-png.flaticon.com/512/6134/6134065.png" style="width: 120px;" class="opacity-50 mb-3" alt="Empty">
+                <h5 class="text-secondary">Hiện tại không có chiến dịch nào đang tuyển hoặc phù hợp với bộ lọc.</h5>
+            </div>
+
+            <div class="col" th:each="proj : ${projects}">
+                <div class="card h-100 shadow-sm border-0 hover-shadow transition-all">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-semibold fs-7">
+                                <i class="bi bi-person-plus-fill me-1"></i> Đang Tuyển
+                            </span>
+                            <small class="text-muted"><i class="bi bi-hash"></i><span th:text="${proj.id}">1</span></small>
+                        </div>
+
+                        <h4 class="card-title fw-bold text-dark mb-2" th:text="${proj.title}">Tên dự án mẫu</h4>
+
+                        <p class="text-muted mb-4 fs-6">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> <span th:text="${proj.location}">Vị trí dự án</span>
+                        </p>
+
+                        <div class="mt-auto pt-3 border-top d-flex gap-2 justify-content-between align-items-center">
+                            <th:block th:if="${currentUserId != null}">
+                                <form th:if="${!savedProjectIds.contains(proj.id)}" th:action="@{/projects/save}" method="post" class="m-0">
+                                    <input type="hidden" name="projectId" th:value="${proj.id}" />
+                                    <input type="hidden" name="userId" th:value="${currentUserId}" />
+                                    <button type="submit" class="btn btn-outline-warning btn-sm px-3 rounded-pill"><i class="bi bi-bookmark"></i> Lưu</button>
+                                </form>
+                                <form th:if="${savedProjectIds.contains(proj.id)}" th:action="@{/projects/unsave}" method="post" class="m-0">
+                                    <input type="hidden" name="projectId" th:value="${proj.id}" />
+                                    <input type="hidden" name="userId" th:value="${currentUserId}" />
+                                    <button type="submit" class="btn btn-warning btn-sm px-3 rounded-pill text-white"><i class="bi bi-bookmark-fill"></i> Đã lưu</button>
+                                </form>
+                            </th:block>
+
+                            <a th:href="@{/projects/detail/{id}(id=${proj.id})}" class="btn btn-primary px-4 fw-semibold shadow-sm rounded-pill">
+                                Xem chi tiết <i class="bi bi-arrow-right-short ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
