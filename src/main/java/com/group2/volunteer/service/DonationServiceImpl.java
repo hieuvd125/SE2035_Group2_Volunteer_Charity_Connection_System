@@ -1,5 +1,6 @@
 package com.group2.volunteer.service;
 
+import com.group2.volunteer.dto.DonationDTO;
 import com.group2.volunteer.entity.Donation;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.exception.BadRequestException;
@@ -22,9 +23,9 @@ public class DonationServiceImpl implements DonationService{
     }
 
     @Override
-    public Donation donate(Long projectId, String donorName, Double amount) {
-        if (amount == null || amount <= 0) {
-            throw new BadRequestException("Donation amount must be greater than 0");
+    public Donation donate(Long projectId, DonationDTO donationDTO) {
+        if (donationDTO.getAmount() == null || donationDTO.getAmount() < 1000) {
+            throw new BadRequestException("Donation amount must be at least 1000");
         }
 
         Project project = projectRepository.findById(projectId)
@@ -32,8 +33,8 @@ public class DonationServiceImpl implements DonationService{
 
         Donation donation = new Donation();
         donation.setProject(project);
-        donation.setDonorName(donorName);
-        donation.setAmount(amount);
+        donation.setDonorName(donationDTO.getDonorName());
+        donation.setAmount(donationDTO.getAmount());
 
         return donationRepository.save(donation);
     }
