@@ -82,6 +82,7 @@ public class ProjectController {
         model.addAttribute("projects", projects);
         model.addAttribute("keyword", keyword);
         model.addAttribute("location", location);
+        model.addAttribute("searchUrl", "/projects");
         return "project/project-list";
     }
 
@@ -156,12 +157,18 @@ public class ProjectController {
     }
 
     @GetMapping("/organizer")
-    public String listOrganizerProjects(Model model, HttpSession session) {
+    public String listOrganizerProjects(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "location", required = false) String location,
+            Model model, HttpSession session) {
         checkOrganizerAccess(session);
         User loggedUser = (User) session.getAttribute("loggedUser");
         Long organizerId = loggedUser.getId();
-        List<Project> projects = projectService.getProjectsByOrganizer(organizerId);
+        List<Project> projects = projectService.getProjectsByOrganizer(organizerId, keyword, location);
         model.addAttribute("projects", projects);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("location", location);
+        model.addAttribute("searchUrl", "/projects/organizer");
         return "project/list_projects";
     }
 

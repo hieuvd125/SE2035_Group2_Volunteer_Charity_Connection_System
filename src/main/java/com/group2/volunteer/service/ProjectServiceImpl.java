@@ -87,8 +87,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getProjectsByOrganizer(Long organizerId) {
-        return projectRepository.findByOrganizerId(organizerId);
+    public List<Project> getProjectsByOrganizer(Long organizerId, String keyword, String location) {
+        String searchTitle = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        String searchLocation = (location != null && !location.trim().isEmpty()) ? location.trim() : null;
+        return projectRepository.searchProjectsByOrganizer(searchTitle, searchLocation, organizerId);
     }
 
     @Override
