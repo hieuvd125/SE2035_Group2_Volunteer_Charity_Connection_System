@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Homepage</title>
@@ -7,10 +8,7 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/header :: header-part}"></div>
-<div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
-
-<div style="margin-left: 220px; padding: 20px;">
+<div style="margin-left: 50px; padding: 20px;">
     <h1>Homepage Content</h1>
 
     <div th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></div>
