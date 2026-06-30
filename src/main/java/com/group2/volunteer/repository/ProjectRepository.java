@@ -18,4 +18,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findByStatus(String status);
     List<Project> findByOrganizerId(Long organizerId);
+
+    @Query("SELECT p FROM Project p WHERE p.organizer.id = :organizerId " +
+            "AND (:title IS NULL OR p.title LIKE %:title%) " +
+            "AND (:location IS NULL OR p.location LIKE %:location%)")
+    List<Project> searchProjectsByOrganizer(@Param("title") String title,
+                                            @Param("location") String location,
+                                            @Param("organizerId") Long organizerId);
 }

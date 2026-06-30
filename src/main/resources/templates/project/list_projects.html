@@ -25,7 +25,7 @@
 
         <!-- ================= SEARCH ================= -->
 
-        <form th:action="@{/projects}" method="get">
+        <form th:action="@{${searchUrl != null ? searchUrl : '/projects'}}" method="get">
 
             <div class="row mb-4">
 
@@ -63,7 +63,7 @@
 
                 <div class="col-md-1">
 
-                    <a th:href="@{/projects}"
+                    <a th:href="@{${searchUrl != null ? searchUrl : '/projects'}}"
                        class="btn btn-secondary w-100">
 
                         Đặt lại

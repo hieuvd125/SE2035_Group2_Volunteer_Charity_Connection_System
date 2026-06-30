@@ -11,7 +11,7 @@ public interface ProjectService {
 
     List<Project> getPendingProjects();
 
-    List<Project> getProjectsByOrganizer(Long organizerId);
+    List<Project> getProjectsByOrganizer(Long organizerId, String keyword, String location);
     List<Project> getAllProject();
 
     List<Project> getRecruitingProjects(String keyword, String location);
