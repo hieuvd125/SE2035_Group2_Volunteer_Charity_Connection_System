@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Donation List</title>
@@ -33,9 +34,9 @@
         </tbody>
     </table>
 
-    <p>
-        <a th:href="@{/projects/{projectId}/donate(projectId=${projectId})}">Back to donation form</a>
-    </p>
+<p>
+    <a th:href="@{/projects/{projectId}/donate(projectId=${projectId})}">Back to donation form</a>
+</p>
 </div>
 </body>
 </html>

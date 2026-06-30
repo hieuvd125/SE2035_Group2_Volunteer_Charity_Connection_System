@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Simulated Donation</title>
@@ -16,23 +17,25 @@
 
     <p th:if="${param.success}" style="color: green;">Thank you for your donation!</p>
 
-    <form th:action="@{/projects/{projectId}/donate(projectId=${projectId})}" method="post">
-        <div>
-            <label for="donorName">Donor name</label>
-            <input id="donorName" name="donorName" type="text" maxlength="100" required>
-        </div>
+<form th:action="@{/projects/{projectId}/donate(projectId=${projectId})}" th:object="${donationDTO}" method="post">
+    <div>
+        <label for="donorName">Donor name</label>
+        <input id="donorName" th:field="*{donorName}" type="text" maxlength="100" required>
+        <span th:if="${#fields.hasErrors('donorName')}" th:errors="*{donorName}" style="color: red;"></span>
+    </div>
 
-        <div>
-            <label for="amount">Amount</label>
-            <input id="amount" name="amount" type="number" min="1000" step="1000" required>
-        </div>
+    <div>
+        <label for="amount">Amount</label>
+        <input id="amount" th:field="*{amount}" type="number" min="1000" step="1000" required>
+        <span th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" style="color: red;"></span>
+    </div>
 
         <button type="submit">Donate</button>
     </form>
 
-    <p>
-        <a th:href="@{/projects/{projectId}/donations(projectId=${projectId})}">View donation list</a>
-    </p>
+<p>
+    <a th:href="@{/projects/{projectId}/donations(projectId=${projectId})}">View donation list</a>
+</p>
 </div>
 </body>
 </html>

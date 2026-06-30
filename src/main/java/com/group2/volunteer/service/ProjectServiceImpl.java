@@ -7,9 +7,14 @@ import com.group2.volunteer.entity.User;
 import com.group2.volunteer.repository.ProjectRepository;
 import com.group2.volunteer.repository.ProjectRegistrationRepository;
 import com.group2.volunteer.repository.UserRepository;
+import com.group2.volunteer.constant.ProjectStatus;
+import com.group2.volunteer.constant.RegistrationStatus;
 import com.group2.volunteer.exception.BadRequestException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -103,20 +108,18 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BadRequestException("Bạn đã đăng ký dự án này rồi");
         }
 
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ResourceNotFoundException("Dự án không tồn tại"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResourceNotFoundException("Dự án không tồn tại"));
 
-        if (!"RECRUITING".equals(project.getStatus())) {
+        if (!ProjectStatus.RECRUITING.equals(project.getStatus())) {
             throw new BadRequestException("The current project is not open for volunteer recruitment!");
         }
 
-        long approvedCount = registrationRepository.countByProjectIdAndStatus(projectId, "APPROVED");
-        if (approvedCount >= project.getTargetVolunteers()) {
-            throw new BadRequestException("Dự án đã đủ số lượng tình nguyện viên được phê duyệt!");
+        long currentRegistrations = registrationRepository.countByProjectId(projectId);
+        if (currentRegistrations >= project.getTargetVolunteers()) {
+            throw new BadRequestException("Dự án đã đủ số lượng tình nguyện viên");
         }
 
-        User volunteer = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Volunteer không tồn tại"));
+        User volunteer = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Volunteer không tồn tại"));
 
         ProjectRegistration registration = new ProjectRegistration();
         registration.setVolunteer(volunteer);
