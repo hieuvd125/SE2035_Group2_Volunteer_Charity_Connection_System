@@ -69,8 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTargetVolunteers(dto.getTargetVolunteers());
         project.setStatus("PENDING"); // mặc định
         project.setOrganizer(organizer);
-        // Nếu có Category, bạn cần set category sau khi lấy từ DB (tạm thời để null hoặc thêm sau)
-        // project.setCategory(...);
+
 
         return projectRepository.save(project);
     }
@@ -88,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
-    // Các method khác nếu cần, ví dụ lấy danh sách PENDING
+
     @Override
     public List<Project> getPendingProjects() {
         return projectRepository.findByStatus("PENDING");
@@ -101,7 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> getAllProject() {
-        // Gọi xuống Repository để lấy tất cả dự án trong database lên
+
         return projectRepository.findAll();
     }
 

@@ -28,7 +28,8 @@
             <td th:text="${project.title}"></td>
             <td th:text="${project.status}"></td>
             <td th:text="${#temporals.format(project.startDate, 'dd/MM/yyyy HH:mm')}"></td>
-            <td><a href="#" class="btn btn-sm btn-info">Chi tiết</a></td>
+            <td><a th:href="@{/projects/detail/{id}(id=${project.id})}">
+                <button style="background: blue; color: white; cursor: pointer;">Chi tiết</button></td>
         </tr>
         </tbody>
     </table>
