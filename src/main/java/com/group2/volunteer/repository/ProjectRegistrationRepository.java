@@ -19,7 +19,14 @@ public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegi
             "WHERE pr.volunteer.id = :volunteerId AND pr.status = 'ATTENDED'")
     Integer sumConfirmedHoursByVolunteerId(@Param("volunteerId") Long volunteerId);
 
-    List<ProjectRegistration> findByProjectId(Long projectId);
+    @Query("SELECT pr FROM ProjectRegistration pr " +
+            "JOIN FETCH pr.volunteer v " +
+            "JOIN FETCH pr.project p " +
+            "WHERE p.id = :projectId")
+    List<ProjectRegistration> findByProjectId(@Param("projectId") Long projectId);
+
+    @Query("SELECT COUNT(pr) FROM ProjectRegistration pr WHERE pr.project.id = :projectId AND pr.status <> 'REJECTED'")
+    long countActiveRegistrationsByProjectId(@Param("projectId") Long projectId);
 
     long countByProjectId(Long projectId);
 }

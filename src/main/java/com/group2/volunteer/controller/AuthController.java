@@ -33,9 +33,14 @@ public class AuthController {
     private SavedProjectService savedProjectService;
 
     @GetMapping("/")
-    public String showHomepage(Model model, HttpSession session) {
-        List<Project> projects = projectService.getAllProject();
+    public String showHomepage(@org.springframework.web.bind.annotation.RequestParam(value = "keyword", required = false) String keyword,
+                               @org.springframework.web.bind.annotation.RequestParam(value = "location", required = false) String location,
+                               Model model,
+                               HttpSession session) {
+        List<Project> projects = projectService.getRecruitingProjects(keyword, location);
         model.addAttribute("projects", projects);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("location", location);
 
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser != null) {

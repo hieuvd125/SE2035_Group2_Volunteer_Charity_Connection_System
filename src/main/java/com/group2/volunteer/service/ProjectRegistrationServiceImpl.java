@@ -1,11 +1,12 @@
 package com.group2.volunteer.service;
 
+import com.group2.volunteer.constant.RegistrationStatus;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.ProjectRegistration;
+import com.group2.volunteer.exception.BadRequestException;
+import com.group2.volunteer.exception.ResourceNotFoundException;
 import com.group2.volunteer.repository.ProjectRegistrationRepository;
 import com.group2.volunteer.repository.ProjectRepository;
-import com.group2.volunteer.exception.ResourceNotFoundException;
-import com.group2.volunteer.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,23 +30,29 @@ public class ProjectRegistrationServiceImpl implements ProjectRegistrationServic
     }
 
     @Override
+    public long countActiveRegistrationsByProject(Long projectId) {
+        return registrationRepository.countActiveRegistrationsByProjectId(projectId);
+    }
+
+    @Override
     @Transactional
     public ProjectRegistration updateRegistrationStatus(Long registrationId, String status) {
+        if (!RegistrationStatus.APPROVED.equals(status) && !RegistrationStatus.REJECTED.equals(status)) {
+            throw new BadRequestException("Status khong hop le");
+        }
+
         ProjectRegistration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy lượt đăng ký này"));
+                .orElseThrow(() -> new ResourceNotFoundException("Khong tim thay luot dang ky nay"));
 
         registration.setStatus(status);
         ProjectRegistration savedReg = registrationRepository.save(registration);
 
-        if ("APPROVED".equals(status)) {
-            Project project = registration.getProject();
+        Project project = registration.getProject();
+        long approvedCount = registrationRepository.countByProjectIdAndStatus(project.getId(), RegistrationStatus.APPROVED);
 
-            long approvedCount = registrationRepository.countByProjectIdAndStatus(project.getId(), "APPROVED");
-
-            if (approvedCount >= project.getTargetVolunteers()) {
-                project.setStatus("ONGOING");
-                projectRepository.save(project);
-            }
+        if (approvedCount >= project.getTargetVolunteers()) {
+            project.setStatus("ONGOING");
+            projectRepository.save(project);
         }
 
         return savedReg;

@@ -3,8 +3,10 @@ package com.group2.volunteer.controller;
 import com.group2.volunteer.dto.ProjectDTO;
 import com.group2.volunteer.entity.EventUpdate;
 import com.group2.volunteer.entity.Project;
+import com.group2.volunteer.entity.ProjectRegistration;
 import com.group2.volunteer.service.EventUpdateService;
 import com.group2.volunteer.service.ProjectService;
+import com.group2.volunteer.service.ProjectRegistrationService;
 import com.group2.volunteer.service.SavedProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,12 +32,17 @@ public class ProjectController {
     @Autowired
     private final EventUpdateService eventUpdateService;
 
+    @Autowired
+    private final ProjectRegistrationService registrationService;
+
     public ProjectController(ProjectService projectService,
                              SavedProjectService savedProjectService,
-                             EventUpdateService eventUpdateService) {
+                             EventUpdateService eventUpdateService,
+                             ProjectRegistrationService registrationService) {
         this.projectService = projectService;
         this.savedProjectService = savedProjectService;
         this.eventUpdateService = eventUpdateService;
+        this.registrationService = registrationService;
     }
 
     private void checkOrganizerAccess(HttpSession session) {
@@ -85,6 +92,8 @@ public class ProjectController {
             return "redirect:/projects";
         }
         model.addAttribute("project", project);
+        long registrationCount = registrationService.countActiveRegistrationsByProject(id);
+        model.addAttribute("registrationCount", registrationCount);
 
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser != null && ("ROLE_VOLUNTEER".equals(loggedUser.getRole()) || "ROLE_ORGANIZER".equals(loggedUser.getRole()))) {
@@ -104,15 +113,18 @@ public class ProjectController {
     }
 
     @PostMapping("/apply")
-    public String applyProject(@RequestParam("projectId") Long projectId, HttpSession session) {
+    public String applyProject(@RequestParam("projectId") Long projectId,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
         checkVolunteerAccess(session);
         User loggedUser = (User) session.getAttribute("loggedUser");
         try {
             projectService.applyForProject(projectId, loggedUser.getId());
-            return "redirect:/projects/detail/" + projectId + "?success=true";
+            redirectAttributes.addFlashAttribute("message", "Đăng ký tham gia thành công! Đang chờ duyệt.");
         } catch (Exception e) {
-            return "redirect:/projects/detail/" + projectId + "?error=" + e.getMessage();
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
+        return "redirect:/projects/detail/" + projectId;
     }
 
     @GetMapping("/create")

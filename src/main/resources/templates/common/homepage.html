@@ -16,7 +16,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark m-0">🌍 Chiến dịch Tình nguyện Đang Tuyển</h2>
+                <h2 class="fw-bold text-dark m-0">Chiến dịch Tình nguyện Đang Tuyển</h2>
                 <p class="text-muted m-0">Tìm kiếm và tham gia các hoạt động ý nghĩa xã hội</p>
             </div>
         </div>
@@ -28,14 +28,16 @@
                         <label class="form-label fw-semibold text-secondary">Khu vực / Địa điểm</label>
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
-                            <input type="text" name="location" class="form-control border-start-0" placeholder="Ví dụ: Hà Nội, TP.HCM..." th:value="${location}">
+                            <input type="text" name="location" class="form-control border-start-0"
+                                   placeholder="Ví dụ: Hà Nội, TP.HCM..." th:value="${location}">
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <label class="form-label fw-semibold text-secondary">Lĩnh vực hoạt động</label>
+                        <label class="form-label fw-semibold text-secondary">Tên dự án</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-tag text-muted"></i></span>
-                            <input type="text" name="category" class="form-control border-start-0" placeholder="Ví dụ: Giáo dục, Môi trường..." th:value="${category}">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" name="keyword" class="form-control border-start-0"
+                                   placeholder="Ví dụ: Trồng cây, Hỗ trợ..." th:value="${keyword}">
                         </div>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
@@ -79,12 +81,16 @@
                                 <form th:if="${!savedProjectIds.contains(proj.id)}" th:action="@{/projects/save}" method="post" class="m-0">
                                     <input type="hidden" name="projectId" th:value="${proj.id}" />
                                     <input type="hidden" name="userId" th:value="${currentUserId}" />
-                                    <button type="submit" class="btn btn-outline-warning btn-sm px-3 rounded-pill"><i class="bi bi-bookmark"></i> Lưu</button>
+                                    <button type="submit" class="btn btn-outline-warning btn-sm px-3 rounded-pill">
+                                        <i class="bi bi-bookmark"></i> Lưu
+                                    </button>
                                 </form>
                                 <form th:if="${savedProjectIds.contains(proj.id)}" th:action="@{/projects/unsave}" method="post" class="m-0">
                                     <input type="hidden" name="projectId" th:value="${proj.id}" />
                                     <input type="hidden" name="userId" th:value="${currentUserId}" />
-                                    <button type="submit" class="btn btn-warning btn-sm px-3 rounded-pill text-white"><i class="bi bi-bookmark-fill"></i> Đã lưu</button>
+                                    <button type="submit" class="btn btn-warning btn-sm px-3 rounded-pill text-white">
+                                        <i class="bi bi-bookmark-fill"></i> Đã lưu
+                                    </button>
                                 </form>
                             </th:block>
 

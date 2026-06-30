@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface ProjectRegistrationService {
     List<ProjectRegistration> getRegistrationsByProject(Long projectId);
+    long countActiveRegistrationsByProject(Long projectId);
 
     ProjectRegistration updateRegistrationStatus(Long registrationId, String status);
 }
