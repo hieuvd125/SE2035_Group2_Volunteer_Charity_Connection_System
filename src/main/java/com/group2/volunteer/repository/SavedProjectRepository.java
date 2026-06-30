@@ -21,5 +21,4 @@ public interface SavedProjectRepository extends JpaRepository<SavedProject, Long
     @Query("SELECT s FROM SavedProject s WHERE s.volunteer.id = :volunteerId AND s.project.id = :projectId")
     Optional<SavedProject> findByVolunteerIdAndProjectId(@Param("volunteerId") Long volunteerId, @Param("projectId") Long projectId);
 
-    long countByProjectId(Long projectId);
 }

@@ -12,7 +12,6 @@ public class AttendanceProofController {
 
     private final ProjectRegistrationRepository registrationRepository;
 
-    // Thay thế @Autowired bằng Constructor Injection chuẩn chỉnh
     public AttendanceProofController(ProjectRegistrationRepository registrationRepository) {
         this.registrationRepository = registrationRepository;
     }
@@ -25,7 +24,7 @@ public class AttendanceProofController {
         }
 
         Integer totalHours = registrationRepository.sumConfirmedHoursByVolunteerId(loggedUser.getId());
-        model.addAttribute("totalHours", totalHours != null ? totalHours : 0); // Thêm xử lý tránh NullPointerException nếu chưa có giờ công nào
+        model.addAttribute("totalHours", totalHours != null ? totalHours : 0);
         model.addAttribute("user", loggedUser);
 
         String badge = "Thành viên mới";

@@ -29,7 +29,6 @@ public class EventUpdateServiceImpl implements EventUpdateService {
         eventUpdate.setTitle(title);
         eventUpdate.setContent(content);
         eventUpdate.setImageUrl(imageUrl);
-        // createdAt sẽ được @PrePersist tự động set
         return eventUpdateRepository.save(eventUpdate);
     }
 

@@ -8,7 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Có thể thêm các method tìm kiếm tùy chỉnh ở đây nếu cần
-    // Ví dụ: User findByUsername(String username);
     Optional<User> findByUsername(String username);
 }

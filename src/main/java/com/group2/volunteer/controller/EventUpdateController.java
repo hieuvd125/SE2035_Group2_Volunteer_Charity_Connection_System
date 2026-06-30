@@ -24,12 +24,11 @@ public class EventUpdateController {
 
     @GetMapping("/detail/{id}/update")
     public String showUpdateForm(@PathVariable Long id, Model model, HttpSession session) {
-        // Kiểm tra đăng nhập
         User loggedUser = (User) session.getAttribute("loggedUser");
         if (loggedUser == null) {
             return "redirect:/projects/detail/" + id + "?error=Please login first.";
         }
-        // Chỉ ROLE_ORGANIZER mới được đăng
+
         if (!"ROLE_ORGANIZER".equals(loggedUser.getRole())) {
             return "redirect:/projects/detail/" + id + "?error=Only organizers can post updates.";
         }
@@ -38,7 +37,7 @@ public class EventUpdateController {
         if (project == null) {
             return "redirect:/projects";
         }
-        // Kiểm tra có phải organizer của dự án không
+
         if (!project.getOrganizer().getId().equals(loggedUser.getId())) {
             return "redirect:/projects/detail/" + id + "?error=You are not the organizer of this project.";
         }

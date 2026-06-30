@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,8 @@ public class AuthController {
     private SavedProjectService savedProjectService;
 
     @GetMapping("/")
-    public String showHomepage(@org.springframework.web.bind.annotation.RequestParam(value = "keyword", required = false) String keyword,
-                               @org.springframework.web.bind.annotation.RequestParam(value = "location", required = false) String location,
+    public String showHomepage(@RequestParam(value = "keyword", required = false) String keyword,
+                               @RequestParam(value = "location", required = false) String location,
                                Model model,
                                HttpSession session) {
         List<Project> projects = projectService.getRecruitingProjects(keyword, location);
