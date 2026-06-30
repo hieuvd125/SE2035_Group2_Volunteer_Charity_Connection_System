@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegistration, Long> {
-
+    boolean existsByVolunteerIdAndProjectId(Long volunteerId, Long projectId);
+    long countByProjectId(Long projectId);
 }

@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - VCPCS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
+<div th:replace="~{fragments/header :: header-part}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar-part}"></div>
+<div style="margin-left: 220px; padding: 20px;">
     <div>
         <h2>VCPCS LOGIN</h2>
         <div th:if="${error}" th:text="${error}"></div>
@@ -22,5 +26,6 @@
             <button type="submit">Login</button>
         </form>
     </div>
+</div>
 </body>
 </html>

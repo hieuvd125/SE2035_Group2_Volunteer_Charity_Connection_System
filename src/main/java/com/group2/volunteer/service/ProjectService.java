@@ -19,5 +19,5 @@ public interface ProjectService {
 
     List<Project> getRecruitingProjects(String keyword, String location);
     Project getProjectById(Long id);
-    void applyForProject(Long projectId);
+    void applyForProject(Long projectId, Long userId);
 }

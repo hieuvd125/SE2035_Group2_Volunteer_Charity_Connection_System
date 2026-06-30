@@ -69,8 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTargetVolunteers(dto.getTargetVolunteers());
         project.setStatus("PENDING"); // mặc định
         project.setOrganizer(organizer);
-        // Nếu có Category, bạn cần set category sau khi lấy từ DB (tạm thời để null hoặc thêm sau)
-        // project.setCategory(...);
+
 
         return projectRepository.save(project);
     }
@@ -88,7 +87,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.save(project);
     }
 
-    // Các method khác nếu cần, ví dụ lấy danh sách PENDING
+
     @Override
     public List<Project> getPendingProjects() {
         return projectRepository.findByStatus("PENDING");
@@ -101,22 +100,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> getAllProject() {
-        // Gọi xuống Repository để lấy tất cả dự án trong database lên
+
         return projectRepository.findAll();
     }
 
     @Override
-    public void applyForProject(Long projectId) {
-        Project project = projectRepository.findById(projectId).orElse(null);
-
-        if (project == null || !ProjectStatus.RECRUITING.equals(project.getStatus())) {
-            throw new IllegalArgumentException("The current project is not open for volunteer recruitment!");
+    public void applyForProject(Long projectId, Long userId) {
+        if (registrationRepository.existsByVolunteerIdAndProjectId(userId, projectId)) {
+            throw new BadRequestException("Bạn đã đăng ký dự án này rồi");
         }
 
-        User volunteer = userRepository.findById(4L).orElse(null);
-        if (volunteer == null) {
-            throw new IllegalStateException("Test volunteer account with ID 4 not found!");
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResourceNotFoundException("Dự án không tồn tại"));
+
+        if (!ProjectStatus.RECRUITING.equals(project.getStatus())) {
+            throw new BadRequestException("The current project is not open for volunteer recruitment!");
         }
+
+        long currentRegistrations = registrationRepository.countByProjectId(projectId);
+        if (currentRegistrations >= project.getTargetVolunteers()) {
+            throw new BadRequestException("Dự án đã đủ số lượng tình nguyện viên");
+        }
+
+        User volunteer = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Volunteer không tồn tại"));
 
         ProjectRegistration registration = new ProjectRegistration();
         registration.setVolunteer(volunteer);
