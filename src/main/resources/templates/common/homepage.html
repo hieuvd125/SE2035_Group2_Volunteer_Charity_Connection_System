@@ -88,6 +88,10 @@
                                 </form>
                             </th:block>
 
+                            <a th:href="@{/projects/{id}/donate(id=${proj.id})}" class="btn btn-success px-3 fw-semibold shadow-sm rounded-pill">
+                                Quyên góp
+                            </a>
+
                             <a th:href="@{/projects/detail/{id}(id=${proj.id})}" class="btn btn-primary px-4 fw-semibold shadow-sm rounded-pill">
                                 Xem chi tiết <i class="bi bi-arrow-right-short ms-1"></i>
                             </a>
