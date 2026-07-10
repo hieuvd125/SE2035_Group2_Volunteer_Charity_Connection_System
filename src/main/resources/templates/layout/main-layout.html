@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="page_layout(title, body)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">VCPCS</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header_fragment}"></div>
+
+<div style="display: flex; margin-top: 10px;">
+
+    <div th:replace="~{fragments/sidebar :: sidebar_fragment}"></div>
+
+    <main style="flex: 1;">
+        <div th:replace="${body}"></div>
+    </main>
+
+</div>
+
+<script>
+    document.getElementById('toggleSidebarBtn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        if (sidebar.style.display === 'none') {
+            sidebar.style.display = 'block';
+        } else {
+            sidebar.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
