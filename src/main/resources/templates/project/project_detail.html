@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::#project-content})}">
+<head>
+    <title>Chi Tiết Dự Án</title>
+</head>
+<body>
+
+<div id="project-content" class="container-fluid">
+    <div class="row p-4 d-flex justify-content-center">
+        <div class="col-md-8 card p-4 shadow-sm">
+            <h2 class="text-primary mb-3" th:text="${project.title}">Tên Dự Án</h2>
+            <hr>
+            <p><strong>Khu vực:</strong> <span th:text="${project.location}">Địa điểm</span></p>
+            <p><strong>Số lượng TNV mục tiêu:</strong> <span th:text="${project.targetVolunteers}">0</span> người</p>
+            <p><strong>Trạng thái:</strong> <span class="badge bg-success" th:text="${project.status}">Trạng thái</span></p>
+
+            <p class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+            <form th:action="@{/projects/apply}" method="post" class="mt-4">
+                <input type="hidden" name="projectId" th:value="${project.id}"/>
+                <button type="submit" class="btn btn-success btn-lg px-5">Đăng Ký Tham Gia (Apply)</button>
+                <a th:href="@{/projects/homepage}" class="btn btn-secondary btn-lg px-4 ms-2">Quay lại trang chủ</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
