@@ -8,4 +8,6 @@ public interface ProjectQueryService {
     List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
     Project getProjectById(Long id);
     void applyToProject(RegistrationRequest request) throws Exception;
+    Long getApprovedVolunteerCount(Long projectId);
+    boolean hasApplied(Long projectId, Long userId);
 }

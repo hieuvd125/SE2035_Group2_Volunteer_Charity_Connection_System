@@ -37,10 +37,11 @@
                     <label for="categoryId" class="form-label font-weight-bold">Lĩnh vực hoạt động</label>
                     <select th:field="*{categoryId}" id="categoryId" class="form-select">
                         <option value="">-- Tất cả lĩnh vực --</option>
-                        <option value="1">Giáo dục & Trẻ em</option>
-                        <option value="2">Bảo vệ Môi trường</option>
-                        <option value="3">Cứu trợ Thiên tai</option>
-                        <option value="4">Y tế & Sức khỏe</option>
+                        <option
+                                th:each="c : ${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
                     </select>
                 </div>
 
