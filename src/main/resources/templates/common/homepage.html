@@ -75,6 +75,10 @@
                     <a th:href="@{/projects/detail/{id}(id=${p.id})}" class="btn btn-outline-primary w-100">
                         Xem Chi Tiết & Đăng Ký <i class="bi bi-arrow-right ms-1"></i>
                     </a>
+                    <form th:action="@{/saved-projects/save}" method="post">
+                        <input type="hidden" name="projectId" th:value="${p.id}" />
+                        <button type="submit" title="Lưu dự án"> Lưu dự án</button>
+                    </form>
                 </div>
             </div>
         </div>

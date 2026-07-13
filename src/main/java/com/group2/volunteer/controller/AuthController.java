@@ -8,6 +8,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String home() {
-        return "common/homepage";
+        return "redirect:/projects/homepage";
     }
 }
