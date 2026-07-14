@@ -23,7 +23,7 @@ public class ProjectCreationDTO {
 
     private String imageUrl;
 
-    @NotBlank(message = " Địa điểm không được để trống")
+    @NotBlank(message = "Địa điểm không được để trống")
     private String location;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
@@ -32,6 +32,7 @@ public class ProjectCreationDTO {
     private LocalDate startDate;
 
     @NotNull(message = "Ngày kết thúc không được để trống")
+    @FutureOrPresent(message = "Ngày kết thúc phải là hôm nay hoặc trong tương lai")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
