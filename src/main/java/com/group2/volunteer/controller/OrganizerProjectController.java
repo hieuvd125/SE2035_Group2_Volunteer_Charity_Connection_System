@@ -38,6 +38,9 @@ public class OrganizerProjectController {
     @GetMapping("/create")
     public String showCreateForm(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
         Long currentUserId = user.getId();
         String role = user.getRole();
         if(!"ORGANIZER".equals(role)){
@@ -53,9 +56,12 @@ public class OrganizerProjectController {
                                 BindingResult bindingResult, HttpSession session, Model model,
                                 RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
         Long currentUserId = user.getId();
         String role = user.getRole();
-        if(!"ORGANIZER".equals(role) || currentUserId == null){
+        if(!"ORGANIZER".equals(role)){
             return "redirect:/login";
         }
         if(bindingResult.hasErrors()){
@@ -75,8 +81,7 @@ public class OrganizerProjectController {
     }
 
     @GetMapping
-    public String listOrganizerProjects(
-            @RequestParam(required = false) String title,
+    public String listOrganizerProjects(@RequestParam(required = false) String title,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
@@ -84,10 +89,13 @@ public class OrganizerProjectController {
             HttpSession session, Model model) {
 
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
         Long currentUserId = user.getId();
         String role = user.getRole();
 
-        if (!"ORGANIZER".equals(role) || currentUserId == null) {
+        if (!"ORGANIZER".equals(role)) {
             return "redirect:/login";
         }
 
@@ -107,6 +115,9 @@ public class OrganizerProjectController {
     @GetMapping("/{id}")
     public String viewProjectDetails(@PathVariable Long id, Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
         Long currentUserId = user.getId();
         String role = user.getRole();
 
