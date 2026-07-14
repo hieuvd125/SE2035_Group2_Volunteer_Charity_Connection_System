@@ -6,4 +6,5 @@ public class ProjectStatus {
     public static final String RECRUITING = "RECRUITING";
     public static final String ONGOING = "ONGOING";
     public static final String COMPLETED = "COMPLETED";
+    public static final String REJECTED = "REJECTED";
 }
