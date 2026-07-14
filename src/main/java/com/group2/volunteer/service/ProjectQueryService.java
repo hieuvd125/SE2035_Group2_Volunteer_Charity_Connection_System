@@ -4,9 +4,10 @@ import com.group2.volunteer.dto.RegistrationRequest;
 import com.group2.volunteer.entity.Project;
 import java.util.List;
 
-public interface ProjectService{
-    //List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
-    //Project getProjectById(Long id);
-    //void applyToProject(RegistrationRequest request) throws Exception;
+public interface ProjectQueryService {
     List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
+    Project getProjectById(Long id);
+    void applyToProject(RegistrationRequest request) throws Exception;
+    Long getApprovedVolunteerCount(Long projectId);
+    boolean hasApplied(Long projectId, Long userId);
 }

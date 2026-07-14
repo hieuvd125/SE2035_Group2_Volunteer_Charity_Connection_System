@@ -1,11 +1,87 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::#project-content})}">
 <head>
-    <title>Test Layout - VCPCS</title>
+    <title>Trang Chủ - Bộ Lọc Dự Án Tình Nguyện</title>
 </head>
 <body>
-<h1>Hello, Layout Test!</h1>
-<p>Nếu bạn nhìn thấy Header phía trên và Sidebar bên trái hiển thị, tức là Móng đã chuẩn!</p>
+
+<div id="project-content" class="container-fluid py-4">
+
+    <div class="row mb-3" th:if="${successMessage} != ''">
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}">Thông báo thành công!</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-primary mb-3"><i class="bi bi-funnel-fill me-2"></i>Bộ Lọc Tìm Kiếm Dự Án</h5>
+
+            <form th:action="@{/projects/homepage}" th:object="${criteria}" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <label for="location" class="form-label font-weight-bold">Khu vực / Địa điểm</label>
+                    <select th:field="*{location}" id="location" class="form-select">
+                        <option value="">-- Tất cả khu vực --</option>
+                        <option value="Hà Giang">Hà Giang</option>
+                        <option value="Vũng Tàu">Vũng Tàu</option>
+                        <option value="Quảng Ngãi">Quảng Ngãi</option>
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label for="categoryId" class="form-label font-weight-bold">Lĩnh vực hoạt động</label>
+                    <select th:field="*{categoryId}" id="categoryId" class="form-select">
+                        <option value="">-- Tất cả lĩnh vực --</option>
+                        <option
+                                th:each="c : ${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-2"></i>Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h4 class="mb-3 text-secondary">Danh Sách Dự Án Đang Tuyển Tình Nguyện Viên</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(projectList)}">
+            <div class="alert alert-warning d-inline-block px-5">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Không tìm thấy dự án nào phù hợp với bộ lọc hiện tại!
+            </div>
+        </div>
+
+        <div class="col" th:each="p : ${projectList}">
+            <div class="card h-100 shadow-sm border-0 transition-card">
+                <div class="card-body">
+                    <h5 class="card-title text-dark font-weight-bold" th:text="${p.title}">Tên dự án</h5>
+                    <p class="card-text text-muted text-truncate-2" th:text="${p.description}">Mô tả ngắn gọn về chương trình...</p>
+                    <hr>
+                    <div class="small mb-3">
+                        <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
+                        <p class="mb-0"><i class="bi bi-people-fill text-success me-2"></i><strong>Mục tiêu:</strong> <span th:text="${p.targetVolunteers}">0</span> tình nguyện viên</p>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                    <a th:href="@{/projects/detail/{id}(id=${p.id})}" class="btn btn-outline-primary w-100">
+                        Xem Chi Tiết & Đăng Ký <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>
