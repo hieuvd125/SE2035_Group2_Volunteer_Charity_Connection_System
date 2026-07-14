@@ -14,10 +14,11 @@
 </header>
 <body>
     <h2>VCPCS Login</h2>
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-weight: bold;"></p>
     <form th:action="@{/login}" method="POST">
         <div style="display: flex; flex-direction: column">
             <div>
-                <label>Tên Đăng Nhập: </label>
+                <label>Email: </label>
                 <input type="text" name="email" required>
             </div>
             <div>

@@ -1,5 +1,7 @@
 package com.group2.volunteer.service;
 
+import com.group2.volunteer.constant.UserStatus;
+import com.group2.volunteer.exception.AuthException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
 import com.group2.volunteer.dto.LoginDTO;
 import com.group2.volunteer.dto.RegisterDTO;
@@ -42,9 +44,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User authenticate(LoginDTO loginDTO) {
         User user = userRepository.findByEmailAndPass(loginDTO.getEmail(),
-                loginDTO.getPassword()).orElseThrow(() -> {
-            return new RuntimeException("Email or password is invalid!");
-        });
+                loginDTO.getPassword()).orElseThrow(() -> new AuthException("Email hoặc mật khẩu không hợp lệ!"));
+
+        if (UserStatus.BLOCKED.name().equals(user.getStatus())) {
+            throw new AuthException("Tài khoản của bạn đã bị chặn.");
+        }
+
+        if (UserStatus.PENDING.name().equals(user.getStatus())) {
+            throw new AuthException("Tài khoản đang chờ kích hoạt.");
+        }
         return user;
     }
 

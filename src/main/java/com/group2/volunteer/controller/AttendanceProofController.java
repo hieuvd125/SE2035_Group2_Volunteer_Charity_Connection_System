@@ -1,6 +1,8 @@
 package com.group2.volunteer.controller;
 
+import com.group2.volunteer.entity.User;
 import com.group2.volunteer.service.AttendanceProofService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +20,18 @@ public class AttendanceProofController {
     }
 
     @GetMapping("/attendance/submit")
-    public String showSubmitProofPage(@RequestParam(required = false) Long volunteerId, Model model) {
-        model.addAttribute("volunteerId", volunteerId);
+    public String showSubmitProofPage(HttpSession session, Model model) {
+        User user = getLoggedInUser(session);
 
-        if (volunteerId != null) {
-            model.addAttribute("registrations", attendanceProofService.getRegistrationsByVolunteer(volunteerId));
+        if (user == null) {
+            return "redirect:/login";
         }
 
+        if (!hasRole(user, "VOLUNTEER")) {
+            return "redirect:/error/403";
+        }
+
+        model.addAttribute("registrations", attendanceProofService.getRegistrationsByVolunteer(user.getId()));
         return "volunteer/submit_proof";
     }
 
@@ -32,14 +39,35 @@ public class AttendanceProofController {
     public String submitProof(@RequestParam Long registrationId,
                               @RequestParam(required = false) String reportText,
                               @RequestParam(required = false) String proofImage,
+                              HttpSession session,
                               RedirectAttributes redirectAttributes) {
-        attendanceProofService.submitProof(registrationId, reportText, proofImage);
-        redirectAttributes.addFlashAttribute("message", "Nộp minh chứng thành công. Vui lòng chờ Organizer duyệt minh chứng.");
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!hasRole(user, "VOLUNTEER")) {
+            return "redirect:/error/403";
+        }
+
+        attendanceProofService.submitProof(registrationId, user.getId(), reportText, proofImage);
+        redirectAttributes.addFlashAttribute("message", "Nop minh chung thanh cong. Vui long cho Organizer duyet.");
         return "redirect:/attendance/submit";
     }
 
     @GetMapping("/attendance/verify")
-    public String showVerifyAttendancePage(Model model) {
+    public String showVerifyAttendancePage(HttpSession session, Model model) {
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!hasRole(user, "ORGANIZER") && !hasRole(user, "ADMIN")) {
+            return "redirect:/error/403";
+        }
+
         model.addAttribute("proofs", attendanceProofService.getProofsWaitingForVerification());
         return "organizer/verify_attendance";
     }
@@ -47,9 +75,28 @@ public class AttendanceProofController {
     @PostMapping("/attendance/verify/{proofId}")
     public String verifyAttendance(@PathVariable Long proofId,
                                    @RequestParam Integer confirmedHours,
+                                   HttpSession session,
                                    RedirectAttributes redirectAttributes) {
+        User user = getLoggedInUser(session);
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if (!hasRole(user, "ORGANIZER") && !hasRole(user, "ADMIN")) {
+            return "redirect:/error/403";
+        }
+
         attendanceProofService.verifyAttendance(proofId, confirmedHours);
-        redirectAttributes.addFlashAttribute("message", "Đã duyệt minh chứng và cộng giờ tình nguyện.");
+        redirectAttributes.addFlashAttribute("message", "Da duyet minh chung va cong gio tinh nguyen.");
         return "redirect:/attendance/verify";
+    }
+
+    private User getLoggedInUser(HttpSession session) {
+        return (User) session.getAttribute("user");
+    }
+
+    private boolean hasRole(User user, String role) {
+        return user.getRole() != null && user.getRole().equalsIgnoreCase(role);
     }
 }

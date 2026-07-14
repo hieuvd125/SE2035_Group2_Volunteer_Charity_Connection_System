@@ -4,8 +4,10 @@ import com.group2.volunteer.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class RoleInterceptor implements HandlerInterceptor {
 
     @Override
@@ -27,6 +29,21 @@ public class RoleInterceptor implements HandlerInterceptor {
         }
 
         if (uri.startsWith("/projects/create") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+            response.sendRedirect(request.getContextPath() + "/error/403");
+            return false;
+        }
+
+        if (uri.startsWith("/organizer") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+            response.sendRedirect(request.getContextPath() + "/error/403");
+            return false;
+        }
+
+        if (uri.startsWith("/attendance/submit") && !"VOLUNTEER".equalsIgnoreCase(role)) {
+            response.sendRedirect(request.getContextPath() + "/error/403");
+            return false;
+        }
+
+        if (uri.startsWith("/attendance/verify") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }

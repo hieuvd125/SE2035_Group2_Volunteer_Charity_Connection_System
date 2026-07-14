@@ -40,9 +40,13 @@ public class AttendanceProofServiceImpl implements AttendanceProofService{
 
     @Override
     @Transactional
-    public AttendanceProof submitProof(Long registrationId, String reportText, String proofImage) {
+    public AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage) {
         ProjectRegistration registration = projectRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn đăng ký."));
+
+        if (registration.getVolunteer() == null || !registration.getVolunteer().getId().equals(volunteerId)) {
+            throw new BadRequestException("Khong the nop minh chung cho don dang ky cua volunteer khac.");
+        }
 
         if (RegistrationStatus.REJECTED.equals(registration.getStatus())) {
             throw new BadRequestException("Đơn đăng ký đã bị từ chối nên không thể nộp minh chứng.");
