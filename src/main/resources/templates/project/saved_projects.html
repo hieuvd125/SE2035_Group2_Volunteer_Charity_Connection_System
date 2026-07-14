@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::#project-content})}">
+<head>
+    <title>Dự Án Đã Lưu - VCPCS</title>
+</head>
+<body>
+
+<div id="project-content" class="container py-4">
+    <h3>Dự án đã lưu của tôi</h3>
+    <hr>
+
+
+    <div th:if="${successMessage}" class="alert alert-success py-2" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
+
+
+    <div th:if="${#lists.isEmpty(savedList)}" class="alert alert-secondary">
+        Bạn chưa lưu bất kỳ dự án nào. <a th:href="@{/projects/homepage}">Quay lại trang chủ</a>.
+    </div>
+
+
+    <table th:if="${!#lists.isEmpty(savedList)}" class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>Tên dự án</th>
+            <th>Địa điểm</th>
+            <th>Ngày lưu</th>
+            <th style="width: 150px;">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${savedList}">
+            <td th:text="${item.project.title}">Tên dự án</td>
+            <td th:text="${item.project.location}">Địa điểm</td>
+            <td th:text="${#temporals.format(item.savedAt, 'dd-MM-yyyy HH:mm')}">Ngày lưu</td>
+            <td>
+
+                <form th:action="@{/saved-projects/unsave}" method="post">
+                    <input type="hidden" name="projectId" th:value="${item.project.id}" />
+                    <button type="submit" class="btn btn-danger btn-sm w-100">Hủy lưu</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

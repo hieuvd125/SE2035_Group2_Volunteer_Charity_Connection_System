@@ -12,6 +12,12 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
+    @Query("SELECT p FROM Project p WHERE " +
+            "(:location IS NULL OR p.location LIKE %:location%) " +
+            "AND (:categoryId IS NULL OR p.category.id = :categoryId)")
+    List<Project> searchProjects(@Param("location") String location,
+                                 @Param("categoryId") Long categoryId);
+
     @Query("Select p From Project p Where p.organizer.id = :orgId " +
             "And (:title Is Null Or :title = '' Or Lower(p.title) like Lower(Concat('%', :title, '%'))) " +
             "And (:location Is Null Or :location = '' or lower(p.location) like lower(concat('%', :location, '%'))) "+
