@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Chi tiết dự án</title>
@@ -16,8 +17,8 @@
     <p><strong>Danh mục:</strong> <span th:text="${project.category != null ? project.category.name : 'Không có'}">Danh mục</span></p>
     <p><strong>Người đăng:</strong> <span th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}">Người đăng</span></p>
     <p><strong>Trạng thái:</strong> <span th:text="${project.status}">Trạng thái</span></p>
-    
-    <a href="/organizer/projects">Quay lại danh sách</a>
+
+    <a th:href="@{/organizer/projects}">Quay lại danh sách</a>
 </div>
 </body>
 </html>
