@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.group2.volunteer.dto.ProjectSearchCriteria;
+import com.group2.volunteer.entity.Project;
+import java.util.List;
 
 @Service
 @Transactional
@@ -94,5 +97,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Không tìm thấy dự án"));
+    }
+  
+    @Override
+    public List<Project> getAvailableProjects(ProjectSearchCriteria criteria) {
+        return null;
     }
 }

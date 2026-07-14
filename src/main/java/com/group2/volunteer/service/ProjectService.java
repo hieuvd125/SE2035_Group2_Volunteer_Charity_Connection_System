@@ -1,4 +1,8 @@
 package com.group2.volunteer.service;
+import com.group2.volunteer.dto.ProjectSearchCriteria;
+import com.group2.volunteer.dto.RegistrationRequest;
+import com.group2.volunteer.entity.Project;
+import java.util.List;
 
 import com.group2.volunteer.dto.ProjectCreationDTO;
 import com.group2.volunteer.entity.Project;
@@ -13,5 +17,5 @@ public interface ProjectService {
     Page<Project> getOrganizerProjects(Long organizerId, String title, String location, String status, Pageable pageable);
     Project getProjectById(Long projectId);
 
-
+    List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
 }

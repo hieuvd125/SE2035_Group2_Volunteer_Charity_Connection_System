@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
@@ -19,4 +20,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
                                         @Param("location") String location, @Param("status") String status, Pageable pageable);
 
     Page<Project> findByStatus(String status, Pageable pageable);
+}
+    @Query("SELECT p FROM Project p WHERE p.status = 'RECRUITING' " +
+            "AND (:location IS NULL OR p.location LIKE %:location%) " +
+            "AND (:categoryId IS NULL OR p.category.id = :categoryId)")
+    List<Project> searchProjects(@Param("location") String location,
+                                 @Param("categoryId") Long categoryId);
 }
