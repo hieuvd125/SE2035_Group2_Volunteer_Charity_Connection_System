@@ -37,9 +37,8 @@ public class AuthController {
         ModelAndView mv = new ModelAndView();
         User user = userService.authenticate(new LoginDTO(email, password));
         session.setAttribute("user", user);
-        session.setAttribute("currentUser", user);
-        session.setAttribute("currentUserId", user.getId());
         session.setAttribute("role", user.getRole());
+        session.setAttribute("currentUserId", user.getId());
         redirectAttributes.addFlashAttribute("message", "Đăng nhập thành công.");
         mv.setViewName("redirect:/");
         return mv;
