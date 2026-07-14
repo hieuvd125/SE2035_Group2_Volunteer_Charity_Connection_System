@@ -1,9 +1,13 @@
 package com.group2.volunteer.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class LoginDTO {
-
+    private String email;
+    private String password;
 }

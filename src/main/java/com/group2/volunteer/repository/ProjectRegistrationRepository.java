@@ -12,4 +12,7 @@ public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegi
 
     List<ProjectRegistration> findByStatus(String status);
 
+    Long countByProjectIdAndStatus(Long projectId, String status);
+
+    boolean existsByProjectIdAndVolunteerId(Long projectId, Long volunteerId);
 }
