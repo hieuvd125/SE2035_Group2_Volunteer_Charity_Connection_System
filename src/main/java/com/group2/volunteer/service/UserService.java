@@ -1,5 +1,9 @@
 package com.group2.volunteer.service;
 
-public interface UserService {
+import com.group2.volunteer.entity.User;
 
+public interface UserService {
+    User getUserById(Long userId);
+
+    String getBadgeName(Integer totalHours);
 }

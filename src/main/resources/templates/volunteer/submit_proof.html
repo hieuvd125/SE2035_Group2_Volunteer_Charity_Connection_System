@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <title>Nộp minh chứng tham gia</title>
+</head>
+<body>
+<h1>Nộp minh chứng tham gia tình nguyện</h1>
+
+<p th:if="${message}" th:text="${message}"></p>
+
+<h2>Tìm đơn đăng ký của Volunteer</h2>
+<form th:action="@{/attendance/submit}" method="get">
+    <label for="volunteerId">ID Volunteer</label>
+    <input id="volunteerId" type="number" name="volunteerId" th:value="${volunteerId}" required>
+    <button type="submit">Tìm đơn đăng ký</button>
+</form>
+
+<div th:if="${registrations != null}">
+    <h2>Thông tin minh chứng</h2>
+
+    <p th:if="${#lists.isEmpty(registrations)}">Volunteer này chưa có đơn đăng ký nào.</p>
+
+    <form th:if="${!#lists.isEmpty(registrations)}" th:action="@{/attendance/submit}" method="post">
+        <div>
+            <label for="registrationId">Chọn đơn đăng ký</label>
+            <select id="registrationId" name="registrationId" required>
+                <option th:each="registration : ${registrations}"
+                        th:value="${registration.id}"
+                        th:text="${'Đơn #' + registration.id + ' - Dự án: ' + registration.project.title + ' - Trạng thái: ' + registration.status}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="reportText">Báo cáo sau sự kiện</label><br>
+            <textarea id="reportText" name="reportText" rows="6" cols="70"
+                      placeholder="Nhập nội dung báo cáo, công việc đã tham gia, kết quả hỗ trợ..."></textarea>
+        </div>
+
+        <div>
+            <label for="proofImage">Đường dẫn ảnh minh chứng</label>
+            <input id="proofImage" type="text" name="proofImage" placeholder="Ví dụ: https://.../anh-minh-chung.jpg">
+        </div>
+
+        <button type="submit">Nộp minh chứng</button>
+    </form>
+</div>
+</body>
+</html>
