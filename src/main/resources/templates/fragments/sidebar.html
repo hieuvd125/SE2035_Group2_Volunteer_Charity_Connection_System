@@ -1,10 +1,18 @@
 <div th:fragment="sidebar_fragment" id="sidebar" style="display: block; width: 200px; margin-right: 20px;">
     <h4>Navigation</h4>
     <ul>
-        <li><a th:href="@{/projects/create}">Create Project (NGO)</a></li>
-        <li><a th:href="@{/attendance/submit}">Nộp minh chứng</a></li>
-        <li><a th:href="@{/attendance/verify}">Duyệt minh chứng</a></li>
-        <li><a th:href="@{/admin/dashboard}">Admin Dashboard</a></li>
-        <li><a th:href="@{/profile}">Trang cá nhân Volunteer</a></li>
+        <th:block th:if="${session.user != null and (session.user.role == 'ROLE_ORGANIZER')}">
+            <li><a th:href="@{/projects/create}">Create Project (NGO)</a></li>
+            <li><a th:href="@{/attendance/verify}">Duyệt minh chứng</a></li>
+        </th:block>
+
+        <th:block th:if="${session.user != null and (session.user.role == 'ROLE_VOLUNTEER' or session.user.role == 'ROLE_ADMIN')}">
+            <li><a th:href="@{/attendance/submit}">Nộp minh chứng</a></li>
+            <li><a th:href="@{/profile}">Trang cá nhân Volunteer</a></li>
+        </th:block>
+
+        <th:block th:if="${session.user != null and session.user.role == 'ROLE_ADMIN'}">
+            <li><a th:href="@{/admin/dashboard}">Admin Dashboard</a></li>
+        </th:block>
     </ul>
 </div>
