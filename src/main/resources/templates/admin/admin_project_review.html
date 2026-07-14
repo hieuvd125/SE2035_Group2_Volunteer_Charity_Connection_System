@@ -7,32 +7,59 @@
 </head>
 <body>
 <h2>Duyệt dự án</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Tên chiến dịch</th>
-        <th>Tổ chức</th>
-        <th>Hành động</th>
-    </tr>
-    <tr th:each="p : ${pendingProjects.content}">
-        <td th:text="${p.id}"></td>
-        <td th:text="${p.title}"></td>
-        <td th:text="${p.organizer.fullName}"></td>
-        <td>
-            <form th:action="@{/admin/projects/{id}/approve(id=${p.id})}" method="post" style="display:inline">
-                <button type="submit">Phê duyệt</button>
-            </form>
-            <form th:action="@{/admin/projects/{id}/reject(id=${p.id})}" method="post" style="display:inline">
-                <button type="submit">Từ chối</button>
-            </form>
-        </td>
-    </tr>
-</table>
 
-<div th:if="${pendingProjects.totalPages > 0}">
-    <span th:each="i : ${#numbers.sequence(0, pendingProjects.totalPages - 1)}">
-        <a th:href="@{/admin/projects/review(page=${i})}" th:text="${i+1}"></a>
-    </span>
+
+<div th:if="${message}" th:text="${message}"></div>
+<div th:if="${error}" th:text="${error}"></div>
+
+<div th:if="${pendingProjects != null and pendingProjects.totalElements > 0}">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Tên chiến dịch</th>
+            <th>Tổ chức</th>
+            <th>Hành động</th>
+        </tr>
+        <tr th:each="p : ${pendingProjects.content}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.organizer.fullName}"></td>
+            <td>
+                <form th:action="@{/admin/projects/{id}/approve(id=${p.id})}" method="post" style="display:inline">
+                    <button type="submit">Phê duyệt</button>
+                </form>
+                <form th:action="@{/admin/projects/{id}/reject(id=${p.id})}" method="post" style="display:inline">
+                    <button type="submit">Từ chối</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+
+    <div th:if="${pendingProjects.totalPages > 1}">
+
+        <a th:if="${!pendingProjects.first}"
+           th:href="@{/admin/projects/review(page=${pendingProjects.number - 1}, size=${pendingProjects.size})}"
+        >&laquo; Trước</a>
+        <span th:if="${pendingProjects.first}">&laquo; Trước</span>
+
+        <span th:each="i : ${#numbers.sequence(0, pendingProjects.totalPages - 1)}">
+            <a th:href="@{/admin/projects/review(page=${i}, size=${pendingProjects.size})}"
+               th:text="${i + 1}"
+               th:classappend="${i == pendingProjects.number} ? 'active'"></a>
+        </span>
+
+        <a th:if="${!pendingProjects.last}"
+           th:href="@{/admin/projects/review(page=${pendingProjects.number + 1}, size=${pendingProjects.size})}"
+        >Sau &raquo;</a>
+        <span th:if="${pendingProjects.last}">Sau &raquo;</span>
+
+        <span>Trang <span th:text="${pendingProjects.number + 1}"></span>/<span th:text="${pendingProjects.totalPages}"></span></span>
+    </div>
+</div>
+
+<div th:if="${pendingProjects == null or pendingProjects.totalElements == 0}">
+    <p>Không có dự án nào chờ duyệt.</p>
 </div>
 </body>
 </html>
