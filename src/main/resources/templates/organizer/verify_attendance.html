@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <title>Duyệt minh chứng</title>
+</head>
+<body>
+<h1>Duyệt minh chứng tham gia tình nguyện</h1>
+
+<p th:if="${message}" th:text="${message}"></p>
+
+<p th:if="${#lists.isEmpty(proofs)}">Chưa có minh chứng nào cần xác nhận.</p>
+
+<table th:if="${!#lists.isEmpty(proofs)}" border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID minh chứng</th>
+        <th>Volunteer</th>
+        <th>Dự án</th>
+        <th>Trạng thái đơn</th>
+        <th>Báo cáo</th>
+        <th>Ảnh minh chứng</th>
+        <th>Số giờ xác nhận</th>
+        <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="proof : ${proofs}">
+        <td th:text="${proof.id}"></td>
+        <td th:text="${proof.registration.volunteer.fullName}"></td>
+        <td th:text="${proof.registration.project.title}"></td>
+        <td th:text="${proof.registration.status}"></td>
+        <td th:text="${proof.reportText}"></td>
+        <td>
+            <a th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
+               th:href="${proof.proofImage}" target="_blank">Xem ảnh</a>
+            <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
+        </td>
+        <td colspan="2">
+            <form th:action="@{/attendance/verify/{proofId}(proofId=${proof.id})}" method="post">
+                <input type="number" name="confirmedHours" min="1"
+                       th:value="${proof.registration.confirmedHours != null && proof.registration.confirmedHours > 0 ? proof.registration.confirmedHours : 1}"
+                       required>
+                <button type="submit">Duyệt minh chứng</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

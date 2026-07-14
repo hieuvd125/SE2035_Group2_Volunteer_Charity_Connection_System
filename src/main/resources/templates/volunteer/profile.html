@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <title>Trang cá nhân Volunteer</title>
+</head>
+<body>
+<h1>Trang cá nhân Volunteer</h1>
+
+<div th:if="${user != null}">
+    <h2>Thông tin cá nhân</h2>
+    <p><strong>Họ tên:</strong> <span th:text="${user.fullName}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Vai trò:</strong> <span th:text="${user.role}"></span></p>
+    <p><strong>Tổng giờ tình nguyện:</strong> <span th:text="${user.totalHours}"></span></p>
+
+    <h2>Danh hiệu</h2>
+    <div th:if="${user.totalHours >= 50}">
+        <h3>Community Hero</h3>
+        <p>Huy hiệu: Anh hùng cộng đồng</p>
+    </div>
+
+    <div th:if="${user.totalHours >= 10 && user.totalHours < 50}">
+        <h3>Kind Heart</h3>
+        <p>Huy hiệu: Trái tim nhân ái</p>
+    </div>
+
+    <div th:if="${user.totalHours < 10}">
+        <h3>New Volunteer</h3>
+        <p>Huy hiệu: Tình nguyện viên mới</p>
+    </div>
+
+    <p><strong>Danh hiệu hiện tại:</strong> <span th:text="${badgeName}"></span></p>
+</div>
+</body>
+</html>

@@ -34,4 +34,7 @@ public class User {
     @Column(name = "status", nullable = false, length = 30, columnDefinition = "VARCHAR(30) DEFAULT 'ACTIVE'")
     private String status;
 
+    @Column(name = "total_hours", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer totalHours = 0;
+
 }
