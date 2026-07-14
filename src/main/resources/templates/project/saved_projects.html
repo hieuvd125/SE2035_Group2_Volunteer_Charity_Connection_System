@@ -11,8 +11,8 @@
     <hr>
 
 
-    <div th:if="${successMessage}" class="alert alert-success py-2" th:text="${successMessage}"></div>
-    <div th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
+    <div style="color: green" th:if="${successMessage}" class="alert alert-success py-2" th:text="${successMessage}"></div>
+    <div style="color: red" th:if="${errorMessage}" class="alert alert-danger py-2" th:text="${errorMessage}"></div>
 
 
     <div th:if="${#lists.isEmpty(savedList)}" class="alert alert-secondary">
