@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class AttendanceProofServiceImpl implements AttendanceProofService{
+public class AttendanceProofServiceImpl implements AttendanceProofService {
     private final AttendanceProofRepository attendanceProofRepository;
     private final ProjectRegistrationRepository projectRegistrationRepository;
     private final UserRepository userRepository;
@@ -45,7 +45,7 @@ public class AttendanceProofServiceImpl implements AttendanceProofService{
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn đăng ký."));
 
         if (registration.getVolunteer() == null || !registration.getVolunteer().getId().equals(volunteerId)) {
-            throw new BadRequestException("Khong the nop minh chung cho don dang ky cua volunteer khac.");
+            throw new BadRequestException("Không thể nộp minh chứng cho đơn đăng ký của volunteer khác.");
         }
 
         if (RegistrationStatus.REJECTED.equals(registration.getStatus())) {
