@@ -14,10 +14,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public User getUserById(Long userId) {
         User user = userRepository.findById(userId)
@@ -42,8 +38,6 @@ public class UserServiceImpl implements UserService{
 
         return "New Volunteer";
     }
-
-    private final UserRepository userRepository;
 
     @Override
     public User authenticate(LoginDTO loginDTO) {

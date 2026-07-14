@@ -21,7 +21,7 @@ public class AuthController {
 
     @GetMapping("/")
     public String home() {
-        return "common/homepage";
+        return "redirect:/projects/homepage";
     }
 
     @GetMapping("/login")
@@ -40,5 +40,11 @@ public class AuthController {
         redirectAttributes.addFlashAttribute("message", "Đăng nhập thành công.");
         mv.setViewName("redirect:/");
         return mv;
+    }
+
+    @GetMapping("/logout")
+    public String handleLogout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 }
