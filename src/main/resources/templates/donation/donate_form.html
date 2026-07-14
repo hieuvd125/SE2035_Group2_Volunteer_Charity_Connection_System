@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::#donate-form-content})}">
+<head>
+    <title>Quyên Góp Ủng Hộ - VCPCS</title>
+</head>
+<body>
+<div id="donate-form-content" class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 card p-4 shadow-sm">
+            <h3 class="text-success mb-3"><i class="bi bi-heart-fill text-danger me-2"></i>Quyên Góp Ủng Hộ</h3>
+
+            <h5 class="text-muted mb-4" th:text="'Dự án: ' + ${project.title}">Tên dự án</h5>
+
+            <form th:action="@{/donations/donate}" method="post">
+                <input type="hidden" name="projectId" th:value="${project.id}" />
+
+                <div class="mb-3">
+                    <label for="amount" class="form-label fw-bold">Số tiền quyên góp (VNĐ)</label>
+                    <input type="number" id="amount" name="amount" class="form-control"  min="1000" required />
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" name="anonymous" id="anonCheck" />
+                    <label class="form-check-label" for="anonCheck">
+                        Quyên góp ẩn danh (Bảng vinh danh sẽ hiện "Người dùng ẩn danh")
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg w-100">Xác Nhận Quyên Góp</button>
+                <a th:href="@{/projects/detail/{id}(id=${project.id})}" class="btn btn-secondary w-100 mt-2">Hủy bỏ</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

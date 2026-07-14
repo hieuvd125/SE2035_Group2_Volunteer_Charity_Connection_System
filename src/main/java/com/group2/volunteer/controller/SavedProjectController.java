@@ -25,12 +25,15 @@ public class SavedProjectController {
 @PostMapping("/save")
     public String saveProject(@RequestParam("projectId") Long projectId,
         HttpSession session, RedirectAttributes redirectAttributes) {
-    User sessionUser = (User) session.getAttribute("currentUser");
+    User sessionUser = (User) session.getAttribute("user");
     if (sessionUser == null) {
         throw new UserNotLoggedInException("Người dùng chưa đăng nhập!");
 
 
-    } else {
+    } else if(savedProjectService.isProjectSaved(sessionUser.getId(),projectId)){
+        redirectAttributes.addFlashAttribute("errorMessage","Bạn đã lưu dự án này rồi");
+        return "redirect:/saved-projects/my";
+    }else{
         savedProjectService.saveProject(sessionUser.getId(), projectId);
         redirectAttributes.addFlashAttribute("successMessage","Đã lưu dự án thành công");
         return "redirect:/saved-projects/my";
@@ -39,7 +42,7 @@ public class SavedProjectController {
 }
 @GetMapping("/my")
     public String showSavedProject(HttpSession session, Model model){
-    User sessionUser = (User) session.getAttribute("currentUser");
+    User sessionUser = (User) session.getAttribute("user");
     if (sessionUser == null) {
         throw new UserNotLoggedInException("Người dùng chưa đăng nhập!");
 
@@ -52,7 +55,7 @@ public class SavedProjectController {
 }
 @PostMapping("/unsave")
     public String unsaveProject(@RequestParam("projectId") Long projectId,HttpSession session, RedirectAttributes redirectAttributes){
-    User sessionUser = (User) session.getAttribute("currentUser");
+    User sessionUser = (User) session.getAttribute("user");
     if (sessionUser == null) {
         throw new UserNotLoggedInException("Người dùng chưa đăng nhập!");
 
