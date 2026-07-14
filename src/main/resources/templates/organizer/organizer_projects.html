@@ -7,40 +7,68 @@
 </head>
 <body>
 <h2>Danh sách dự án của tôi</h2>
+
 <form method="get" th:action="@{/organizer/projects}">
     <input type="text" name="title" placeholder="Tìm theo tên" th:value="${param.title}"/>
     <input type="text" name="location" placeholder="Tìm theo địa điểm" th:value="${param.location}"/>
     <select name="status">
         <option value="">Tất cả trạng thái</option>
-        <option value="PENDING" th:selected="${param.status=='PENDING'}">Chờ duyệt</option>
+        <option value="PENDING"    th:selected="${param.status == 'PENDING'}">Chờ duyệt</option>
+        <option value="PLANNING" th:selected="${param.status == 'PLANNING'}">Đang kế hoạch</option>
         <option value="RECRUITING" th:selected="${param.status == 'RECRUITING'}">Đang tuyển</option>
-        <option value="ONGOING" th:selected="${param.status =='ONGOING'}">Đang tiến hành</option>
-        <option value="REJECTED" th:selected="${param.status == 'REJECTED'}">Từ chối</option>
-        <option value="COMPLETED" th:selected="${param.status == 'COMPLETED'}">Đã hoàn thành</option>
+        <option value="ONGOING"    th:selected="${param.status == 'ONGOING'}">Đang tiến hành</option>
+        <option value="REJECTED"   th:selected="${param.status == 'REJECTED'}">Từ chối</option>
+        <option value="COMPLETED"  th:selected="${param.status == 'COMPLETED'}">Đã hoàn thành</option>
     </select>
+    <!-- Giữ lại size khi tìm kiếm -->
+    <input type="hidden" name="size" th:value="${projects != null ? projects.size : 5}"/>
     <button type="submit">Tìm kiếm</button>
 </form>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Tên chiến dịch</th>
-        <th>Địa điểm</th>
-        <th>Trạng thái</th>
-        <th>Hành động</th>
-    </tr>
-    <tr th:each="p : ${projects.content}">
-        <td th:text="${p.id}"></td>
-        <td th:text="${p.title}"></td>
-        <td th:text="${p.location}"></td>
-        <td th:text="${p.status}"></td>
-        <td><a th:href="@{/organizer/projects/{id}(id=${p.id})}">Xem chi tiết</a></td>
-    </tr>
-</table>
 
-<div th:if="${projects.totalPages > 0}">
-    <span th:each="i : ${#numbers.sequence(0, projects.totalPages - 1)}">
-        <a th:href="@{/organizer/projects(page=${i}, title=${title}, location=${location}, status=${status})}" th:text="${i+1}"></a>
-    </span>
+<!-- Bảng dữ liệu: chỉ hiển thị khi có dữ liệu -->
+<div th:if="${projects != null and projects.totalElements > 0}">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Tên chiến dịch</th>
+            <th>Địa điểm</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        <tr th:each="p : ${projects.content}">
+            <td th:text="${p.id}"></td>
+            <td th:text="${p.title}"></td>
+            <td th:text="${p.location}"></td>
+            <td th:text="${p.status}"></td>
+            <td><a th:href="@{/organizer/projects/{id}(id=${p.id})}">Xem chi tiết</a></td>
+        </tr>
+    </table>
+
+    <!-- Phân trang -->
+    <div th:if="${projects.totalPages > 1}">
+
+        <a th:if="${!projects.first}"
+           th:href="@{/organizer/projects(page=${projects.number - 1}, size=${projects.size}, title=${param.title}, location=${param.location}, status=${param.status})}"
+        >&laquo; Trước</a>
+        <span th:if="${projects.first}">&laquo; Trước</span>
+
+        <span th:each="i : ${#numbers.sequence(0, projects.totalPages - 1)}">
+            <a th:href="@{/organizer/projects(page=${i}, size=${projects.size}, title=${param.title}, location=${param.location}, status=${param.status})}"
+               th:text="${i + 1}"
+               th:classappend="${i == projects.number} ? 'active'"></a>
+        </span>
+
+        <a th:if="${!projects.last}"
+           th:href="@{/organizer/projects(page=${projects.number + 1}, size=${projects.size}, title=${param.title}, location=${param.location}, status=${param.status})}"
+        >Sau &raquo;</a>
+        <span th:if="${projects.last}">Sau &raquo;</span>
+
+        <span>Trang <span th:text="${projects.number + 1}"></span>/<span th:text="${projects.totalPages}"></span></span>
+    </div>
+</div>
+
+<div th:if="${projects == null or projects.totalElements == 0}">
+    <p>Không có dự án nào.</p>
 </div>
 </body>
 </html>
