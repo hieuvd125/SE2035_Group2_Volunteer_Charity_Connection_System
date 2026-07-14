@@ -3,6 +3,7 @@ package com.group2.volunteer.controller;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.service.AttendanceProofService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequiredArgsConstructor
 public class AttendanceProofController {
     private final AttendanceProofService attendanceProofService;
-
-    public AttendanceProofController(AttendanceProofService attendanceProofService) {
-        this.attendanceProofService = attendanceProofService;
-    }
 
     @GetMapping("/attendance/submit")
     public String showSubmitProofPage(HttpSession session, Model model) {
@@ -52,7 +50,7 @@ public class AttendanceProofController {
         }
 
         attendanceProofService.submitProof(registrationId, user.getId(), reportText, proofImage);
-        redirectAttributes.addFlashAttribute("message", "Nop minh chung thanh cong. Vui long cho Organizer duyet.");
+        redirectAttributes.addFlashAttribute("message", "Nộp minh chứng thành công. Vui lòng chờ Organizer duyệt.");
         return "redirect:/attendance/submit";
     }
 
@@ -88,7 +86,7 @@ public class AttendanceProofController {
         }
 
         attendanceProofService.verifyAttendance(proofId, confirmedHours);
-        redirectAttributes.addFlashAttribute("message", "Da duyet minh chung va cong gio tinh nguyen.");
+        redirectAttributes.addFlashAttribute("message", "Đã duyệt minh chứng và cộng giờ tình nguyện.");
         return "redirect:/attendance/verify";
     }
 

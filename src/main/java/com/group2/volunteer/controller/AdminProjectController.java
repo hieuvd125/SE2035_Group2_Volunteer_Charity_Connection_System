@@ -1,6 +1,7 @@
 package com.group2.volunteer.controller;
 
 import com.group2.volunteer.entity.Project;
+import com.group2.volunteer.entity.User;
 import com.group2.volunteer.exception.InvalidProjectStateException;
 import com.group2.volunteer.service.ProjectService;
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +24,9 @@ public class AdminProjectController {
     public String reviewPendingProjects(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "5") int size,
                                         HttpSession session, Model model) {
-        String role = (String) session.getAttribute("role");
+        User user = (User) session.getAttribute("user");
+        Long currentUserId = user.getId();
+        String role = user.getRole();
         if(!"ADMIN".equals(role)) {
             return "redirect:/login";
         }
@@ -38,7 +41,9 @@ public class AdminProjectController {
     @PostMapping("/{id}/approve")
     public String approveProject(@PathVariable Long id, RedirectAttributes redirectAttributes,
                                  HttpSession session) {
-        String role = (String) session.getAttribute("role");
+        User user = (User) session.getAttribute("user");
+        Long currentUserId = user.getId();
+        String role = user.getRole();
         if(!"ADMIN".equals(role)) {
             return "redirect:/login";
         }
@@ -53,7 +58,9 @@ public class AdminProjectController {
 
     @PostMapping("/{id}/reject")
     public String rejectProject(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpSession session) {
-        String role = (String) session.getAttribute("role");
+        User user = (User) session.getAttribute("user");
+        Long currentUserId = user.getId();
+        String role = user.getRole();
         if(!"ADMIN".equals(role)) {
             return "redirect:/login";
         }

@@ -15,7 +15,11 @@
             </p>
             <hr>
             <p><strong>Khu vực:</strong> <span th:text="${project.location}">Địa điểm</span></p>
-            <p><strong>Lĩnh vực:</strong> <span th:text="${project.category.name}"></span></p>
+
+            <p><strong>Lĩnh vực:</strong>
+                <span th:text="${project.category?.name != null ? project.category.name : 'Chưa phân loại'}"></span>
+            </p>
+
             <p><strong>Ngày bắt đầu:</strong> <span th:text="${#temporals.format(project.startDate,'dd/MM/yyyy')}"></span></p>
             <p><strong>Ngày kết thúc:</strong> <span th:text="${#temporals.format(project.endDate,'dd/MM/yyyy')}"></span></p>
             <p><strong>Đơn vị tổ chức:</strong> <span th:text="${project.organizer?.fullName != null ? project.organizer.fullName : 'Chưa cập nhật'}"></span></p>
@@ -42,8 +46,13 @@
                     <i class="bi bi-check-circle me-2"></i>Bạn đã nộp đơn (Chờ duyệt)
                 </button>
 
-                <button type="button" class="btn btn-secondary btn-lg px-5" disabled th:if="${project.status != 'RECRUITING'}">
-                    <i class="bi bi-lock-fill me-2"></i>Dự án chưa mở đăng ký
+                <button
+                        type="button"
+                        class="btn btn-secondary btn-lg px-5"
+                        disabled
+                        th:if="${project.status != 'RECRUITING'}">
+
+                    Không thể đăng ký
                 </button>
 
                 <a th:href="@{/projects/homepage}" class="btn btn-secondary btn-lg px-4 ms-2">Quay lại trang chủ</a>

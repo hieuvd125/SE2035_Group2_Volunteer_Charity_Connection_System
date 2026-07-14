@@ -7,13 +7,6 @@
 <body>
 <h1>Trang cá nhân Volunteer</h1>
 
-<h2>Tìm Volunteer</h2>
-<form th:action="@{/profile}" method="get">
-    <label for="userId">ID người dùng</label>
-    <input id="userId" type="number" name="userId" th:value="${userId}" required>
-    <button type="submit">Xem trang cá nhân</button>
-</form>
-
 <div th:if="${user != null}">
     <h2>Thông tin cá nhân</h2>
     <p><strong>Họ tên:</strong> <span th:text="${user.fullName}"></span></p>
