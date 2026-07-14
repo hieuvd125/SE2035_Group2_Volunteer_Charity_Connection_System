@@ -38,9 +38,7 @@ public class OrganizerProjectController {
     @GetMapping("/create")
     public String showCreateForm(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        Long currentUserId = user.getId();
-        String role = user.getRole();
-        if(!"ORGANIZER".equals(role)){
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
             return "redirect:/login";
         }
         model.addAttribute("categories", categoryService.findAll());
@@ -53,11 +51,11 @@ public class OrganizerProjectController {
                                 BindingResult bindingResult, HttpSession session, Model model,
                                 RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
-        Long currentUserId = user.getId();
-        String role = user.getRole();
-        if(!"ORGANIZER".equals(role) || currentUserId == null){
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
             return "redirect:/login";
         }
+        Long currentUserId = user.getId();
+
         if(bindingResult.hasErrors()){
             model.addAttribute("categories", categoryService.findAll());
             return "organizer/create_project";
@@ -75,8 +73,7 @@ public class OrganizerProjectController {
     }
 
     @GetMapping
-    public String listOrganizerProjects(
-            @RequestParam(required = false) String title,
+    public String listOrganizerProjects(@RequestParam(required = false) String title,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
@@ -84,18 +81,15 @@ public class OrganizerProjectController {
             HttpSession session, Model model) {
 
         User user = (User) session.getAttribute("user");
-        Long currentUserId = user.getId();
-        String role = user.getRole();
-
-        if (!"ORGANIZER".equals(role) || currentUserId == null) {
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
             return "redirect:/login";
         }
+        Long currentUserId = user.getId();
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<Project> projects = projectService.getOrganizerProjects(currentUserId, title, location, status, pageable);
 
         model.addAttribute("projects", projects);
-
         model.addAttribute("title", title);
         model.addAttribute("location", location);
         model.addAttribute("status", status);
@@ -107,6 +101,9 @@ public class OrganizerProjectController {
     @GetMapping("/{id}")
     public String viewProjectDetails(@PathVariable Long id, Model model, HttpSession session){
         User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
         Long currentUserId = user.getId();
         String role = user.getRole();
 

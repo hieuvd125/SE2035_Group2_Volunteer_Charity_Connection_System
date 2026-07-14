@@ -34,7 +34,9 @@
                 </span>
             </p>
             <p class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-            <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div style="color: green" class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+
 
             <form th:action="@{/projects/apply}" method="post" class="mt-4">
                 <input type="hidden" name="projectId" th:value="${project.id}"/>
@@ -57,6 +59,19 @@
 
                 <a th:href="@{/projects/homepage}" class="btn btn-secondary btn-lg px-4 ms-2">Quay lại trang chủ</a>
             </form>
+
+            <div class="mt-4 pt-3 border-top d-flex gap-2">
+
+                <a th:href="@{/donations/form(projectId=${project.id})}" class="btn btn-warning btn-lg text-dark fw-bold">
+                    <i class="bi bi-heart-fill me-2 text-danger"></i>Quyên Góp Ủng Hộ
+                </a>
+
+            <br>
+                <a th:href="@{/donations/list(projectId=${project.id})}" class="btn btn-outline-success btn-lg">
+                    <i class="bi bi-list-stars me-2"></i>Xem Danh Sách Nhà Hảo Tâm
+                </a>
+            </div>
+
         </div>
     </div>
 </div>
