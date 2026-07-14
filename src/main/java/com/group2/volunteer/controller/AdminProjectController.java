@@ -25,11 +25,7 @@ public class AdminProjectController {
                                         @RequestParam(defaultValue = "5") int size,
                                         HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        String role = user.getRole();
-        if(!"ADMIN".equals(role)) {
+        if (user == null || !"ADMIN".equals(user.getRole())) {
             return "redirect:/login";
         }
 
@@ -44,11 +40,7 @@ public class AdminProjectController {
     public String approveProject(@PathVariable Long id, RedirectAttributes redirectAttributes,
                                  HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        String role = user.getRole();
-        if(!"ADMIN".equals(role)) {
+        if (user == null || !"ADMIN".equals(user.getRole())) {
             return "redirect:/login";
         }
         try {
@@ -63,11 +55,7 @@ public class AdminProjectController {
     @PostMapping("/{id}/reject")
     public String rejectProject(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-        String role = user.getRole();
-        if(!"ADMIN".equals(role)) {
+        if (user == null || !"ADMIN".equals(user.getRole())) {
             return "redirect:/login";
         }
         try {
