@@ -56,7 +56,8 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
 
         User volunteer = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản Tình nguyện viên này!"));
-        if (!"VOLUNTEER".equalsIgnoreCase(volunteer.getRole())) {
+        String role = volunteer.getRole();
+        if (!"ROLE_VOLUNTEER".equalsIgnoreCase(role) && !"VOLUNTEER".equalsIgnoreCase(role)) {
             throw new Exception("Chỉ tài khoản Tình nguyện viên mới được đăng ký tham gia dự án.");
         }
         if (!"ACTIVE".equalsIgnoreCase(volunteer.getStatus())) {

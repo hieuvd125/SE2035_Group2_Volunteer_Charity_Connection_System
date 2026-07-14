@@ -44,7 +44,7 @@ public class ProjectController {
         model.addAttribute("project", project);
         model.addAttribute("approvedCount", approvedCount);
         model.addAttribute("remainingSlot", remainingSlot);
-        User currentUser = (User) session.getAttribute("currentUser");
+        User currentUser = (User) session.getAttribute("user");
 
         if (currentUser != null) {
             boolean applied = projectQueryService.hasApplied(id, currentUser.getId());
@@ -60,7 +60,7 @@ public class ProjectController {
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
 
-        User sessionUser = (User) session.getAttribute("currentUser");
+        User sessionUser = (User) session.getAttribute("user");
 
         if (sessionUser == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Bạn cần đăng nhập trước khi đăng ký tham gia dự án!");

@@ -21,9 +21,15 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Page<Project> findByStatus(String status, Pageable pageable);
 
-    @Query("SELECT p FROM Project p WHERE p.status = 'RECRUITING' " +
-            "AND (:location IS NULL OR p.location LIKE %:location%) " +
-            "AND (:categoryId IS NULL OR p.category.id = :categoryId)")
-    List<Project> searchProjects(@Param("location") String location,
-                                 @Param("categoryId") Long categoryId);
+    @Query("""
+SELECT p
+FROM Project p
+WHERE
+(:location IS NULL OR p.location LIKE %:location%)
+AND
+(:categoryId IS NULL OR p.category.id = :categoryId)
+""")
+    List<Project> searchProjects(
+            @Param("location") String location,
+            @Param("categoryId") Long categoryId);
 }
