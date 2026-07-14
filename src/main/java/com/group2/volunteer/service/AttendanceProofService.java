@@ -10,7 +10,7 @@ public interface AttendanceProofService {
 
     List<AttendanceProof> getProofsWaitingForVerification();
 
-    AttendanceProof submitProof(Long registrationId, String reportText, String proofImage);
+    AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage);
 
     ProjectRegistration verifyAttendance(Long proofId, Integer confirmedHours);
 }

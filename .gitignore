@@ -1,5 +1,7 @@
 target/
-.mvn/
+.mvn/*
+!.mvn/wrapper/
+!.mvn/wrapper/maven-wrapper.properties
 .idea/
 *.iml
 *.iws
