@@ -38,9 +38,7 @@
         </td>
         <td colspan="2">
             <form th:action="@{/attendance/verify/{proofId}(proofId=${proof.id})}" method="post">
-                <input type="number" name="confirmedHours" min="1"
-                       th:value="${proof.registration.confirmedHours != null && proof.registration.confirmedHours > 0 ? proof.registration.confirmedHours : 1}"
-                       required>
+                <input type="number" name="confirmedHours" min="1" required>
                 <button type="submit">Duyệt minh chứng</button>
             </form>
         </td>
