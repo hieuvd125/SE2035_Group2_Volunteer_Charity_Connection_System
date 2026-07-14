@@ -14,6 +14,9 @@
             <a th:if="${session.user == null}" th:href="@{/login}" style="background-color: white; color: black; padding: 6px 10px; text-decoration: none; font-size: 14px;">
                 Login
             </a>
+            <a th:if="${session.user != null}" th:href="@{/logout}" style="background-color: #e74c3c; color: white; padding: 6px 12px; text-decoration: none; font-size: 14px; border-radius: 4px; font-weight: bold;">
+                Logout
+            </a>
         </div>
     </div>
 </header>
