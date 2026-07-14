@@ -14,18 +14,18 @@
     <select name="status">
         <option value="">Tất cả trạng thái</option>
         <option value="PENDING"    th:selected="${param.status == 'PENDING'}">Chờ duyệt</option>
-        <option value="PLANNING" th:selected="${param.status == 'PLANNING'}">Đang kế hoạch</option>
+        <option value="PLANNING"   th:selected="${param.status == 'PLANNING'}">Đang kế hoạch</option>
         <option value="RECRUITING" th:selected="${param.status == 'RECRUITING'}">Đang tuyển</option>
         <option value="ONGOING"    th:selected="${param.status == 'ONGOING'}">Đang tiến hành</option>
         <option value="REJECTED"   th:selected="${param.status == 'REJECTED'}">Từ chối</option>
         <option value="COMPLETED"  th:selected="${param.status == 'COMPLETED'}">Đã hoàn thành</option>
     </select>
-    <!-- Giữ lại size khi tìm kiếm -->
+
     <input type="hidden" name="size" th:value="${projects != null ? projects.size : 5}"/>
     <button type="submit">Tìm kiếm</button>
+    <a th:href="@{/organizer/projects}">Clear</a>
 </form>
 
-<!-- Bảng dữ liệu: chỉ hiển thị khi có dữ liệu -->
 <div th:if="${projects != null and projects.totalElements > 0}">
     <table>
         <tr>
