@@ -37,10 +37,11 @@
                     <label for="categoryId" class="form-label font-weight-bold">Lĩnh vực hoạt động</label>
                     <select th:field="*{categoryId}" id="categoryId" class="form-select">
                         <option value="">-- Tất cả lĩnh vực --</option>
-                        <option value="1">Giáo dục & Trẻ em</option>
-                        <option value="2">Bảo vệ Môi trường</option>
-                        <option value="3">Cứu trợ Thiên tai</option>
-                        <option value="4">Y tế & Sức khỏe</option>
+                        <option
+                                th:each="c : ${categories}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
                     </select>
                 </div>
 
@@ -51,7 +52,7 @@
         </div>
     </div>
 
-    <h4 class="mb-3 text-secondary">Danh Sách Dự Án Đang Tuyển Tình Nguyện Viên</h4>
+    <h4 class="mb-3 text-secondary">Danh Sách Dự Án</h4>
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
         <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(projectList)}">
@@ -69,6 +70,18 @@
                     <div class="small mb-3">
                         <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
                         <p class="mb-0"><i class="bi bi-people-fill text-success me-2"></i><strong>Mục tiêu:</strong> <span th:text="${p.targetVolunteers}">0</span> tình nguyện viên</p>
+                        <p class="mb-2">
+                            <strong>Trạng thái:</strong>
+
+                            <span
+                                    class="badge"
+                                    th:classappend="
+            ${p.status == 'RECRUITING'} ? 'bg-success' :
+            (${p.status == 'PENDING'} ? 'bg-warning text-dark' :
+            'bg-secondary')"
+                                    th:text="${p.status}">
+    </span>
+                        </p>
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 pt-0 pb-3">

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết dự án</title>
+</head>
+<body>
+<div style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; line-height: 1.6;">
+    <h2 th:text="${project.title}">Tên dự án</h2>
+    <hr/>
+    <p><strong>Mô tả:</strong> <span th:text="${project.description}">Mô tả</span></p>
+    <p><strong>Địa điểm:</strong> <span th:text="${project.location}">Địa điểm</span></p>
+    <p><strong>Ngày bắt đầu:</strong> <span th:text="${project.startDate}">Ngày bắt đầu</span></p>
+    <p><strong>Ngày kết thúc:</strong> <span th:text="${project.endDate}">Ngày kết thúc</span></p>
+    <p><strong>Số lượng tình nguyện viên tuyển:</strong> <span th:text="${project.targetVolunteers}">Số lượng</span></p>
+    <p><strong>Danh mục:</strong> <span th:text="${project.category != null ? project.category.name : 'Không có'}">Danh mục</span></p>
+    <p><strong>Người đăng:</strong> <span th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}">Người đăng</span></p>
+    <p><strong>Trạng thái:</strong> <span th:text="${project.status}">Trạng thái</span></p>
+
+    <a th:href="@{/organizer/projects}">Quay lại danh sách</a>
+</div>
+</body>
+</html>

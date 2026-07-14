@@ -38,6 +38,10 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
     public void applyToProject(RegistrationRequest request) throws Exception {
         Project project = getProjectById(request.getProjectId());
 
+        if (!"RECRUITING".equals(project.getStatus())) {
+            throw new Exception("Dự án hiện chưa mở đăng ký.");
+        }
+
         if (registrationRepository.existsByProjectIdAndVolunteerId(request.getProjectId(), request.getUserId())) {
             throw new Exception("Bạn đã nộp đơn đăng ký tham gia dự án này rồi, không thể nộp lại!");
         }
@@ -52,12 +56,31 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
 
         User volunteer = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản Tình nguyện viên này!"));
+        String role = volunteer.getRole();
+        if (!"ROLE_VOLUNTEER".equalsIgnoreCase(role) && !"VOLUNTEER".equalsIgnoreCase(role)) {
+            throw new Exception("Chỉ tài khoản Tình nguyện viên mới được đăng ký tham gia dự án.");
+        }
+        if (!"ACTIVE".equalsIgnoreCase(volunteer.getStatus())) {
+            throw new Exception("Tài khoản của bạn chưa được kích hoạt hoặc đã bị khóa.");
+        }
         reg.setVolunteer(volunteer);
 
         reg.setStatus("PENDING");
-        reg.setRegistrationDate(java.time.LocalDateTime.now());
         reg.setConfirmedHours(0);
 
         registrationRepository.save(reg);
+    }
+    @Override
+    public Long getApprovedVolunteerCount(Long projectId) {
+
+        return registrationRepository.countByProjectIdAndStatus(projectId, "APPROVED");
+
+    }
+    @Override
+    public boolean hasApplied(Long projectId, Long userId) {
+
+        return registrationRepository
+                .existsByProjectIdAndVolunteerId(projectId, userId);
+
     }
 }
