@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Danh sách dự án của tôi</title>
 </head>
 <body>
 <h2>Danh sách dự án của tôi</h2>
-<form method="get" action="/organizer/projects">
+<form method="get" th:action="@{/organizer/projects}">
     <input type="text" name="title" placeholder="Tìm theo tên" th:value="${param.title}"/>
     <input type="text" name="location" placeholder="Tìm theo địa điểm" th:value="${param.location}"/>
     <select name="status">

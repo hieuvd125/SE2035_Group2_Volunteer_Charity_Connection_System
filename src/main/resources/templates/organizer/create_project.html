@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
     <title>Tạo dự án mới</title>
@@ -9,7 +10,7 @@
     Tạo dự án mới
 </h2>
 <div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-bottom: 15px;"></div>
-<form th:action = "@{/organizer/projects}" th:object="${projectDTO}" method="post">
+<form th:action="@{/organizer/projects}" th:object="${projectDTO}" method="post">
     <div>
         <label>Tên dự án</label>
         <input type="text" th:field="*{title}">
