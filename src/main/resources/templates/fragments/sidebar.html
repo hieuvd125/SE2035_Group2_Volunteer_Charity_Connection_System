@@ -22,7 +22,10 @@
         <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
             <a th:href="@{/admin/users/review}">Duyệt tài khoản</a>
         </li>
-        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
+        <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
+            <a th:href="@{/admin/categories}">Quản lý danh mục</a>
+        </li>
+        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER' || (session.user.role == 'ORGANIZER'))}">
             <a th:href="@{/profile}">Trang cá nhân</a>
         </li>
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">

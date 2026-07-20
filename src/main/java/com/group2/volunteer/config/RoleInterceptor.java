@@ -28,12 +28,12 @@ public class RoleInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (uri.startsWith("/projects/create") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+        if (uri.startsWith("/projects/create") && !"ORGANIZER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }
 
-        if (uri.startsWith("/organizer") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+        if (uri.startsWith("/organizer") && !"ORGANIZER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }
@@ -43,12 +43,12 @@ public class RoleInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (uri.startsWith("/attendance/verify") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+        if (uri.startsWith("/attendance/verify") && !"ORGANIZER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }
 
-        if (uri.startsWith("/profile") && !"VOLUNTEER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
+        if (uri.startsWith("/profile") && !"VOLUNTEER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }

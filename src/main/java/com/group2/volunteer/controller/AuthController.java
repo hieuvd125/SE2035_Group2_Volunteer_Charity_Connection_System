@@ -6,6 +6,7 @@ import com.group2.volunteer.dto.RegisterVolunteerRequest;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +34,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView handleLogin(@RequestParam(name = "username") String username,
-                                    @RequestParam(name = "password") String password,
+    public ModelAndView handleLogin(@Valid @RequestParam(name = "username") String username,
+                                    @Valid @RequestParam(name = "password") String password,
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView();
@@ -58,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/register/volunteer")
-    public String handleRegisterVolunteer(@ModelAttribute("registerRequest") RegisterVolunteerRequest request,
+    public String handleRegisterVolunteer(@Valid @ModelAttribute("registerRequest") RegisterVolunteerRequest request,
                                           BindingResult bindingResult,
                                           RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -94,7 +95,7 @@ public class AuthController {
     }
 
     @PostMapping("/register/organizer")
-    public String handleRegisterOrganizer(@ModelAttribute("registerRequest") RegisterOrganizerRequest request,
+    public String handleRegisterOrganizer(@Valid @ModelAttribute("registerRequest") RegisterOrganizerRequest request,
                                           BindingResult bindingResult,
                                           RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
