@@ -37,6 +37,9 @@ public class Project {
     @Column(name = "target_volunteers", nullable = false)
     private Integer targetVolunteers;
 
+    @Column(name = "target_donation", nullable = false)
+    private Double targetDonation;
+
     @Column(nullable = false, length = 30)
     private String status = "PENDING";
 
