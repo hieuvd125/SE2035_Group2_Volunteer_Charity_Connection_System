@@ -1,7 +1,8 @@
 package com.group2.volunteer.controller;
 
-import com.group2.volunteer.dto.LoginDTO;
-import com.group2.volunteer.dto.RegisterRequest;
+import com.group2.volunteer.dto.LoginRequest;
+import com.group2.volunteer.dto.RegisterOrganizerRequest;
+import com.group2.volunteer.dto.RegisterVolunteerRequest;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -32,12 +33,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView handleLogin(@RequestParam(name = "email") String email,
+    public ModelAndView handleLogin(@RequestParam(name = "username") String username,
                                     @RequestParam(name = "password") String password,
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView();
-        User user = userService.authenticate(new LoginDTO(email, password));
+        User user = userService.authenticate(new LoginRequest(username, password));
         session.setAttribute("user", user);
         redirectAttributes.addFlashAttribute("message", "Đăng nhập thành công.");
         mv.setViewName("redirect:/");
@@ -50,58 +51,75 @@ public class AuthController {
         return "redirect:/";
     }
 
-    @GetMapping("/register")
-    public String registerForm(Model model) {
-        model.addAttribute("registerRequest", new RegisterRequest());
-        return "common/register";
+    @GetMapping("/register/volunteer")
+    public String showVolunteerRegisterForm(Model model) {
+        model.addAttribute("registerRequest", new RegisterVolunteerRequest());
+        return "common/register_volunteer";
     }
 
-    @PostMapping("/register")
-    public String handleRegister(@ModelAttribute("registerRequest") RegisterRequest request,
-                                       BindingResult bindingResult,
-                                       RedirectAttributes redirectAttributes) {
+    @PostMapping("/register/volunteer")
+    public String handleRegisterVolunteer(@ModelAttribute("registerRequest") RegisterVolunteerRequest request,
+                                          BindingResult bindingResult,
+                                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "common/register";
+            return "common/register_volunteer";
         }
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setFullName(request.getFullName());
         user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+        user.setFullName(request.getFullName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setCity(request.getCity());
+        user.setAddress(request.getAddress());
+        user.setDateOfBirth(request.getDateOfBirth());
+        user.setGender(request.getGender());
+        user.setBio(request.getBio());
+
+        user.setRole("VOLUNTEER");
+        user.setStatus("ACTIVE");
+        user.setTotalHours(0);
+
+        userService.register(user);
+
+        redirectAttributes.addFlashAttribute("message", "Đăng ký tài khoản Tình nguyện viên thành công!");
+        return "redirect:/login";
+    }
+
+    @GetMapping("/register/organizer")
+    public String showOrganizerRegisterForm(Model model) {
+        model.addAttribute("registerRequest", new RegisterOrganizerRequest());
+        return "common/register_organizer";
+    }
+
+    @PostMapping("/register/organizer")
+    public String handleRegisterOrganizer(@ModelAttribute("registerRequest") RegisterOrganizerRequest request,
+                                          BindingResult bindingResult,
+                                          RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "common/register_organizer";
+        }
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setFullName(request.getFullName());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setCity(request.getCity());
+        user.setAddress(request.getAddress());
+        user.setWebsite(request.getWebsite());
+        user.setDescription(request.getDescription());
+
+        user.setRole("ORGANIZER");
         user.setStatus("PENDING");
         user.setTotalHours(0);
 
         userService.register(user);
 
-        redirectAttributes.addFlashAttribute("message", "Đơn đăng ký tài khoản đã được gửi. Hãy chờ admin phê duyệt.");
+        redirectAttributes.addFlashAttribute("message", "Đơn đăng ký Tổ chức đã gửi. Vui lòng chờ Admin phê duyệt!");
         return "redirect:/login";
     }
 
-    @GetMapping("/admin/users/review")
-    public String showPendingUsers(Model model) {
-        List<User> pendingUsers = userService.findAllPendingUsers();
-        model.addAttribute("pendingUsers", pendingUsers);
-        return "admin/pending_users";
-    }
-
-    @GetMapping("/admin/users")
-    public String userManagement() {
-        return "admin/user_list";
-    }
-
-    @PostMapping("/admin/users/approve/{id}")
-    public String approveUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        userService.updateUserStatus(id, "ACTIVE");
-        redirectAttributes.addFlashAttribute("message", "Đã phê duyệt tài khoản thành công!");
-        return "redirect:/admin/users/review";
-    }
-
-    @PostMapping("/admin/users/reject/{id}")
-    public String rejectUser(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        userService.updateUserStatus(id, "BLOCKED");
-        redirectAttributes.addFlashAttribute("message", "Đã từ chối tài khoản!");
-        return "redirect:/admin/users/review";
-    }
 }

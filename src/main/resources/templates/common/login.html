@@ -13,11 +13,11 @@
     <h2 style="margin-top:0; text-align: center; color: #2c3e50;">VCPCS Đăng nhập</h2>
     <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-weight: bold;"></p>
     <p th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></p>
-    <form th:action="@{/login}" method="POST">
+    <form th:action="@{/login}" style="display: flex; justify-content: center;" method="POST">
         <div style="display: flex; flex-direction: column">
             <div>
-                <label>Email: </label>
-                <input type="text" name="email" required>
+                <label>Username: </label>
+                <input type="text" name="username" required>
             </div>
             <div>
                 <label>Mật khẩu: </label>
@@ -28,6 +28,13 @@
             </div>
         </div>
     </form>
-    <div>Không có tài khoản?<a th:href="@{/register}" class="register-link">Đăng ký tài khoản </a></div>
+    <div style="margin-top: 15px; text-align: center;">
+        <p>Chưa có tài khoản? Đăng ký ngay:</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a th:href="@{/register/volunteer}" class="btn-link">Tài khoản Tình nguyện viên</a>
+            <span>|</span>
+            <a th:href="@{/register/organizer}" class="btn-link">Tài khoản Tổ chức / NGO</a>
+        </div>
+    </div>
 </body>
 </html>

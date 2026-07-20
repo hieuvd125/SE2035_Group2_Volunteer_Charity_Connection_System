@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class LoginDTO {
-    private String email;
+public class LoginRequest {
+    private String username;
     private String password;
 }

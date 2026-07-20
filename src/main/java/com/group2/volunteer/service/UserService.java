@@ -1,12 +1,12 @@
 package com.group2.volunteer.service;
 
-import com.group2.volunteer.dto.LoginDTO;
+import com.group2.volunteer.dto.LoginRequest;
 import com.group2.volunteer.entity.User;
 
 import java.util.List;
 
 public interface UserService {
-    User authenticate(LoginDTO loginDTO);
+    User authenticate(LoginRequest loginRequest);
 
     void register(User user);
 
@@ -17,4 +17,8 @@ public interface UserService {
     User getUserById(Long userId);
 
     String getBadgeName(Integer totalHours);
+
+    List<User> getUsersByFilter(String keyword, String role, String status);
+
+    void updateUserByAdmin(Long id, User userForm);
 }

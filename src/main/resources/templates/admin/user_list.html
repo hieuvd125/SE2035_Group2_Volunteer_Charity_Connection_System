@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý tài khoản</title>
 </head>
 <body>
+
+<div class="container">
+    <h2 style="color: #2c3e50;">Danh sách tài khoản hệ thống</h2>
+
+    <p th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></p>
+
+    <div class="filter-card">
+        <form th:action="@{/admin/users}" method="GET" class="filter-form">
+
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Nhập tên, username hoặc email..." style="width: 250px;">
+
+            <select name="role">
+                <option value="">-- Tất cả Vai trò --</option>
+                <option value="VOLUNTEER" th:selected="${role == 'VOLUNTEER'}">Tình nguyện viên</option>
+                <option value="ORGANIZER" th:selected="${role == 'ORGANIZER'}">Tổ chức</option>
+                <option value="ADMIN" th:selected="${role == 'ADMIN'}">Quản trị viên</option>
+            </select>
+
+            <select name="status">
+                <option value="">-- Tất cả Trạng thái --</option>
+                <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">Hoạt động</option>
+                <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ duyệt</option>
+                <option value="BLOCKED" th:selected="${status == 'BLOCKED'}">Đã khóa</option>
+            </select>
+
+            <button type="submit" class="btn-search">Tìm kiếm</button>
+            <a th:href="@{/admin/users}" class="btn-reset">Xóa bộ lọc</a>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Họ và Tên / Tên tổ chức</th>
+            <th>Email</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.username}">username</td>
+            <td th:text="${user.fullName}">Nguyễn Văn A</td>
+            <td th:text="${user.email}">email@example.com</td>
+            <td th:text="${user.role}">VOLUNTEER</td>
+            <td>
+                <span th:if="${user.status == 'ACTIVE'}" class="badge badge-active">Hoạt động</span>
+                <span th:if="${user.status == 'PENDING'}" class="badge badge-pending">Chờ duyệt</span>
+                <span th:if="${user.status == 'BLOCKED'}" class="badge badge-blocked">Đã khóa</span>
+            </td>
+            <td>
+                <a th:href="@{/admin/users/detail/{id}(id=${user.id})}" class="action-link">Xem chi tiết</a>
+                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="action-link" style="color: #e67e22;">Chỉnh sửa</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td colspan="7" style="text-align: center; color: #7f8c8d;">Không tìm thấy tài khoản nào phù hợp!</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

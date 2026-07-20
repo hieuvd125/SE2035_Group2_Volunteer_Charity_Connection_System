@@ -3,7 +3,7 @@ package com.group2.volunteer.service;
 import com.group2.volunteer.constant.UserStatus;
 import com.group2.volunteer.exception.AuthException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
-import com.group2.volunteer.dto.LoginDTO;
+import com.group2.volunteer.dto.LoginRequest;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User authenticate(LoginDTO loginDTO) {
-        User user = userRepository.findByEmailAndPass(loginDTO.getEmail(),
-                loginDTO.getPassword()).orElseThrow(() -> new AuthException("Email hoặc mật khẩu không hợp lệ!"));
+    public User authenticate(LoginRequest loginRequest) {
+        User user = userRepository.findByUsernameAndPass(loginRequest.getUsername(),
+                loginRequest.getPassword()).orElseThrow(() -> new AuthException("Email hoặc mật khẩu không hợp lệ!"));
 
         if (UserStatus.BLOCKED.name().equals(user.getStatus())) {
             throw new AuthException("Tài khoản của bạn đã bị chặn.");
@@ -74,5 +74,24 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
         user.setStatus(status);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getUsersByFilter(String keyword, String role, String status) {
+        String cleanKeyword = (keyword != null) ? keyword.trim() : null;
+        return userRepository.getUsersByFilter(cleanKeyword, role, status);
+    }
+
+    @Override
+    public void updateUserByAdmin(Long id, User userForm) {
+        User existingUser = getUserById(id);
+
+        existingUser.setFullName(userForm.getFullName());
+        existingUser.setEmail(userForm.getEmail());
+        existingUser.setPhoneNumber(userForm.getPhoneNumber());
+        existingUser.setRole(userForm.getRole());
+        existingUser.setStatus(userForm.getStatus());
+
+        userRepository.save(existingUser);
     }
 }
