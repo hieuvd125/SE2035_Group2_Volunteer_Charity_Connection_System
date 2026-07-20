@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách ứng viên</title>
+</head>
+<body>
+<h2>Danh sách ứng viên</h2>
+<h3 th:text="${project.title}">Tên dự án</h3>
+
+<div th:if="${message}" th:text="${message}"></div>
+<div th:if="${error}" th:text="${error}"></div>
+
+<table th:if="${registrations != null and not #lists.isEmpty(registrations)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Họ tên</th>
+        <th>Email</th>
+        <th>Ngày đăng ký</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="registration : ${registrations}">
+        <td th:text="${registration.id}"></td>
+        <td th:text="${registration.volunteer.fullName}"></td>
+        <td th:text="${registration.volunteer.email}"></td>
+        <td th:text="${registration.registrationDate != null ? #temporals.format(registration.registrationDate, 'dd/MM/yyyy HH:mm') : ''}"></td>
+        <td th:text="${registration.status}"></td>
+        <td>
+            <div th:if="${registration.status == 'PENDING'}">
+                <form th:action="@{/organizer/projects/{projectId}/registrations/{registrationId}/approve(projectId=${project.id}, registrationId=${registration.id})}"
+                      method="post" style="display:inline">
+                    <button type="submit">Duyệt</button>
+                </form>
+                <form th:action="@{/organizer/projects/{projectId}/registrations/{registrationId}/reject(projectId=${project.id}, registrationId=${registration.id})}"
+                      method="post" style="display:inline">
+                    <button type="submit">Từ chối</button>
+                </form>
+            </div>
+            <span th:if="${registration.status != 'PENDING'}">Đã xử lý</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${registrations == null or #lists.isEmpty(registrations)}">Chưa có ứng viên đăng ký.</p>
+
+<a th:href="@{/organizer/projects/{id}(id=${project.id})}">Quay lại chi tiết dự án</a>
+</body>
+</html>
