@@ -91,6 +91,10 @@
                 <a th:href="@{/donations/list(projectId=${project.id})}" class="btn btn-outline-success btn-lg">
                     <i class="bi bi-list-stars me-2"></i>Xem Danh Sách Nhà Hảo Tâm
                 </a>
+                
+                <a th:href="@{/projects/{id}/events(id=${project.id})}" class="btn btn-outline-info btn-lg">
+                    <i class="bi bi-calendar-event me-2"></i>Dòng Sự Kiện
+                </a>
             </div>
 
         </div>
