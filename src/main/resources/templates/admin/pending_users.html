@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Phê duyệt tài khoản</title>
+</head>
+<body>
+
+<div class="container">
+    <a th:href="@{/}" class="back-link">← Quay lại trang chủ</a>
+    <h2>Danh sách tài khoản chờ phê duyệt</h2>
+
+    <div th:if="${message}" class="alert-success" th:text="${message}"></div>
+
+    <div th:if="${#lists.isEmpty(pendingUsers)}" class="empty-state">
+      Hiện tại không có tài khoản nào đang chờ phê duyệt.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(pendingUsers)}">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên đăng nhập</th>
+                <th>Họ và tên</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user, stat : ${pendingUsers}">
+                <td th:text="${stat.count}">1</td>
+                <td th:text="${user.username}" style="font-weight: bold;">nguyen_van_a</td>
+                <td th:text="${user.fullName}">Nguyễn Văn A</td>
+                <td th:text="${user.email}">a@gmail.com</td>
+                <td>
+                    <span class="role-badge" th:text="${user.role}">VOLUNTEER</span>
+                </td>
+                <td>
+                    <div class="btn-action-group">
+                        <form th:action="@{/admin/users/approve/{id}(id=${user.id})}" method="POST">
+                          <button type="submit" class="btn-approve">Phê duyệt</button>
+                        </form>
+
+                        <form th:action="@{/admin/users/reject/{id}(id=${user.id})}" method="POST">
+                          <button type="submit" class="btn-reject" onclick="return confirm('Bạn có chắc chắn muốn từ chối tài khoản này?');">Từ chối</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
