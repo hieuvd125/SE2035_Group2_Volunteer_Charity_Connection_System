@@ -10,6 +10,10 @@ import java.util.List;
 public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegistration, Long> {
     List<ProjectRegistration> findByVolunteerId(Long volunteerId);
 
+    List<ProjectRegistration> findByProjectId(Long projectId);
+
+    Long countByProjectId(Long projectId);
+
     List<ProjectRegistration> findByStatus(String status);
 
     Long countByProjectIdAndStatus(Long projectId, String status);

@@ -4,6 +4,7 @@ public class ProjectStatus {
     public static final String PENDING = "PENDING";
     public static final String PLANNING = "PLANNING";
     public static final String RECRUITING = "RECRUITING";
+    public static final String RECRUITMENT_CLOSED = "RECRUITMENT_CLOSED";
     public static final String ONGOING = "ONGOING";
     public static final String COMPLETED = "COMPLETED";
     public static final String REJECTED = "REJECTED";

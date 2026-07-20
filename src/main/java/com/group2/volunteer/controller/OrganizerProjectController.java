@@ -6,6 +6,7 @@ import com.group2.volunteer.entity.User;
 import com.group2.volunteer.exception.InvalidProjectStateException;
 import com.group2.volunteer.service.CategoryService;
 import com.group2.volunteer.service.ProjectService;
+import com.group2.volunteer.service.ProjectRegistrationService;
 import com.group2.volunteer.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +26,8 @@ import java.util.Arrays;
 @RequestMapping("/organizer/projects")
 public class OrganizerProjectController {
 
+    private static final int PAGE_SIZE = 5;
+
     @Autowired
     private ProjectService projectService;
 
@@ -34,6 +36,9 @@ public class OrganizerProjectController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProjectRegistrationService projectRegistrationService;
 
     @GetMapping("/create")
     public String showCreateForm(Model model, HttpSession session) {
@@ -76,8 +81,7 @@ public class OrganizerProjectController {
     public String listOrganizerProjects(@RequestParam(required = false) String title,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(name = "pageNumber", required = false, defaultValue = "0") Integer pageNumber,
             HttpSession session, Model model) {
 
         User user = (User) session.getAttribute("user");
@@ -86,14 +90,17 @@ public class OrganizerProjectController {
         }
         Long currentUserId = user.getId();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        Page<Project> projects = projectService.getOrganizerProjects(currentUserId, title, location, status, pageable);
+        Page<Project> page = projectService.getOrganizerProjects(
+                currentUserId, title, location, status,
+                PageRequest.of(Math.max(pageNumber, 0), PAGE_SIZE, Sort.by("id").ascending()));
 
-        model.addAttribute("projects", projects);
-        model.addAttribute("title", title);
-        model.addAttribute("location", location);
-        model.addAttribute("status", status);
-        model.addAttribute("statuses", Arrays.asList("PENDING", "PLANNING", "RECRUITING", "ONGOING", "REJECTED", "COMPLETED"));
+        model.addAttribute("projects", page.getContent());
+        model.addAttribute("totalPage", page.getTotalPages());
+        model.addAttribute("currentPage", page.getNumber());
+        model.addAttribute("filterTitle", title);
+        model.addAttribute("filterLocation", location);
+        model.addAttribute("filterStatus", status);
+        model.addAttribute("statuses", Arrays.asList("PENDING", "PLANNING", "RECRUITING", "RECRUITMENT_CLOSED", "ONGOING", "REJECTED", "COMPLETED"));
 
         return "organizer/organizer_projects";
     }
@@ -118,7 +125,28 @@ public class OrganizerProjectController {
         }
 
         model.addAttribute("project", project);
+        model.addAttribute("applicantCount",
+                projectRegistrationService.countProjectRegistrations(id, currentUserId));
         return "organizer/project_detail";
+    }
+
+    @PostMapping("/{id}/close-recruitment")
+    public String closeRecruitment(@PathVariable Long id,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        try {
+            projectService.closeRecruitment(id, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Recruitment closed successfully");
+        } catch (InvalidProjectStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/organizer/projects/" + id;
     }
 
 }

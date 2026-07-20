@@ -37,10 +37,10 @@ public class Project {
     @Column(name = "target_volunteers")
     private Integer targetVolunteers;
 
-    @Column(name = "target_donation")
-    private Long targetDonation;
+    @Column(name = "target_donation", nullable = false)
+    private Double targetDonation;
 
-    @Column(length = 30)
+    @Column(nullable = false, length = 30)
     private String status = "PENDING";
 
     @ManyToOne(fetch = FetchType.LAZY)
