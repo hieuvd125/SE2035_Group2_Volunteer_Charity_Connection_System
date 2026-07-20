@@ -12,7 +12,7 @@
 <div th:if="${message}" th:text="${message}"></div>
 <div th:if="${error}" th:text="${error}"></div>
 
-<div th:if="${pendingProjects != null and pendingProjects.totalElements > 0}">
+<div th:if="${pendingProjects != null and not #lists.isEmpty(pendingProjects)}">
     <table>
         <tr>
             <th>ID</th>
@@ -20,7 +20,7 @@
             <th>Tổ chức</th>
             <th>Hành động</th>
         </tr>
-        <tr th:each="p : ${pendingProjects.content}">
+        <tr th:each="p : ${pendingProjects}">
             <td th:text="${p.id}"></td>
             <td th:text="${p.title}"></td>
             <td th:text="${p.organizer.fullName}"></td>
@@ -36,29 +36,22 @@
     </table>
 
 
-    <div th:if="${pendingProjects.totalPages > 1}">
-
-        <a th:if="${!pendingProjects.first}"
-           th:href="@{/admin/projects/review(page=${pendingProjects.number - 1}, size=${pendingProjects.size})}"
-        >&laquo; Trước</a>
-        <span th:if="${pendingProjects.first}">&laquo; Trước</span>
-
-        <span th:each="i : ${#numbers.sequence(0, pendingProjects.totalPages - 1)}">
-            <a th:href="@{/admin/projects/review(page=${i}, size=${pendingProjects.size})}"
-               th:text="${i + 1}"
-               th:classappend="${i == pendingProjects.number} ? 'active'"></a>
-        </span>
-
-        <a th:if="${!pendingProjects.last}"
-           th:href="@{/admin/projects/review(page=${pendingProjects.number + 1}, size=${pendingProjects.size})}"
-        >Sau &raquo;</a>
-        <span th:if="${pendingProjects.last}">Sau &raquo;</span>
-
-        <span>Trang <span th:text="${pendingProjects.number + 1}"></span>/<span th:text="${pendingProjects.totalPages}"></span></span>
+    <div class="pagination" th:if="${reviewTotalPage > 1}" aria-label="Phân trang">
+        <a th:if="${reviewCurrentPage > 0}"
+           th:href="@{/admin/projects/review(pageNumber=${reviewCurrentPage - 1})}">Trước</a>
+        <span th:if="${reviewCurrentPage == 0}">Trước</span>
+        <a th:each="i : ${#numbers.sequence(0, reviewTotalPage - 1)}"
+           th:href="@{/admin/projects/review(pageNumber=${i})}"
+           th:text="${i + 1}"
+           th:classappend="${i == reviewCurrentPage} ? 'active' : ''"></a>
+        <a th:if="${reviewCurrentPage < reviewTotalPage - 1}"
+           th:href="@{/admin/projects/review(pageNumber=${reviewCurrentPage + 1})}">Sau</a>
+        <span th:if="${reviewCurrentPage >= reviewTotalPage - 1}">Sau</span>
+        <span class="summary">Trang <b th:text="${reviewCurrentPage + 1}"></b>/<b th:text="${reviewTotalPage}"></b></span>
     </div>
 </div>
 
-<div th:if="${pendingProjects == null or pendingProjects.totalElements == 0}">
+<div th:if="${pendingProjects == null or #lists.isEmpty(pendingProjects)}">
     <p>Không có dự án nào chờ duyệt.</p>
 </div>
 </body>

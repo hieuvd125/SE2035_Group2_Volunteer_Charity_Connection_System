@@ -1,6 +1,7 @@
 package com.group2.volunteer.service;
 
 import com.group2.volunteer.dto.ProjectCreationDTO;
+import com.group2.volunteer.constant.ProjectStatus;
 import com.group2.volunteer.entity.Category;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
@@ -49,6 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStartDate(dto.getStartDate().atStartOfDay());
         project.setEndDate(dto.getEndDate().atStartOfDay());
         project.setTargetVolunteers(dto.getTargetVolunteers());
+        project.setTargetDonation(dto.getTargetDonation());
         project.setOrganizer(organizer);
         project.setCategory(category);
         project.setStatus("PENDING");
@@ -76,6 +78,19 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStatus("REJECTED");
         projectRepository.save(project);
 
+    }
+
+    @Override
+    public void closeRecruitment(Long projectId, Long organizerId) {
+        Project project = getProjectById(projectId);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
+            throw new InvalidProjectStateException("You are not allowed to close this project recruitment");
+        }
+        if (!ProjectStatus.RECRUITING.equals(project.getStatus())) {
+            throw new InvalidProjectStateException("Project is not recruiting");
+        }
+        project.setStatus(ProjectStatus.RECRUITMENT_CLOSED);
+        projectRepository.save(project);
     }
 
     @Override

@@ -46,6 +46,11 @@
         <span th:errors="*{targetVolunteers}" style="color:red"></span>
     </div>
     <div>
+        <label>Số tiền quyên góp mục tiêu</label>
+        <input type="number" min="0" step="1000" th:field="*{targetDonation}"></input>
+        <span th:errors="*{targetDonation}" style="color:red"></span>
+    </div>
+    <div>
         <label>Loại</label>
         <select th:field="*{categoryId}">
             <option value="">-- Chọn --</option>
