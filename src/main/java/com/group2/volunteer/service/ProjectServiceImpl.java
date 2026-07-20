@@ -113,9 +113,12 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Không tìm thấy dự án"));
     }
-  
+
     @Override
     public List<Project> getAvailableProjects(ProjectSearchCriteria criteria) {
-        return null;
+        String title = (criteria.getTitle() == null || criteria.getTitle().trim().isEmpty()) ? null : criteria.getTitle().trim();
+        String loc = (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) ? null : criteria.getLocation().trim();
+
+        return projectRepository.searchProjects(title, loc, criteria.getCategoryId());
     }
 }
