@@ -20,11 +20,11 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
     private final ProjectRepository projectRepository;
     private final ProjectRegistrationRepository registrationRepository;
     private final UserRepository userRepository;
-
     @Override
     public List<Project> getAvailableProjects(ProjectSearchCriteria criteria) {
-        String loc = (criteria.getLocation() == null || criteria.getLocation().isEmpty()) ? null : criteria.getLocation();
-        return projectRepository.searchProjects(loc, criteria.getCategoryId());
+        String title = (criteria.getTitle() == null || criteria.getTitle().trim().isEmpty()) ? null : criteria.getTitle().trim();
+        String loc = (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) ? null : criteria.getLocation().trim();
+        return projectRepository.searchProjects(title, loc, criteria.getCategoryId());
     }
 
     @Override
