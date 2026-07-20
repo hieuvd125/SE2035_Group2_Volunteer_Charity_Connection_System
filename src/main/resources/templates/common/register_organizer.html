@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Đăng ký Tình nguyện viên</title>
+    <title>Đăng ký Tổ chức</title>
 </head>
 <header style="background-color: #2c3e50; padding: 15px; color: white;">
     <a th:href="@{/}" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold; margin-right: 20px;">
@@ -11,10 +11,10 @@
 </header>
 <body>
 <div>
-    <h2 style="margin-top:0; text-align: center; color: #2c3e50;">Đăng ký Tình nguyện viên</h2>
+    <h2 style="margin-top:0; text-align: center; color: #2c3e50;">Đăng ký Tài khoản Tổ chức</h2>
     <p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-weight: bold;"></p>
 
-    <form th:action="@{/register/volunteer}" th:object="${registerRequest}" method="POST">
+    <form th:action="@{/register/organizer}" th:object="${registerRequest}" method="POST">
 
         <div class="form-group">
             <label>Tên đăng nhập: </label>
@@ -23,13 +23,13 @@
         </div>
 
         <div class="form-group">
-            <label>Họ và tên: </label>
+            <label>Tên tổ chức / Đơn vị: </label>
             <input type="text" th:field="*{fullName}" required>
             <span class="error-message" th:errors="*{fullName}"></span>
         </div>
 
         <div class="form-group">
-            <label>Email: </label>
+            <label>Email liên hệ: </label>
             <input type="email" th:field="*{email}" required>
             <span class="error-message" th:errors="*{email}"></span>
         </div>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="form-group">
-            <label>Số điện thoại: </label>
+            <label>Số điện thoại liên hệ: </label>
             <input type="text" th:field="*{phoneNumber}">
             <span class="error-message" th:errors="*{phoneNumber}"></span>
         </div>
@@ -53,35 +53,24 @@
         </div>
 
         <div class="form-group">
-            <label>Địa chỉ cụ thể: </label>
+            <label>Địa chỉ trụ sở: </label>
             <input type="text" th:field="*{address}">
             <span class="error-message" th:errors="*{address}"></span>
         </div>
 
         <div class="form-group">
-            <label>Ngày sinh: </label>
-            <input type="date" th:field="*{dateOfBirth}">
-            <span class="error-message" th:errors="*{dateOfBirth}"></span>
+            <label>Website / Trang thông tin: </label>
+            <input type="url" th:field="*{website}" placeholder="https://example.org">
+            <span class="error-message" th:errors="*{website}"></span>
         </div>
 
         <div class="form-group">
-            <label>Giới tính: </label>
-            <select th:field="*{gender}">
-                <option value="">-- Chọn giới tính --</option>
-                <option value="MALE">Nam</option>
-                <option value="FEMALE">Nữ</option>
-                <option value="OTHER">Khác</option>
-            </select>
-            <span class="error-message" th:errors="*{gender}"></span>
+            <label>Mô tả ngắn về tổ chức: </label>
+            <textarea th:field="*{description}" rows="3"></textarea>
+            <span class="error-message" th:errors="*{description}"></span>
         </div>
 
-        <div class="form-group">
-            <label>Giới thiệu bản thân / Kỹ năng: </label>
-            <textarea th:field="*{bio}" rows="3"></textarea>
-            <span class="error-message" th:errors="*{bio}"></span>
-        </div>
-
-        <button type="submit" class="btn-reg">Đăng ký ngay</button>
+        <button type="submit" class="btn-reg">Gửi đơn đăng ký</button>
     </form>
     <div>Đã có tài khoản? <a th:href="@{/login}" class="back-link">Đăng nhập tại đây</a></div>
 </div>
