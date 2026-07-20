@@ -1,5 +1,6 @@
 package com.group2.volunteer.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -15,31 +16,35 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCreationDTO {
-    @NotBlank(message = "Tên dự án không được để trống")
+    @NotBlank(message = "Project title is required")
     private String title;
 
-    @NotBlank(message = "Mô tả không được để trống")
+    @NotBlank(message = "Description is required")
     private String description;
 
     private String imageUrl;
 
-    @NotBlank(message = "Địa điểm không được để trống")
+    @NotBlank(message = "Location is required")
     private String location;
 
-    @NotNull(message = "Ngày bắt đầu không được để trống")
-    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc trong tương lai")
+    @NotNull(message = "Start date is required")
+    @FutureOrPresent(message = "Start date must be today or in the future")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull(message = "Ngày kết thúc không được để trống")
-    @FutureOrPresent(message = "Ngày kết thúc phải là hôm nay hoặc trong tương lai")
+    @NotNull(message = "End date is required")
+    @FutureOrPresent(message = "End date must be today or in the future")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @NotNull(message = "Số lượng tình nguyện viên cần có")
-    @Min(value = 1, message = "Số lượng tối thiểu là 1")
+    @NotNull(message = "Target volunteers is required")
+    @Min(value = 1, message = "Target volunteers must be at least 1")
     private Integer targetVolunteers;
 
-    @NotNull(message = "Vui lòng chọn category")
+    @NotNull(message = "Target donation is required")
+    @DecimalMin(value = "0.0", message = "Target donation must be greater than or equal to 0")
+    private Double targetDonation;
+
+    @NotNull(message = "Category is required")
     private Long categoryId;
 }
