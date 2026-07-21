@@ -4,10 +4,7 @@ import com.group2.volunteer.dto.ProjectCreationDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.exception.InvalidProjectStateException;
-import com.group2.volunteer.service.CategoryService;
-import com.group2.volunteer.service.ProjectService;
-import com.group2.volunteer.service.ProjectRegistrationService;
-import com.group2.volunteer.service.UserService;
+import com.group2.volunteer.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +37,9 @@ public class OrganizerProjectController {
 
     @Autowired
     private ProjectRegistrationService projectRegistrationService;
+
+    @Autowired
+    private AttendanceProofService attendanceProofService;
 
     @GetMapping("/create")
     public String showCreateForm(Model model, HttpSession session) {
@@ -128,6 +128,8 @@ public class OrganizerProjectController {
         model.addAttribute("project", project);
         model.addAttribute("applicantCount",
                 projectRegistrationService.countProjectRegistrations(id, currentUserId));
+        model.addAttribute("proofs",
+                attendanceProofService.getProofsWaitingForVerificationByProject(id));
         return "organizer/project_detail";
     }
 
@@ -220,6 +222,48 @@ public class OrganizerProjectController {
         }
 
         return "redirect:/organizer/projects/" + id;
+    }
+
+    @PostMapping("/{projectId}/proofs/{proofId}/verify")
+    public String verifyAttendance(
+            @PathVariable Long projectId,
+            @PathVariable Long proofId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null ||
+                !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        Project project =
+                projectService.getProjectById(projectId);
+
+        if (project.getOrganizer() == null ||
+                !project.getOrganizer().getId().equals(user.getId())) {
+            return "redirect:/organizer/projects";
+        }
+
+        try {
+            attendanceProofService.verifyAttendanceForProject(
+                    proofId,
+                    projectId
+            );
+
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "Đã xác nhận Volunteer tham gia dự án."
+            );
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    e.getMessage()
+            );
+        }
+
+        return "redirect:/organizer/projects/" + projectId;
     }
 
     private ProjectCreationDTO toProjectCreationDTO(Project project) {
