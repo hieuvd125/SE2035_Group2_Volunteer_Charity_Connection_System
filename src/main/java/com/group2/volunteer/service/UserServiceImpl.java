@@ -1,6 +1,7 @@
 package com.group2.volunteer.service;
 
 import com.group2.volunteer.constant.UserStatus;
+import com.group2.volunteer.dto.OrganizerProfileDTO;
 import com.group2.volunteer.exception.AuthException;
 import com.group2.volunteer.exception.InvalidProfileException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import com.group2.volunteer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -142,5 +144,49 @@ public class UserServiceImpl implements UserService{
             return null;
         }
         return value.trim();
+    public OrganizerProfileDTO getOrganizerProfileDTO(Long userId) {
+        User user = getUserById(userId);
+        return new OrganizerProfileDTO(
+                user.getFullName(),
+                user.getPhoneNumber(),
+                user.getCity(),
+                user.getAddress(),
+                user.getAvatarUrl(),
+                user.getWebsite(),
+                user.getDescription()
+        );
+    }
+
+    @Override
+    @Transactional
+    public void updateOrganizerProfile(Long userId, OrganizerProfileDTO profileDTO) {
+        User user = getUserById(userId);
+
+        user.setFullName(profileDTO.getFullName());
+        user.setPhoneNumber(profileDTO.getPhoneNumber());
+        user.setCity(profileDTO.getCity());
+        user.setAddress(profileDTO.getAddress());
+        user.setWebsite(profileDTO.getWebsite());
+        user.setDescription(profileDTO.getDescription());
+
+        if (profileDTO.getAvatarFile() != null && !profileDTO.getAvatarFile().isEmpty()) {
+            try {
+                MultipartFile file = profileDTO.getAvatarFile();
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+                String uploadDir = "src/main/resources/static/uploads/";
+                java.io.File dir = new java.io.File(uploadDir);
+                if (!dir.exists()) dir.mkdirs();
+
+                java.nio.file.Path path = java.nio.file.Paths.get(uploadDir + fileName);
+                java.nio.file.Files.copy(file.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                user.setAvatarUrl("/uploads/" + fileName);
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        userRepository.save(user);
     }
 }
