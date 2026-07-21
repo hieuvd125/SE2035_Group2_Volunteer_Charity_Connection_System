@@ -9,7 +9,5 @@ import java.util.Optional;
 public interface AttendanceProofRepository extends JpaRepository<AttendanceProof, Long> {
     Optional<AttendanceProof> findByRegistrationId(Long registrationId);
 
-    List<AttendanceProof> findByRegistration_Status(String status);
-
     List<AttendanceProof> findByRegistration_Project_IdAndRegistration_Status(Long projectId, String status);
 }

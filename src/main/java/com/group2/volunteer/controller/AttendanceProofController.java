@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/attendance")
+@RequestMapping("/volunteer/attendance")
 public class AttendanceProofController {
     private final AttendanceProofService attendanceProofService;
 
@@ -44,31 +44,7 @@ public class AttendanceProofController {
                 request.getReportText(),
                 request.getProofImage());
         redirectAttributes.addFlashAttribute("message", "Nộp minh chứng thành công. Vui lòng chờ Organizer duyệt.");
-        return "redirect:/attendance/submit";
+        return "redirect:/volunteer/attendance/submit";
     }
 
-    @GetMapping("/verify")
-    public String showVerifyAttendancePage(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
-            throw new UserNotLoggedInException("Người dùng chưa đăng nhập");
-        }
-
-        model.addAttribute("proofs", attendanceProofService.getProofsWaitingForVerification());
-        return "organizer/verify_attendance";
-    }
-
-    @PostMapping("/verify/{proofId}")
-    public String verifyAttendance(@PathVariable Long proofId,
-                                   HttpSession session,
-                                   RedirectAttributes redirectAttributes) {
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser == null) {
-            throw new UserNotLoggedInException("Người dùng chưa đăng nhập");
-        }
-
-        attendanceProofService.verifyAttendance(proofId);
-        redirectAttributes.addFlashAttribute("message", "Đã xác nhận Volunteer tham gia dự án.");
-        return "redirect:/attendance/verify";
-    }
 }

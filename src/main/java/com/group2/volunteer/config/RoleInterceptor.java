@@ -38,16 +38,6 @@ public class RoleInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (uri.startsWith("/attendance/submit") && !"VOLUNTEER".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/attendance/verify") && !"ORGANIZER".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
         if (uri.startsWith("/volunteer") && !"VOLUNTEER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
