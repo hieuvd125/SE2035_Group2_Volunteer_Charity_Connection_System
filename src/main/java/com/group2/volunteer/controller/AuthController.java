@@ -24,7 +24,11 @@ public class AuthController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String home() {
+    public String home(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null && "ADMIN".equalsIgnoreCase(user.getRole())) {
+            return "redirect:/admin/dashboard";
+        }
         return "redirect:/projects/homepage";
     }
 
@@ -34,16 +38,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ModelAndView handleLogin(@Valid @RequestParam(name = "username") String username,
+    public String handleLogin(@Valid @RequestParam(name = "username") String username,
                                     @Valid @RequestParam(name = "password") String password,
                                     HttpSession session,
                                     RedirectAttributes redirectAttributes) {
-        ModelAndView mv = new ModelAndView();
         User user = userService.authenticate(new LoginRequest(username, password));
         session.setAttribute("user", user);
         redirectAttributes.addFlashAttribute("message", "Đăng nhập thành công.");
-        mv.setViewName("redirect:/");
-        return mv;
+        if ("ADMIN".equalsIgnoreCase(user.getRole())) {
+            return "redirect:/admin/dashboard";
+        }
+
+        return "redirect:/projects/homepage";
     }
 
     @GetMapping("/logout")
