@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/")
-public class UserController {
+public class VolunteerController {
     private final UserService userService;
     private final AttendanceProofService attendanceProofService;
 

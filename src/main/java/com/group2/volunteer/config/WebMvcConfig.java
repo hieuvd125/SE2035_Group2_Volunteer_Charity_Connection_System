@@ -14,11 +14,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private RoleInterceptor roleInterceptor;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:uploads/");
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/uploads/**")
+//                .addResourceLocations("file:uploads/");
+//    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,12 +36,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 )
                 .excludePathPatterns("/login", "/logout", "/", "/css/**", "/js/**");
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         Path uploadDir = Paths.get("src/main/resources/static/uploads");
         String uploadPath = uploadDir.toFile().getAbsolutePath();
 
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:/" + uploadPath + "/");
+                .addResourceLocations(
+                        "file:/" + uploadPath + "/",
+                        "file:uploads/",
+                        "classpath:/static/uploads/"
+                );
     }
 }

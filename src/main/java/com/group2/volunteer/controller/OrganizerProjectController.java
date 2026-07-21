@@ -1,5 +1,6 @@
 package com.group2.volunteer.controller;
 
+import com.group2.volunteer.dto.OrganizerProfileDTO;
 import com.group2.volunteer.dto.ProjectCreationDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
@@ -28,9 +29,6 @@ public class OrganizerProjectController {
 
     @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private CategoryService categoryService;
