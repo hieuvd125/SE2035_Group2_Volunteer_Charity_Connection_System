@@ -7,49 +7,26 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-@Component
 public class RoleInterceptor implements HandlerInterceptor {
 
+    private final String requiredRole;
+
+    public RoleInterceptor(String requiredRole) {
+        this.requiredRole = requiredRole;
+    }
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
+        HttpSession session = req.getSession(false);
+        User user = (session != null) ? (User) session.getAttribute("user") : null;
 
         if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            res.sendRedirect(req.getContextPath() + "/login");
             return false;
         }
 
-        String uri = request.getRequestURI();
-        String role = user.getRole();
-
-        if (uri.startsWith("/admin") && !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/projects/create") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/organizer") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/attendance/submit") && !"VOLUNTEER".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/attendance/verify") && !"ORGANIZER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
-            return false;
-        }
-
-        if (uri.startsWith("/profile") && !"VOLUNTEER".equalsIgnoreCase(role) && !"ADMIN".equalsIgnoreCase(role)) {
-            response.sendRedirect(request.getContextPath() + "/error/403");
+        if (!requiredRole.equalsIgnoreCase(user.getRole())) {
+            res.sendRedirect(req.getContextPath() + "/error/403");
             return false;
         }
 

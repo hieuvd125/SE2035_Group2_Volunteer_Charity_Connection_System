@@ -1,0 +1,134 @@
+/* =========================================================
+1. STYLE CHUNG CHO TOÀN TRANG (KHÔNG BÓP KHUNG MAIN LAYOUT)
+========================================================= */
+body {
+font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
+background-color: #f4f7f6;
+color: #2c3e50;
+line-height: 1.6;
+margin: 0;
+padding: 0;
+}
+
+/* =========================================================
+2. KHU VỰC FORM & INPUT (TỰ ĐỘNG VỪA VẶN THEO KHUNG CHỨA)
+========================================================= */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+select,
+textarea {
+width: 100%;
+padding: 8px 12px;
+font-size: 14px;
+border: 1px solid #ced4da;
+border-radius: 6px;
+background-color: #fff;
+margin-top: 4px;
+margin-bottom: 12px;
+box-sizing: border-box;
+transition: border-color 0.15s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+border-color: #86b7fe;
+outline: 0;
+box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* =========================================================
+3. SỬA LỖI NÚT BẤM (BUTTON) VỪA VẶN
+========================================================= */
+button:not(.btn), input[type="submit"]:not(.btn) {
+background-color: #0d6efd;
+color: white;
+border: none;
+padding: 8px 16px;
+font-size: 14px;
+border-radius: 6px;
+font-weight: 500;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 6px;
+transition: all 0.2s ease-in-out;
+}
+
+button:not(.btn):hover, input[type="submit"]:not(.btn):hover {
+background-color: #0b5ed7;
+}
+
+button[type="button"]:not(.btn) {
+background-color: #6c757d;
+}
+
+/* =========================================================
+4. BẢNG (TABLE) GỌN GÀNG & ĐẸP
+========================================================= */
+table {
+width: 100% !important;
+border-collapse: collapse !important;
+background-color: #ffffff;
+border-radius: 8px;
+overflow: hidden;
+box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+margin-bottom: 1.5rem;
+border: none !important;
+}
+
+table th {
+background-color: #f8f9fa !important;
+color: #495057;
+font-weight: 600;
+padding: 10px 14px !important;
+text-align: left;
+border-bottom: 2px solid #dee2e6 !important;
+}
+
+table td {
+padding: 10px 14px !important;
+border-bottom: 1px solid #e9ecef !important;
+vertical-align: middle;
+}
+
+table tbody tr:hover {
+background-color: #f1f5f9 !important;
+}
+
+/* =========================================================
+5. DÀNH RIÊNG CHO TRANG ĐĂNG KÝ / ĐĂNG NHẬP (AUTH)
+(Chỉ áp dụng khi bạn bọc form trong <div class="auth-box">)
+    ========================================================= */
+    .auth-box {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* =========================================================
+    6. TIÊU ĐỀ & ĐƯỜNG DẪN
+    ========================================================= */
+    h1, h2, h3, h4, h5 {
+    color: #1e293b;
+    font-weight: 700;
+    }
+
+    a {
+    color: #0d6efd;
+    text-decoration: none;
+    }
+
+    a:hover {
+    text-decoration: underline;
+    }
+
+    hr {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 1.5rem 0;
+    }

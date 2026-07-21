@@ -23,17 +23,17 @@
             <h5 class="card-title text-primary mb-3"><i class="bi bi-funnel-fill me-2"></i>Bộ Lọc Tìm Kiếm Dự Án</h5>
 
             <form th:action="@{/projects/homepage}" th:object="${criteria}" method="get" class="row g-3">
-                <div class="col-md-5">
-                    <label for="location" class="form-label font-weight-bold">Khu vực / Địa điểm</label>
-                    <select th:field="*{location}" id="location" class="form-select">
-                        <option value="">-- Tất cả khu vực --</option>
-                        <option value="Hà Giang">Hà Giang</option>
-                        <option value="Vũng Tàu">Vũng Tàu</option>
-                        <option value="Quảng Ngãi">Quảng Ngãi</option>
-                    </select>
+                <div class="col-md-4">
+                    <label for="title" class="form-label font-weight-bold">Tên dự án</label>
+                    <input type="text" th:field="*{title}" id="title" class="form-control" placeholder="Nhập tên dự án cần tìm...">
                 </div>
 
-                <div class="col-md-5">
+                <div class="col-md-3">
+                    <label for="location" class="form-label font-weight-bold">Khu vực / Địa điểm</label>
+                    <input type="text" th:field="*{location}" id="location" class="form-control" placeholder="Nhập tỉnh thành (Ví dụ: Hà Giang...)">
+                </div>
+
+                <div class="col-md-3">
                     <label for="categoryId" class="form-label font-weight-bold">Lĩnh vực hoạt động</label>
                     <select th:field="*{categoryId}" id="categoryId" class="form-select">
                         <option value="">-- Tất cả lĩnh vực --</option>

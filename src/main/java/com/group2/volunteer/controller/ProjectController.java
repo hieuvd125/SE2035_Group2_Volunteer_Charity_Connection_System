@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
+import com.group2.volunteer.service.DonationService;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ProjectController {
 
     private final ProjectQueryService projectQueryService;
     private final CategoryRepository categoryRepository;
+    private final DonationService donationService;
 
     @GetMapping("/homepage")
     public String showHomepage(@ModelAttribute("criteria") ProjectSearchCriteria criteria, Model model) {
@@ -38,14 +40,32 @@ public class ProjectController {
     @GetMapping("/detail/{id}")
     public String showDetail(@PathVariable Long id, HttpSession session, Model model) {
         Project project = projectQueryService.getProjectById(id);
+
+        Long targetVols = project.getTargetVolunteers() != null ? project.getTargetVolunteers().longValue() : 0L;
         Long approvedCount = projectQueryService.getApprovedVolunteerCount(id);
-        Long remainingSlot = project.getTargetVolunteers().longValue() - approvedCount;
+        Long remainingSlot = targetVols - approvedCount;
+
+        Double currentDonated = donationService.getTotalDonatedAmount(id);
+        if (currentDonated == null) {
+            currentDonated = 0.0;
+        }
+
+        double percentProgress = 0.0;
+        if (project.getTargetDonation() != null && project.getTargetDonation() > 0) {
+            percentProgress = (currentDonated / project.getTargetDonation()) * 100;
+            if (percentProgress > 100) {
+                percentProgress = 100;
+            }
+        }
 
         model.addAttribute("project", project);
         model.addAttribute("approvedCount", approvedCount);
         model.addAttribute("remainingSlot", remainingSlot);
-        User currentUser = (User) session.getAttribute("user");
 
+        model.addAttribute("currentDonated", currentDonated);
+        model.addAttribute("percentProgress", percentProgress);
+
+        User currentUser = (User) session.getAttribute("user");
         if (currentUser != null) {
             boolean applied = projectQueryService.hasApplied(id, currentUser.getId());
             model.addAttribute("applied", applied);

@@ -16,7 +16,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String title;
 
     @Column(columnDefinition = "TEXT")
@@ -25,17 +25,20 @@ public class Project {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String location;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    @Column(name = "target_volunteers", nullable = false)
+    @Column(name = "target_volunteers")
     private Integer targetVolunteers;
+
+    @Column(name = "target_donation", nullable = false)
+    private Double targetDonation;
 
     @Column(nullable = false, length = 30)
     private String status = "PENDING";

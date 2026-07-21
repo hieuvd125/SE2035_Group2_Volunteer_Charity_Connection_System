@@ -1,14 +1,31 @@
 package com.group2.volunteer.service;
 
-import com.group2.volunteer.dto.LoginDTO;
-import com.group2.volunteer.dto.RegisterDTO;
+import com.group2.volunteer.dto.LoginRequest;
+import com.group2.volunteer.dto.VolunteerProfileUpdateRequest;
+import com.group2.volunteer.dto.OrganizerProfileDTO;
 import com.group2.volunteer.entity.User;
 
+import java.util.List;
+
 public interface UserService {
-    User authenticate(LoginDTO loginDTO);
-    Long register(RegisterDTO registerDTO);
+    User authenticate(LoginRequest loginRequest);
+
+    void register(User user);
+
+    List<User> findAllPendingUsers();
+
+    void updateUserStatus(Long id, String status);
   
     User getUserById(Long userId);
 
-    String getBadgeName(Integer totalHours);
+    String getBadgeName(Long attendedProjectCount);
+
+    List<User> getUsersByFilter(String keyword, String role, String status);
+
+    void updateUserByAdmin(Long id, User userForm);
+
+    User updateVolunteerProfile(Long userId, VolunteerProfileUpdateRequest profileRequest);
+    OrganizerProfileDTO getOrganizerProfileDTO(Long userId);
+
+    void updateOrganizerProfile(Long userId, OrganizerProfileDTO profileDTO);
 }

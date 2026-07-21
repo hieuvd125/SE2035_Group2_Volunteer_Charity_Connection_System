@@ -29,4 +29,18 @@ public class GlobalExceptionHandler {
 
       return mv;
   }
+
+  @ExceptionHandler(InvalidProfileException.class)
+  public String handleInvalidProfile(InvalidProfileException ex,
+                                     RedirectAttributes redirectAttributes) {
+      redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+      return "redirect:/volunteer/profile/edit";
+  }
+
+  @ExceptionHandler(InvalidAttendanceProofException.class)
+  public String handleInvalidAttendanceProof(InvalidAttendanceProofException ex,
+                                             RedirectAttributes redirectAttributes) {
+      redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+      return "redirect:/volunteer/attendance/submit";
+  }
 }

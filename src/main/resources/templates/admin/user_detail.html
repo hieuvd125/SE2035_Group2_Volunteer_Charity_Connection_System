@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết tài khoản</title>
+</head>
+<body>
+
+<header>
+    <a th:href="@{/}" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold;">
+        VCPCS - Admin Panel
+    </a>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2 class="card-title">Thông tin chi tiết tài khoản</h2>
+
+        <div class="info-group">
+            <span class="info-label">Tên đăng nhập:</span>
+            <span class="info-value" th:text="${user.username}">username</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Vai trò:</span>
+            <span class="info-value" th:text="${user.role}">VOLUNTEER</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Trạng thái:</span>
+            <span class="info-value">
+                <span th:if="${user.status == 'ACTIVE'}" class="badge badge-active">Hoạt động</span>
+                <span th:if="${user.status == 'PENDING'}" class="badge badge-pending">Chờ duyệt</span>
+                <span th:if="${user.status == 'BLOCKED'}" class="badge badge-blocked">Đã khóa</span>
+            </span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Ngày tạo tài khoản:</span>
+            <span class="info-value" th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026</span>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+
+        <div class="info-group">
+            <span class="info-label">Họ và Tên / Tên tổ chức:</span>
+            <span class="info-value" th:text="${user.fullName}">Nguyễn Văn A</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Email:</span>
+            <span class="info-value" th:text="${user.email}">email@example.com</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Số điện thoại:</span>
+            <span class="info-value" th:text="${user.phoneNumber != null ? user.phoneNumber : 'Chưa cập nhật'}">0901234567</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Thành phố:</span>
+            <span class="info-value" th:text="${user.city != null ? user.city : 'Chưa cập nhật'}">Hà Nội</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Địa chỉ cụ thể:</span>
+            <span class="info-value" th:text="${user.address != null ? user.address : 'Chưa cập nhật'}">123 Cầu Giấy</span>
+        </div>
+
+        <div th:if="${user.role == 'VOLUNTEER'}">
+            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+            <div class="info-group">
+                <span class="info-label">Ngày sinh:</span>
+                <span class="info-value" th:text="${user.dateOfBirth != null ? #temporals.format(user.dateOfBirth, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/01/2000</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Giới tính:</span>
+                <span class="info-value" th:text="${user.gender}">Nam</span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Giới thiệu bản thân:</span>
+                <span class="info-value" th:text="${user.bio != null ? user.bio : 'Không có'}">Bio...</span>
+            </div>
+        </div>
+
+        <div th:if="${user.role == 'ORGANIZER'}">
+            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+            <div class="info-group">
+                <span class="info-label">Website / Fanpage:</span>
+                <span class="info-value">
+                    <a th:if="${user.website}" th:href="${user.website}" target="_blank" th:text="${user.website}">https://example.org</a>
+                    <span th:unless="${user.website}">Chưa cập nhật</span>
+                </span>
+            </div>
+            <div class="info-group">
+                <span class="info-label">Mô tả tổ chức:</span>
+                <span class="info-value" th:text="${user.description != null ? user.description : 'Không có'}">Mô tả...</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a th:href="@{/admin/users}" class="btn btn-back">Quay lại danh sách</a>
+            <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-edit">Chỉnh sửa tài khoản này</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

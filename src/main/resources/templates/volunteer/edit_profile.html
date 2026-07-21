@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật hồ sơ</title>
+</head>
+<body>
+<h1>Cập nhật hồ sơ Volunteer</h1>
+
+<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+<form th:action="@{/volunteer/profile/edit}" th:object="${profileRequest}" method="post">
+    <div>
+        <label for="fullName">Họ và tên</label>
+        <input id="fullName" type="text" th:field="*{fullName}">
+    </div>
+    <div>
+        <label for="phoneNumber">Số điện thoại</label>
+        <input id="phoneNumber" type="text" th:field="*{phoneNumber}">
+    </div>
+    <div>
+        <label for="dateOfBirth">Ngày sinh</label>
+        <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+    </div>
+    <div>
+        <label for="gender">Giới tính</label>
+        <input id="gender" type="text" th:field="*{gender}">
+    </div>
+    <div>
+        <label for="city">Thành phố</label>
+        <input id="city" type="text" th:field="*{city}">
+    </div>
+    <div>
+        <label for="address">Địa chỉ</label>
+        <input id="address" type="text" th:field="*{address}">
+    </div>
+    <div>
+        <label for="avatarUrl">Đường dẫn ảnh đại diện</label>
+        <input id="avatarUrl" type="text" th:field="*{avatarUrl}">
+    </div>
+    <div>
+        <label for="bio">Giới thiệu</label>
+        <textarea id="bio" th:field="*{bio}"></textarea>
+    </div>
+    <button type="submit">Lưu thay đổi</button>
+    <a th:href="@{/volunteer/profile}">Hủy</a>
+</form>
+</body>
+</html>
