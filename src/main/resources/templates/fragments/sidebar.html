@@ -10,8 +10,8 @@
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
             <a th:href="@{/attendance/submit}">Nộp minh chứng</a>
         </li>
-        <li th:if="${session.user != null and (session.user.role == 'ORGANIZER')}">
-            <a th:href="@{/attendance/verify}">Duyệt minh chứng</a>
+        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
+            <a th:href="@{/my-activities}">Hoạt động của tôi</a>
         </li>
         <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
             <a th:href="@{/admin/projects/review}">Duyệt dự án</a>

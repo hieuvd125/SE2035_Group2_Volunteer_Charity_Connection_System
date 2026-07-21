@@ -44,6 +44,37 @@
     </form>
 
     <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
+    <hr/>
+    <h3>Duyệt minh chứng tham gia</h3>
+    <p th:if="${#lists.isEmpty(proofs)}">Chưa có minh chứng nào cần xác nhận cho dự án này.</p>
+    <table th:if="${!#lists.isEmpty(proofs)}" border="1" cellpadding="6" style="width:100%; border-collapse:collapse">
+        <thead>
+        <tr>
+            <th>Volunteer</th>
+            <th>Báo cáo</th>
+            <th>Ảnh minh chứng</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="proof : ${proofs}">
+            <td th:text="${proof.registration.volunteer.fullName}"></td>
+            <td th:text="${proof.reportText}"></td>
+            <td>
+                <a th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
+                   th:href="${proof.proofImage}" target="_blank" rel="noopener">Xem ảnh</a>
+                <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
+            </td>
+            <td>
+                <form th:action="@{/organizer/projects/{projectId}/proofs/{proofId}/verify(projectId=${project.id}, proofId=${proof.id})}"
+                      method="post">
+                    <button type="submit">Xác nhận tham gia</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
     <a th:href="@{/organizer/projects}">Quay lại danh sách</a>
 </div>
 </body>
