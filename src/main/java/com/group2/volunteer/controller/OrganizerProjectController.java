@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Controller
@@ -137,6 +138,25 @@ public class OrganizerProjectController {
         return "organizer/project_detail";
     }
 
+    @GetMapping("/{id}/edit")
+    public String showUpdateForm(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        Project project = projectService.getProjectById(id);
+        Project project = projectService.getProjectById(projectId);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
+            return "redirect:/organizer/projects";
+        }
+
+        model.addAttribute("project", project);
+        model.addAttribute("projectDTO", toProjectCreationDTO(project));
+        model.addAttribute("categories", categoryService.findAll());
+        return "organizer/update_project";
+    }
+  
     @PostMapping("/{projectId}/proofs/{proofId}/verify")
     public String verifyAttendance(@PathVariable Long projectId,
                                    @PathVariable Long proofId,
@@ -152,6 +172,70 @@ public class OrganizerProjectController {
             return "redirect:/organizer/projects";
         }
 
+        try {
+            attendanceProofService.verifyAttendanceForProject(proofId, projectId);
+            redirectAttributes.addFlashAttribute("message", "Đã xác nhận Volunteer tham gia dự án.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/organizer/projects/" + projectId;
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateProject(@PathVariable Long id,
+                                @Valid @ModelAttribute("projectDTO") ProjectCreationDTO dto,
+                                BindingResult bindingResult,
+                                HttpSession session,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        Project project = projectService.getProjectById(id);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
+            return "redirect:/organizer/projects";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("project", project);
+            model.addAttribute("categories", categoryService.findAll());
+            return "organizer/update_project";
+        }
+
+        try {
+            projectService.updateProject(id, dto, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Project updated successfully");
+            return "redirect:/organizer/projects/" + id;
+        } catch (InvalidProjectStateException e) {
+            model.addAttribute("project", project);
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("errorMessage", e.getMessage());
+            return "organizer/update_project";
+        }
+    }
+
+    @PostMapping("/{id}/start_project")
+    public String startProject(@PathVariable Long id,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        try {
+            projectService.startProject(id, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Đã tiến hành dự án thành công");
+        } catch (InvalidProjectStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/organizer/projects/" + id;
+    }
+
+    @PostMapping("/{id}/close_recruitment")
         try {
             attendanceProofService.verifyAttendanceForProject(proofId, projectId);
             redirectAttributes.addFlashAttribute("message", "Đã xác nhận Volunteer tham gia dự án.");
@@ -180,6 +264,20 @@ public class OrganizerProjectController {
         return "redirect:/organizer/projects/" + id;
     }
 
+    private ProjectCreationDTO toProjectCreationDTO(Project project) {
+        ProjectCreationDTO dto = new ProjectCreationDTO();
+        dto.setTitle(project.getTitle());
+        dto.setDescription(project.getDescription());
+        dto.setImageUrl(project.getImageUrl());
+        dto.setLocation(project.getLocation());
+        dto.setStartDate(project.getStartDate() != null ? project.getStartDate().toLocalDate() : LocalDate.now());
+        dto.setEndDate(project.getEndDate() != null ? project.getEndDate().toLocalDate() : LocalDate.now());
+        dto.setTargetVolunteers(project.getTargetVolunteers());
+        dto.setTargetDonation(project.getTargetDonation());
+        dto.setCategoryId(project.getCategory() != null ? project.getCategory().getId() : null);
+        return dto;
+    }
+  
     @GetMapping("/profile")
     public String showProfileForm(HttpSession session, Model model) {
         User sessionUser = (User) session.getAttribute("user");

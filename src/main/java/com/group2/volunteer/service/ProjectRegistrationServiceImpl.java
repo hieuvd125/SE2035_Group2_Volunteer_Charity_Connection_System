@@ -38,12 +38,12 @@ public class ProjectRegistrationServiceImpl implements ProjectRegistrationServic
         ProjectRegistration registration = getRegistration(projectId, registrationId);
 
         if (!RegistrationStatus.PENDING.equals(registration.getStatus())) {
-            throw new InvalidProjectStateException("Registration is not pending");
+            throw new InvalidProjectStateException("Đơn đăng ký không ở trạng thái chờ duyệt");
         }
 
         Long approvedCount = registrationRepository.countByProjectIdAndStatus(projectId, RegistrationStatus.APPROVED);
         if (project.getTargetVolunteers() != null && approvedCount >= project.getTargetVolunteers()) {
-            throw new InvalidProjectStateException("Project has no remaining volunteer slots");
+            throw new InvalidProjectStateException("Dự án không còn vị trí tình nguyện viên trống");
         }
 
         registration.setStatus(RegistrationStatus.APPROVED);
@@ -63,7 +63,7 @@ public class ProjectRegistrationServiceImpl implements ProjectRegistrationServic
         ProjectRegistration registration = getRegistration(projectId, registrationId);
 
         if (!RegistrationStatus.PENDING.equals(registration.getStatus())) {
-            throw new InvalidProjectStateException("Registration is not pending");
+            throw new InvalidProjectStateException("Đơn đăng ký không ở trạng thái chờ duyệt");
         }
 
         registration.setStatus(RegistrationStatus.REJECTED);
@@ -72,10 +72,10 @@ public class ProjectRegistrationServiceImpl implements ProjectRegistrationServic
 
     private Project validateOrganizerProject(Long projectId, Long organizerId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy dự án"));
 
         if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
-            throw new InvalidProjectStateException("You are not allowed to manage this project");
+            throw new InvalidProjectStateException("Bạn không có quyền quản lý dự án này");
         }
 
         return project;
@@ -83,10 +83,10 @@ public class ProjectRegistrationServiceImpl implements ProjectRegistrationServic
 
     private ProjectRegistration getRegistration(Long projectId, Long registrationId) {
         ProjectRegistration registration = registrationRepository.findById(registrationId)
-                .orElseThrow(() -> new IllegalArgumentException("Registration not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn đăng ký"));
 
         if (registration.getProject() == null || !registration.getProject().getId().equals(projectId)) {
-            throw new InvalidProjectStateException("Registration does not belong to this project");
+            throw new InvalidProjectStateException("Đơn đăng ký không thuộc dự án này");
         }
 
         return registration;

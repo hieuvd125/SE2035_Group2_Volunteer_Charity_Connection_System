@@ -34,9 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project createProject(ProjectCreationDTO dto, Long organizerId) {
-        if(dto.getEndDate().isBefore(dto.getStartDate()) || dto.getEndDate().isEqual(dto.getStartDate())) {
-            throw new InvalidProjectStateException("Ngày kết thúc phải sau ngày bắt đầu");
-        }
+        validateProjectDates(dto);
 
         User organizer = userRepository.findById(organizerId).orElseThrow(() -> new RuntimeException("Không tìm thấy organizer"));
 
@@ -57,6 +55,31 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectRepository.save(project);
 
+    }
+
+    @Override
+    public Project updateProject(Long projectId, ProjectCreationDTO dto, Long organizerId) {
+        validateProjectDates(dto);
+
+        Project project = getProjectById(projectId);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
+            throw new InvalidProjectStateException("You are not allowed to update this project");
+        }
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy category"));
+
+        project.setTitle(dto.getTitle());
+        project.setDescription(dto.getDescription());
+        project.setImageUrl(dto.getImageUrl());
+        project.setLocation(dto.getLocation());
+        project.setStartDate(dto.getStartDate().atStartOfDay());
+        project.setEndDate(dto.getEndDate().atStartOfDay());
+        project.setTargetVolunteers(dto.getTargetVolunteers());
+        project.setTargetDonation(dto.getTargetDonation());
+        project.setCategory(category);
+
+        return projectRepository.save(project);
     }
 
     @Override
@@ -94,6 +117,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void startProject(Long projectId, Long organizerId) {
+        Project project = getProjectById(projectId);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
+            throw new InvalidProjectStateException("Bạn không có quyền tiến hành dự án này");
+        }
+        if (!ProjectStatus.RECRUITMENT_CLOSED.equals(project.getStatus())) {
+            throw new InvalidProjectStateException("Chỉ có thể tiến hành dự án sau khi đã đóng tuyển");
+        }
+        project.setStatus(ProjectStatus.ONGOING);
+        projectRepository.save(project);
+    }
+
+    @Override
     public Page<Project> getPendingProjects(Pageable pageable) {
         return projectRepository.findByStatus("PENDING", pageable);
     }
@@ -112,6 +148,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Không tìm thấy dự án"));
+    }
+
+    private void validateProjectDates(ProjectCreationDTO dto) {
+        if (dto.getEndDate().isBefore(dto.getStartDate()) || dto.getEndDate().isEqual(dto.getStartDate())) {
+            throw new InvalidProjectStateException("Ngày kết thúc phải sau ngày bắt đầu");
+        }
     }
 
     @Override

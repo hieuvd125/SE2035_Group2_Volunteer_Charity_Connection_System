@@ -38,10 +38,16 @@
     <div th:if="${error}" th:text="${error}"></div>
 
     <form th:if="${project.status == 'RECRUITING'}"
-          th:action="@{/organizer/projects/{id}/close-recruitment(id=${project.id})}"
+          th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}"
           method="post" style="display:inline">
         <button type="submit">Đóng ứng tuyển</button>
     </form>
+    <form th:if="${project.status == 'RECRUITMENT_CLOSED'}"
+          th:action="@{/organizer/projects/{id}/start_project(id=${project.id})}"
+          method="post" style="display:inline">
+        <button type="submit">Tiến hành dự án</button>
+    </form>
+    <a th:href="@{/organizer/projects/{id}/edit(id=${project.id})}">Update</a>
 
     <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
     <hr/>

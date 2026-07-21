@@ -11,9 +11,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProjectService {
     Project createProject(ProjectCreationDTO dto, Long organizerId);
+    Project updateProject(Long projectId, ProjectCreationDTO dto, Long organizerId);
     void approveProject(Long projectId);
     void rejectProject(Long projectId);
     void closeRecruitment(Long projectId, Long organizerId);
+    void startProject(Long projectId, Long organizerId);
     Page<Project> getPendingProjects(Pageable pageable);
     Page<Project> getOrganizerProjects(Long organizerId, String title, String location, String status, Pageable pageable);
     Project getProjectById(Long projectId);
