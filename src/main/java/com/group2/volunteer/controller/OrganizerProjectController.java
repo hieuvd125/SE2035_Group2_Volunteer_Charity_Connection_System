@@ -184,6 +184,25 @@ public class OrganizerProjectController {
         }
     }
 
+    @PostMapping("/{id}/start_project")
+    public String startProject(@PathVariable Long id,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        try {
+            projectService.startProject(id, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Đã tiến hành dự án thành công");
+        } catch (InvalidProjectStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/organizer/projects/" + id;
+    }
+
     @PostMapping("/{id}/close_recruitment")
     public String closeRecruitment(@PathVariable Long id,
                                    HttpSession session,
