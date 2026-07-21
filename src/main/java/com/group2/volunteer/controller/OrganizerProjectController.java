@@ -1,12 +1,10 @@
 package com.group2.volunteer.controller;
 
-import com.group2.volunteer.dto.OrganizerProfileDTO;
 import com.group2.volunteer.dto.ProjectCreationDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.exception.InvalidProjectStateException;
 import com.group2.volunteer.service.CategoryService;
-import com.group2.volunteer.service.AttendanceProofService;
 import com.group2.volunteer.service.ProjectService;
 import com.group2.volunteer.service.ProjectRegistrationService;
 import com.group2.volunteer.service.UserService;
@@ -42,9 +40,6 @@ public class OrganizerProjectController {
 
     @Autowired
     private ProjectRegistrationService projectRegistrationService;
-
-    @Autowired
-    private AttendanceProofService attendanceProofService;
 
     @GetMapping("/create")
     public String showCreateForm(Model model, HttpSession session) {
@@ -85,10 +80,10 @@ public class OrganizerProjectController {
 
     @GetMapping
     public String listOrganizerProjects(@RequestParam(required = false) String title,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) String status,
-            @RequestParam(name = "pageNumber", required = false, defaultValue = "0") Integer pageNumber,
-            HttpSession session, Model model) {
+                                        @RequestParam(required = false) String location,
+                                        @RequestParam(required = false) String status,
+                                        @RequestParam(name = "pageNumber", required = false, defaultValue = "0") Integer pageNumber,
+                                        HttpSession session, Model model) {
 
         User user = (User) session.getAttribute("user");
         if (user == null || !"ORGANIZER".equals(user.getRole())) {
@@ -133,8 +128,6 @@ public class OrganizerProjectController {
         model.addAttribute("project", project);
         model.addAttribute("applicantCount",
                 projectRegistrationService.countProjectRegistrations(id, currentUserId));
-        model.addAttribute("proofs",
-                attendanceProofService.getProofsWaitingForVerificationByProject(id));
         return "organizer/project_detail";
     }
 
@@ -146,7 +139,6 @@ public class OrganizerProjectController {
         }
 
         Project project = projectService.getProjectById(id);
-        Project project = projectService.getProjectById(projectId);
         if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
             return "redirect:/organizer/projects";
         }
@@ -155,30 +147,6 @@ public class OrganizerProjectController {
         model.addAttribute("projectDTO", toProjectCreationDTO(project));
         model.addAttribute("categories", categoryService.findAll());
         return "organizer/update_project";
-    }
-  
-    @PostMapping("/{projectId}/proofs/{proofId}/verify")
-    public String verifyAttendance(@PathVariable Long projectId,
-                                   @PathVariable Long proofId,
-                                   HttpSession session,
-                                   RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"ORGANIZER".equals(user.getRole())) {
-            return "redirect:/login";
-        }
-
-        Project project = projectService.getProjectById(projectId);
-        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
-            return "redirect:/organizer/projects";
-        }
-
-        try {
-            attendanceProofService.verifyAttendanceForProject(proofId, projectId);
-            redirectAttributes.addFlashAttribute("message", "Đã xác nhận Volunteer tham gia dự án.");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/organizer/projects/" + projectId;
     }
 
     @PostMapping("/{id}/update")
@@ -236,16 +204,6 @@ public class OrganizerProjectController {
     }
 
     @PostMapping("/{id}/close_recruitment")
-        try {
-            attendanceProofService.verifyAttendanceForProject(proofId, projectId);
-            redirectAttributes.addFlashAttribute("message", "Đã xác nhận Volunteer tham gia dự án.");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/organizer/projects/" + projectId;
-    }
-
-    @PostMapping("/{id}/close-recruitment")
     public String closeRecruitment(@PathVariable Long id,
                                    HttpSession session,
                                    RedirectAttributes redirectAttributes) {
@@ -277,40 +235,4 @@ public class OrganizerProjectController {
         dto.setCategoryId(project.getCategory() != null ? project.getCategory().getId() : null);
         return dto;
     }
-  
-    @GetMapping("/profile")
-    public String showProfileForm(HttpSession session, Model model) {
-        User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null || !"ORGANIZER".equals(sessionUser.getRole())) {
-            return "redirect:/login";
-        }
-
-        OrganizerProfileDTO profileDTO = userService.getOrganizerProfileDTO(sessionUser.getId());
-        model.addAttribute("profileDTO", profileDTO);
-        return "organizer/organizer_profile";
-    }
-
-    @PostMapping("/profile")
-    public String updateProfile(@Valid @ModelAttribute("profileDTO") OrganizerProfileDTO profileDTO,
-                                BindingResult bindingResult,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-        User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null || !"ORGANIZER".equals(sessionUser.getRole())) {
-            return "redirect:/login";
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "organizer/organizer_profile";
-        }
-
-        userService.updateOrganizerProfile(sessionUser.getId(), profileDTO);
-
-        sessionUser.setFullName(profileDTO.getFullName());
-        session.setAttribute("user", sessionUser);
-
-        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thông tin tổ chức thành công!");
-        return "redirect:/organizer/projects/profile";
-    }
-
 }
