@@ -203,6 +203,25 @@ public class OrganizerProjectController {
         return "redirect:/organizer/projects/" + id;
     }
 
+    @PostMapping("/{id}/complete_project")
+    public String completeProject(@PathVariable Long id,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        try {
+            projectService.completeProject(id, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Đã hoàn thành dự án thành công!");
+        } catch (InvalidProjectStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/organizer/projects/" + id;
+    }
+
     @PostMapping("/{id}/close_recruitment")
     public String closeRecruitment(@PathVariable Long id,
                                    HttpSession session,
@@ -252,7 +271,7 @@ public class OrganizerProjectController {
 
             redirectAttributes.addFlashAttribute(
                     "message",
-                    "Đã xác nhận Volunteer tham gia dự án."
+                    "Đã xác nhận tình nguyện viên tham gia dự án."
             );
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute(
