@@ -42,6 +42,7 @@
           method="post" style="display:inline">
         <button type="submit">Đóng ứng tuyển</button>
     </form>
+    <a th:href="@{/organizer/projects/{id}/edit(id=${project.id})}">Update</a>
 
     <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
     <a th:href="@{/organizer/projects}">Quay lại danh sách</a>

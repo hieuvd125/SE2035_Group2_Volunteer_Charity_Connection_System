@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Controller
@@ -130,6 +131,59 @@ public class OrganizerProjectController {
         return "organizer/project_detail";
     }
 
+    @GetMapping("/{id}/edit")
+    public String showUpdateForm(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        Project project = projectService.getProjectById(id);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
+            return "redirect:/organizer/projects";
+        }
+
+        model.addAttribute("project", project);
+        model.addAttribute("projectDTO", toProjectCreationDTO(project));
+        model.addAttribute("categories", categoryService.findAll());
+        return "organizer/update_project";
+    }
+
+    @PostMapping("/{id}/update")
+    public String updateProject(@PathVariable Long id,
+                                @Valid @ModelAttribute("projectDTO") ProjectCreationDTO dto,
+                                BindingResult bindingResult,
+                                HttpSession session,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        Project project = projectService.getProjectById(id);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
+            return "redirect:/organizer/projects";
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("project", project);
+            model.addAttribute("categories", categoryService.findAll());
+            return "organizer/update_project";
+        }
+
+        try {
+            projectService.updateProject(id, dto, user.getId());
+            redirectAttributes.addFlashAttribute("message", "Project updated successfully");
+            return "redirect:/organizer/projects/" + id;
+        } catch (InvalidProjectStateException e) {
+            model.addAttribute("project", project);
+            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("errorMessage", e.getMessage());
+            return "organizer/update_project";
+        }
+    }
+
     @PostMapping("/{id}/close-recruitment")
     public String closeRecruitment(@PathVariable Long id,
                                    HttpSession session,
@@ -149,4 +203,17 @@ public class OrganizerProjectController {
         return "redirect:/organizer/projects/" + id;
     }
 
+    private ProjectCreationDTO toProjectCreationDTO(Project project) {
+        ProjectCreationDTO dto = new ProjectCreationDTO();
+        dto.setTitle(project.getTitle());
+        dto.setDescription(project.getDescription());
+        dto.setImageUrl(project.getImageUrl());
+        dto.setLocation(project.getLocation());
+        dto.setStartDate(project.getStartDate() != null ? project.getStartDate().toLocalDate() : LocalDate.now());
+        dto.setEndDate(project.getEndDate() != null ? project.getEndDate().toLocalDate() : LocalDate.now());
+        dto.setTargetVolunteers(project.getTargetVolunteers());
+        dto.setTargetDonation(project.getTargetDonation());
+        dto.setCategoryId(project.getCategory() != null ? project.getCategory().getId() : null);
+        return dto;
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ProjectService {
     Project createProject(ProjectCreationDTO dto, Long organizerId);
+    Project updateProject(Long projectId, ProjectCreationDTO dto, Long organizerId);
     void approveProject(Long projectId);
     void rejectProject(Long projectId);
     void closeRecruitment(Long projectId, Long organizerId);
