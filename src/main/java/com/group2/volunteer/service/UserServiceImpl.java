@@ -12,6 +12,7 @@ import com.group2.volunteer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -144,6 +145,10 @@ public class UserServiceImpl implements UserService{
             return null;
         }
         return value.trim();
+
+    }
+
+    @Override
     public OrganizerProfileDTO getOrganizerProfileDTO(Long userId) {
         User user = getUserById(userId);
         return new OrganizerProfileDTO(

@@ -31,7 +31,7 @@
         </li>
 
         <li th:if="${session.user != null and session.user.role == 'ORGANIZER'}">
-            <a th:href="@{/organizer/projects/profile}">Trang cá nhân</a>
+            <a th:href="@{/organizer/profile}">Trang cá nhân</a>
         </li>
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
             <a th:href="@{/saved-projects/my}">Dự án đã lưu</a>
