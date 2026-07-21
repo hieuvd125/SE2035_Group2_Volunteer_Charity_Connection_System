@@ -34,6 +34,6 @@ public class GlobalExceptionHandler {
   public String handleInvalidProfile(InvalidProfileException ex,
                                      RedirectAttributes redirectAttributes) {
       redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-      return "redirect:/profile/edit";
+      return "redirect:/volunteer/profile/edit";
   }
 }

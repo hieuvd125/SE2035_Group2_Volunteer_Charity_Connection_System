@@ -14,12 +14,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/volunteer")
 public class VolunteerController {
     private final UserService userService;
     private final AttendanceProofService attendanceProofService;
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
     public String showProfile(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
@@ -35,7 +35,7 @@ public class VolunteerController {
         return "volunteer/profile";
     }
 
-    @GetMapping("profile/edit")
+    @GetMapping("/profile/edit")
     public String showEditProfile(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
@@ -58,7 +58,7 @@ public class VolunteerController {
         return "volunteer/edit_profile";
     }
 
-    @PostMapping("profile/edit")
+    @PostMapping("/profile/edit")
     public String updateProfile(@ModelAttribute VolunteerProfileUpdateRequest profileRequest,
                                 HttpSession session,
                                 RedirectAttributes redirectAttributes) {
@@ -70,10 +70,10 @@ public class VolunteerController {
         User updatedUser = userService.updateVolunteerProfile(currentUser.getId(), profileRequest);
         session.setAttribute("user", updatedUser);
         redirectAttributes.addFlashAttribute("message", "Cập nhật hồ sơ thành công.");
-        return "redirect:/profile";
+        return "redirect:/volunteer/profile";
     }
 
-    @GetMapping("my-activities")
+    @GetMapping("/my-activities")
     public String showMyActivities(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {

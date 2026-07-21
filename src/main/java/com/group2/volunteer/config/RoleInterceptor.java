@@ -48,8 +48,7 @@ public class RoleInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if ((uri.startsWith("/profile") || uri.startsWith("/my-activities"))
-                && !"VOLUNTEER".equalsIgnoreCase(role)) {
+        if (uri.startsWith("/volunteer") && !"VOLUNTEER".equalsIgnoreCase(role)) {
             response.sendRedirect(request.getContextPath() + "/error/403");
             return false;
         }

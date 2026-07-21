@@ -10,7 +10,7 @@
 
 <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
-<form th:action="@{/profile/edit}" th:object="${profileRequest}" method="post">
+<form th:action="@{/volunteer/profile/edit}" th:object="${profileRequest}" method="post">
     <div>
         <label for="fullName">Họ và tên</label>
         <input id="fullName" type="text" th:field="*{fullName}">
@@ -49,7 +49,7 @@
     </div>
 
     <button type="submit">Lưu thay đổi</button>
-    <a th:href="@{/profile}">Hủy</a>
+    <a th:href="@{/volunteer/profile}">Hủy</a>
 </form>
 </body>
 </html>
