@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getUsersByFilter(@Param("keyword") String keyword,
                                 @Param("role") String role,
                                 @Param("status") String status);
+
+    long countByRole(String role);
 }
