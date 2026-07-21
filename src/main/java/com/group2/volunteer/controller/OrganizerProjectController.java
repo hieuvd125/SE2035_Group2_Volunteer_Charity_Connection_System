@@ -5,6 +5,8 @@ import com.group2.volunteer.dto.ProjectCreationDTO;
 import com.group2.volunteer.entity.Project;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.exception.InvalidProjectStateException;
+import com.group2.volunteer.exception.BadRequestException;
+import com.group2.volunteer.exception.ResourceNotFoundException;
 import com.group2.volunteer.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -250,36 +252,28 @@ public class OrganizerProjectController {
 
         User user = (User) session.getAttribute("user");
 
-        if (user == null ||
-                !"ORGANIZER".equals(user.getRole())) {
+        if (user == null || !"ORGANIZER".equals(user.getRole())) {
             return "redirect:/login";
         }
 
-        Project project =
-                projectService.getProjectById(projectId);
+        Project project = projectService.getProjectById(projectId);
 
-        if (project.getOrganizer() == null ||
-                !project.getOrganizer().getId().equals(user.getId())) {
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(user.getId())) {
             return "redirect:/organizer/projects";
         }
 
         try {
-            attendanceProofService.verifyAttendanceForProject(
-                    proofId,
-                    projectId
-            );
-
+            attendanceProofService.verifyAttendanceForProject(proofId, projectId);
             redirectAttributes.addFlashAttribute(
                     "message",
                     "Đã xác nhận tình nguyện viên tham gia dự án."
             );
-        } catch (RuntimeException e) {
+        } catch (BadRequestException | ResourceNotFoundException e) {
             redirectAttributes.addFlashAttribute(
                     "error",
                     e.getMessage()
             );
         }
-
         return "redirect:/organizer/projects/" + projectId;
     }
 
