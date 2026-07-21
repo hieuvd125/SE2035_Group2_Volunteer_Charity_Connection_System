@@ -31,7 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/attendance/submit/**",
                         "/attendance/verify",
                         "/attendance/verify/**",
-                        "/profile/**"
+                        "/profile/**",
+                        "/my-activities/**"
                 )
                 .excludePathPatterns("/login", "/logout", "/", "/css/**", "/js/**");
     }

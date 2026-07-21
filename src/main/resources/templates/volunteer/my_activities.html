@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Hoạt động của tôi</title>
+</head>
+<body>
+<div>
+    <h1>Hoạt động của tôi</h1>
+
+    <section>
+        <div>Tổng số dự án đã tham gia</div>
+        <div>
+            <span th:text="${attendedProjectCount != null ? attendedProjectCount : 0}">0</span> dự án
+        </div>
+    </section>
+
+    <h2>Các dự án đã đăng ký tham gia</h2>
+    <p th:if="${#lists.isEmpty(registrations)}">Bạn chưa tham gia dự án nào.</p>
+
+    <table th:if="${!#lists.isEmpty(registrations)}">
+        <thead>
+        <tr>
+            <th>Dự án</th>
+            <th>Thời gian dự án</th>
+            <th>Ngày đăng ký</th>
+            <th>Trạng thái tham gia</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="registration : ${registrations}">
+            <td>
+                <a th:href="@{/projects/detail/{id}(id=${registration.project.id})}"
+                   th:text="${registration.project.title}">Tên dự án</a>
+            </td>
+            <td>
+                <span th:text="${#temporals.format(registration.project.startDate, 'dd/MM/yyyy')}"></span>
+                -
+                <span th:text="${#temporals.format(registration.project.endDate, 'dd/MM/yyyy')}"></span>
+            </td>
+            <td th:text="${registration.registrationDate != null ? #temporals.format(registration.registrationDate, 'dd/MM/yyyy HH:mm') : '—'}"></td>
+            <td>
+                <span th:if="${registration.status == 'PENDING'}">Chờ duyệt</span>
+                <span th:if="${registration.status == 'APPROVED'}">Đã được chấp nhận</span>
+                <span th:if="${registration.status == 'REJECTED'}">Đã bị từ chối</span>
+                <span th:if="${registration.status == 'ATTENDED'}">Đã tham gia</span>
+                <span th:unless="${registration.status == 'PENDING' or registration.status == 'APPROVED' or registration.status == 'REJECTED' or registration.status == 'ATTENDED'}"
+                      th:text="${registration.status}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

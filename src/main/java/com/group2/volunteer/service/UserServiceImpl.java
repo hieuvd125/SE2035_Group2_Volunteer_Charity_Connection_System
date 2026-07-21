@@ -3,8 +3,10 @@ package com.group2.volunteer.service;
 import com.group2.volunteer.constant.UserStatus;
 import com.group2.volunteer.dto.OrganizerProfileDTO;
 import com.group2.volunteer.exception.AuthException;
+import com.group2.volunteer.exception.InvalidProfileException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
 import com.group2.volunteer.dto.LoginRequest;
+import com.group2.volunteer.dto.VolunteerProfileUpdateRequest;
 import com.group2.volunteer.entity.User;
 import com.group2.volunteer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -30,14 +33,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String getBadgeName(Integer totalHours) {
-        int hours = totalHours == null ? 0 : totalHours;
+    public String getBadgeName(Long attendedProjectCount) {
+        long projectCount = attendedProjectCount == null ? 0 : attendedProjectCount;
 
-        if (hours >= 50) {
+        if (projectCount >= 10) {
             return "Community Hero";
         }
 
-        if (hours >= 10) {
+        if (projectCount >= 3) {
             return "Kind Heart";
         }
 
@@ -98,6 +101,49 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
+    public User updateVolunteerProfile(Long userId, VolunteerProfileUpdateRequest profileRequest) {
+        validateProfileRequest(profileRequest);
+
+        User user = getUserById(userId);
+        if (!"VOLUNTEER".equalsIgnoreCase(user.getRole())) {
+            throw new InvalidProfileException("Chỉ Volunteer mới có thể cập nhật hồ sơ này.");
+        }
+
+        user.setFullName(profileRequest.getFullName().trim());
+        user.setPhoneNumber(emptyToNull(profileRequest.getPhoneNumber()));
+        user.setDateOfBirth(profileRequest.getDateOfBirth());
+        user.setGender(emptyToNull(profileRequest.getGender()));
+        user.setCity(emptyToNull(profileRequest.getCity()));
+        user.setAddress(emptyToNull(profileRequest.getAddress()));
+        user.setAvatarUrl(emptyToNull(profileRequest.getAvatarUrl()));
+        user.setBio(emptyToNull(profileRequest.getBio()));
+        user.setWebsite(emptyToNull(profileRequest.getWebsite()));
+
+        return userRepository.save(user);
+    }
+
+    private void validateProfileRequest(VolunteerProfileUpdateRequest request) {
+        if (request.getFullName() == null || request.getFullName().isBlank()) {
+            throw new InvalidProfileException("Họ và tên không được để trống.");
+        }
+
+        String phoneNumber = emptyToNull(request.getPhoneNumber());
+        if (phoneNumber != null && !phoneNumber.matches("^[+]?[0-9]{10,15}$")) {
+            throw new InvalidProfileException("Số điện thoại không hợp lệ.");
+        }
+
+        if (request.getDateOfBirth() != null
+                && !request.getDateOfBirth().isBefore(LocalDate.now())) {
+            throw new InvalidProfileException("Ngày sinh phải là một ngày trong quá khứ.");
+        }
+    }
+
+    private String emptyToNull(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim();
     public OrganizerProfileDTO getOrganizerProfileDTO(Long userId) {
         User user = getUserById(userId);
         return new OrganizerProfileDTO(
@@ -123,13 +169,11 @@ public class UserServiceImpl implements UserService{
         user.setWebsite(profileDTO.getWebsite());
         user.setDescription(profileDTO.getDescription());
 
-        // Xử lý Upload file ảnh nếu người dùng chọn file mới
         if (profileDTO.getAvatarFile() != null && !profileDTO.getAvatarFile().isEmpty()) {
             try {
                 MultipartFile file = profileDTO.getAvatarFile();
                 String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
-                // Đường dẫn lưu file vào thư mục static/uploads
                 String uploadDir = "src/main/resources/static/uploads/";
                 java.io.File dir = new java.io.File(uploadDir);
                 if (!dir.exists()) dir.mkdirs();
@@ -137,7 +181,6 @@ public class UserServiceImpl implements UserService{
                 java.nio.file.Path path = java.nio.file.Paths.get(uploadDir + fileName);
                 java.nio.file.Files.copy(file.getInputStream(), path, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-                // Lưu đường dẫn avatar vào database
                 user.setAvatarUrl("/uploads/" + fileName);
             } catch (java.io.IOException e) {
                 e.printStackTrace();

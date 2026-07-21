@@ -72,10 +72,6 @@
                 <span class="info-value" th:text="${user.gender}">Nam</span>
             </div>
             <div class="info-group">
-                <span class="info-label">Tổng số giờ đóng góp:</span>
-                <span class="info-value"><strong style="color: #27ae60;" th:text="${user.totalHours + ' giờ'}">0 giờ</strong></span>
-            </div>
-            <div class="info-group">
                 <span class="info-label">Giới thiệu bản thân:</span>
                 <span class="info-value" th:text="${user.bio != null ? user.bio : 'Không có'}">Bio...</span>
             </div>
