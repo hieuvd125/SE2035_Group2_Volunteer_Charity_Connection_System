@@ -8,6 +8,7 @@
 <h1>Nộp minh chứng tham gia tình nguyện</h1>
 
 <p th:if="${message}" th:text="${message}"></p>
+<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
 <p th:if="${#lists.isEmpty(registrations)}">Bạn chưa được duyệt tham gia dự án nào để nộp minh chứng.</p>
 

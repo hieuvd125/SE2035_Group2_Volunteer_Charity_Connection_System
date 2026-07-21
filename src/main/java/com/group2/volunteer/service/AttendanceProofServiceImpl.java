@@ -4,6 +4,7 @@ import com.group2.volunteer.constant.RegistrationStatus;
 import com.group2.volunteer.entity.AttendanceProof;
 import com.group2.volunteer.entity.ProjectRegistration;
 import com.group2.volunteer.exception.BadRequestException;
+import com.group2.volunteer.exception.InvalidAttendanceProofException;
 import com.group2.volunteer.exception.ResourceNotFoundException;
 import com.group2.volunteer.repository.AttendanceProofRepository;
 import com.group2.volunteer.repository.ProjectRegistrationRepository;
@@ -46,19 +47,20 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
     @Transactional
     public AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage) {
         ProjectRegistration registration = projectRegistrationRepository.findById(registrationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thông tin tham gia dự án."));
+                .orElseThrow(() -> new InvalidAttendanceProofException(
+                        "Không tìm thấy thông tin tham gia dự án."));
 
         if (registration.getVolunteer() == null || !registration.getVolunteer().getId().equals(volunteerId)) {
-            throw new BadRequestException("Không thể nộp minh chứng cho Volunteer khác.");
+            throw new InvalidAttendanceProofException("Không thể nộp minh chứng cho Volunteer khác.");
         }
 
         if (!RegistrationStatus.APPROVED.equals(registration.getStatus())) {
-            throw new BadRequestException(
+            throw new InvalidAttendanceProofException(
                     "Chỉ Volunteer đã được duyệt tham gia dự án mới có thể nộp minh chứng.");
         }
 
         if ((reportText == null || reportText.isBlank()) && (proofImage == null || proofImage.isBlank())) {
-            throw new BadRequestException("Cần nhập báo cáo hoặc đường dẫn ảnh minh chứng.");
+            throw new InvalidAttendanceProofException("Cần nhập báo cáo hoặc đường dẫn ảnh minh chứng.");
         }
 
         AttendanceProof proof = attendanceProofRepository.findByRegistrationId(registrationId)

@@ -36,4 +36,11 @@ public class GlobalExceptionHandler {
       redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
       return "redirect:/volunteer/profile/edit";
   }
+
+  @ExceptionHandler(InvalidAttendanceProofException.class)
+  public String handleInvalidAttendanceProof(InvalidAttendanceProofException ex,
+                                             RedirectAttributes redirectAttributes) {
+      redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+      return "redirect:/volunteer/attendance/submit";
+  }
 }
