@@ -50,7 +50,7 @@ public class ProjectRegistrationController {
 
         try {
             registrationService.approveRegistration(projectId, registrationId, organizer.getId());
-            redirectAttributes.addFlashAttribute("message", "Applicant approved successfully");
+            redirectAttributes.addFlashAttribute("message", "Đã duyệt ứng viên thành công");
         } catch (InvalidProjectStateException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -69,7 +69,7 @@ public class ProjectRegistrationController {
 
         try {
             registrationService.rejectRegistration(projectId, registrationId, organizer.getId());
-            redirectAttributes.addFlashAttribute("message", "Applicant rejected successfully");
+            redirectAttributes.addFlashAttribute("message", "Đã từ chối ứng viên thành công");
         } catch (InvalidProjectStateException | IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
