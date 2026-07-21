@@ -130,6 +130,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void completeProject(Long projectId, Long organizerId) {
+        Project project = getProjectById(projectId);
+        if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
+            throw new InvalidProjectStateException("Bạn không có quyền hoàn thành dự án này");
+        }
+        if (!ProjectStatus.ONGOING.equals(project.getStatus())) {
+            throw new InvalidProjectStateException("Chỉ có thể hoàn thành dự án đang diễn ra");
+        }
+        project.setStatus(ProjectStatus.COMPLETED);
+        projectRepository.save(project);
+    }
+
+    @Override
     public Page<Project> getPendingProjects(Pageable pageable) {
         return projectRepository.findByStatus("PENDING", pageable);
     }
