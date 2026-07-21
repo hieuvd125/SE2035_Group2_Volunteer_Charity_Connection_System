@@ -17,10 +17,9 @@
         <th>ID minh chứng</th>
         <th>Volunteer</th>
         <th>Dự án</th>
-        <th>Trạng thái đơn</th>
+        <th>Trạng thái tham gia</th>
         <th>Báo cáo</th>
         <th>Ảnh minh chứng</th>
-        <th>Số giờ xác nhận</th>
         <th>Thao tác</th>
     </tr>
     </thead>
@@ -36,10 +35,9 @@
                th:href="${proof.proofImage}" target="_blank">Xem ảnh</a>
             <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
         </td>
-        <td colspan="2">
+        <td>
             <form th:action="@{/attendance/verify/{proofId}(proofId=${proof.id})}" method="post">
-                <input type="number" name="confirmedHours" min="1" required>
-                <button type="submit">Duyệt minh chứng</button>
+                <button type="submit">Xác nhận tham gia</button>
             </form>
         </td>
     </tr>

@@ -31,7 +31,9 @@
         </thead>
         <tbody>
         <tr th:each="item : ${savedList}">
-            <td th:text="${item.project.title}">Tên dự án</td>
+            <td>
+                <a th:href="@{/projects/detail/{id}(id=${item.project.id})}" th:text="${item.project.title}" class="text-primary text-decoration-none fw-semibold">Tên dự án</a>
+            </td>
             <td th:text="${item.project.location}">Địa điểm</td>
             <td th:text="${#temporals.format(item.savedAt, 'dd-MM-yyyy HH:mm')}">Ngày lưu</td>
             <td>

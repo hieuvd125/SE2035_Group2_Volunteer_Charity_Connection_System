@@ -29,4 +29,11 @@ public class GlobalExceptionHandler {
 
       return mv;
   }
+
+  @ExceptionHandler(InvalidProfileException.class)
+  public String handleInvalidProfile(InvalidProfileException ex,
+                                     RedirectAttributes redirectAttributes) {
+      redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+      return "redirect:/profile/edit";
+  }
 }

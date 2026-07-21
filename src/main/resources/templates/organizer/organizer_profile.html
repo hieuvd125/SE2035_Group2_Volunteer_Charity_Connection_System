@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin Ban Tổ Chức</title>
+</head>
+<body>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 fs-5"><i class="bi bi-building"></i> Cập Nhật Hồ Sơ Tổ Chức</h4>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Message Thông báo thành công -->
+                    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <span th:text="${successMessage}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <form th:action="@{/organizer/projects/profile}" th:object="${profileDTO}" method="POST" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Tổ chức / Quỹ charity</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{fullName}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Số điện thoại liên hệ</label>
+                                <input type="text" th:field="*{phoneNumber}" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thành phố</label>
+                                <input type="text" th:field="*{city}" class="form-control" th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{city}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa chỉ trụ sở</label>
+                            <input type="text" th:field="*{address}" class="form-control" th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'">
+                            <div class="invalid-feedback" th:errors="*{address}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ảnh đại diện / Logo Tổ chức</label>
+                            <input type="file" th:field="*{avatarFile}" class="form-control" accept="image/*">
+
+                            <div th:if="${profileDTO.avatarUrl != null and !#strings.isEmpty(profileDTO.avatarUrl)}" class="mt-2">
+                                <small class="text-muted d-block">Ảnh hiện tại:</small>
+                                <img th:src="@{${profileDTO.avatarUrl}}" alt="Avatar" style="max-height: 80px;" class="rounded border mt-1">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Website chính thức</label>
+                            <input type="url" th:field="*{website}" class="form-control" placeholder="https://tochuc.org">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Giới thiệu / Sứ mệnh Tổ chức</label>
+                            <textarea th:field="*{description}" class="form-control" rows="4" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                            <div class="invalid-feedback" th:errors="*{description}"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a th:href="@{/organizer/projects}" class="btn btn-secondary">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-primary px-4">Lưu thay đổi</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

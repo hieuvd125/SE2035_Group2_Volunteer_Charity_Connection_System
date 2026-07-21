@@ -10,6 +10,10 @@ import java.util.List;
 public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegistration, Long> {
     List<ProjectRegistration> findByVolunteerId(Long volunteerId);
 
+    List<ProjectRegistration> findByVolunteerIdOrderByRegistrationDateDesc(Long volunteerId);
+
+    List<ProjectRegistration> findByVolunteerIdAndStatusOrderByRegistrationDateDesc(Long volunteerId, String status);
+
     List<ProjectRegistration> findByProjectId(Long projectId);
 
     Long countByProjectId(Long projectId);
@@ -17,6 +21,8 @@ public interface ProjectRegistrationRepository extends JpaRepository<ProjectRegi
     List<ProjectRegistration> findByStatus(String status);
 
     Long countByProjectIdAndStatus(Long projectId, String status);
+
+    Long countByVolunteerIdAndStatus(Long volunteerId, String status);
 
     boolean existsByProjectIdAndVolunteerId(Long projectId, Long volunteerId);
 }
