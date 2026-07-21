@@ -37,11 +37,6 @@
     <p>Giới thiệu:
         <span th:text="${user.bio != null && !user.bio.isBlank() ? user.bio : 'Chưa cập nhật'}"></span>
     </p>
-    <p>Website:
-        <a th:if="${user.website != null && !user.website.isBlank()}"
-           th:href="${user.website}" th:text="${user.website}" target="_blank" rel="noopener"></a>
-        <span th:if="${user.website == null || user.website.isBlank()}">Chưa cập nhật</span>
-    </p>
     <p>Vai trò: <span th:text="${user.role}"></span></p>
     <p>Trạng thái tài khoản: <span th:text="${user.status}"></span></p>
     <p>Ngày tạo tài khoản:

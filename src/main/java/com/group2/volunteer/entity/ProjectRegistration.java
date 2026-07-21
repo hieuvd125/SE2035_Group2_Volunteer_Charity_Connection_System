@@ -30,6 +30,4 @@ public class ProjectRegistration {
     @Column(nullable = false, length = 30)
     private String status = "PENDING";
 
-    @Column(name = "confirmed_hours")
-    private Integer confirmedHours = 0;
 }

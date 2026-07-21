@@ -52,7 +52,6 @@ public class VolunteerController {
         profileRequest.setAddress(user.getAddress());
         profileRequest.setAvatarUrl(user.getAvatarUrl());
         profileRequest.setBio(user.getBio());
-        profileRequest.setWebsite(user.getWebsite());
         model.addAttribute("profileRequest", profileRequest);
 
         return "volunteer/edit_profile";

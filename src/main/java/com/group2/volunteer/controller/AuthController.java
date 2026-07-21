@@ -80,7 +80,6 @@ public class AuthController {
 
         user.setRole("VOLUNTEER");
         user.setStatus("ACTIVE");
-        user.setTotalHours(0);
 
         userService.register(user);
 
@@ -115,7 +114,6 @@ public class AuthController {
 
         user.setRole("ORGANIZER");
         user.setStatus("PENDING");
-        user.setTotalHours(0);
 
         userService.register(user);
 

@@ -66,7 +66,6 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
         reg.setVolunteer(volunteer);
 
         reg.setStatus("PENDING");
-        reg.setConfirmedHours(0);
 
         registrationRepository.save(reg);
     }

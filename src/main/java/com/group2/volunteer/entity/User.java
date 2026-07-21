@@ -60,9 +60,6 @@ public class User {
     @Column(name = "bio", columnDefinition = "TEXT")
     private String bio;
 
-    @Column(name = "total_hours", nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer totalHours = 0;
-
     @Column(name = "website", length = 255)
     private String website;
 

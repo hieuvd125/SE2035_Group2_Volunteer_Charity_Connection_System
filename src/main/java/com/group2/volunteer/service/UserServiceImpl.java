@@ -27,9 +27,6 @@ public class UserServiceImpl implements UserService{
     public User getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng."));
-        if (user.getTotalHours() == null) {
-            user.setTotalHours(0);
-        }
         return user;
     }
 
@@ -119,7 +116,6 @@ public class UserServiceImpl implements UserService{
         user.setAddress(emptyToNull(profileRequest.getAddress()));
         user.setAvatarUrl(emptyToNull(profileRequest.getAvatarUrl()));
         user.setBio(emptyToNull(profileRequest.getBio()));
-        user.setWebsite(emptyToNull(profileRequest.getWebsite()));
 
         return userRepository.save(user);
     }
