@@ -38,7 +38,7 @@
     <div th:if="${error}" th:text="${error}"></div>
 
     <form th:if="${project.status == 'RECRUITING'}"
-          th:action="@{/organizer/projects/{id}/close-recruitment(id=${project.id})}"
+          th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}"
           method="post" style="display:inline">
         <button type="submit">Đóng ứng tuyển</button>
     </form>

@@ -184,7 +184,7 @@ public class OrganizerProjectController {
         }
     }
 
-    @PostMapping("/{id}/close-recruitment")
+    @PostMapping("/{id}/close_recruitment")
     public String closeRecruitment(@PathVariable Long id,
                                    HttpSession session,
                                    RedirectAttributes redirectAttributes) {
