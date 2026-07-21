@@ -37,11 +37,6 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
     }
 
     @Override
-    public List<AttendanceProof> getProofsWaitingForVerification() {
-        return attendanceProofRepository.findByRegistration_Status(RegistrationStatus.APPROVED);
-    }
-
-    @Override
     public List<AttendanceProof> getProofsWaitingForVerificationByProject(Long projectId) {
         return attendanceProofRepository
                 .findByRegistration_Project_IdAndRegistration_Status(projectId, RegistrationStatus.APPROVED);
@@ -73,12 +68,6 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
         proof.setProofImage(proofImage);
 
         return attendanceProofRepository.save(proof);
-    }
-
-    @Override
-    @Transactional
-    public ProjectRegistration verifyAttendance(Long proofId) {
-        return verifyAttendanceForProject(proofId, null);
     }
 
     @Override

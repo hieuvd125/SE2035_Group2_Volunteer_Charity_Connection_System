@@ -11,7 +11,7 @@
 
 <p th:if="${#lists.isEmpty(registrations)}">Bạn chưa được duyệt tham gia dự án nào để nộp minh chứng.</p>
 
-<form th:if="${!#lists.isEmpty(registrations)}" th:action="@{/attendance/submit}" method="post">
+<form th:if="${!#lists.isEmpty(registrations)}" th:action="@{/volunteer/attendance/submit}" method="post">
     <div>
         <label for="registrationId">Chọn dự án đã được duyệt tham gia</label>
         <select id="registrationId" name="registrationId" required>

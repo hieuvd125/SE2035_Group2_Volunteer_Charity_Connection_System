@@ -8,7 +8,7 @@
             <a th:href="@{/organizer/projects}">Dự án của tôi</a>
         </li>
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
-            <a th:href="@{/attendance/submit}">Nộp minh chứng</a>
+            <a th:href="@{/volunteer/attendance/submit}">Nộp minh chứng</a>
         </li>
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
             <a th:href="@{/volunteer/my-activities}">Hoạt động của tôi</a>

@@ -12,13 +12,9 @@ public interface AttendanceProofService {
 
     Long countAttendedProjectsByVolunteer(Long volunteerId);
 
-    List<AttendanceProof> getProofsWaitingForVerification();
-
     List<AttendanceProof> getProofsWaitingForVerificationByProject(Long projectId);
 
     AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage);
-
-    ProjectRegistration verifyAttendance(Long proofId);
 
     ProjectRegistration verifyAttendanceForProject(Long proofId, Long projectId);
 }
