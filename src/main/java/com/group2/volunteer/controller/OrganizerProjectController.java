@@ -176,7 +176,7 @@ public class OrganizerProjectController {
 
         try {
             projectService.updateProject(id, dto, user.getId());
-            redirectAttributes.addFlashAttribute("message", "Project updated successfully");
+            redirectAttributes.addFlashAttribute("message", "Cập nhật dự án thành công!");
             return "redirect:/organizer/projects/" + id;
         } catch (InvalidProjectStateException e) {
             model.addAttribute("project", project);
@@ -216,7 +216,7 @@ public class OrganizerProjectController {
 
         try {
             projectService.closeRecruitment(id, user.getId());
-            redirectAttributes.addFlashAttribute("message", "Recruitment closed successfully");
+            redirectAttributes.addFlashAttribute("message", "Đã đóng tuyển tình nguyện viên thành công!");
         } catch (InvalidProjectStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
