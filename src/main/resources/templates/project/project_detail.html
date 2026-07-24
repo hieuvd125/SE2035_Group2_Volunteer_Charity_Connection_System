@@ -114,16 +114,18 @@
             <form th:action="@{/projects/apply}" method="post" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <input type="hidden" name="projectId" th:value="${project.id}"/>
 
-                <button type="submit" class="btn-save" style="background-color: #198754 !important; padding: 10px 24px !important;"
-                        th:if="${project.status == 'RECRUITING' and !applied}">
-                    Đăng Ký Tham Gia
-                </button>
+                <th:block th:if="${session.user != null and (session.user.role == 'VOLUNTEER' or session.user.role == 'ROLE_VOLUNTEER')}">
+                    <button type="submit" class="btn-save" style="background-color: #198754 !important; padding: 10px 24px !important;"
+                            th:if="${project.status == 'RECRUITING' and !applied}">
+                        Đăng Ký Tham Gia
+                    </button>
 
-                <button type="button" class="btn-back" disabled
-                        th:if="${project.status == 'RECRUITING' and applied}"
-                        style="background-color: #0dcaf0 !important; color: #fff !important; cursor: not-allowed; opacity: 0.9;">
-                    <i class="bi bi-check-circle me-1"></i> Bạn đã nộp đơn (Chờ duyệt)
-                </button>
+                    <button type="button" class="btn-back" disabled
+                            th:if="${project.status == 'RECRUITING' and applied}"
+                            style="background-color: #0dcaf0 !important; color: #fff !important; cursor: not-allowed; opacity: 0.9;">
+                        <i class="bi bi-check-circle me-1"></i> Bạn đã nộp đơn (Chờ duyệt)
+                    </button>
+                </th>
 
                 <button type="button" class="btn-back" disabled
                         th:if="${project.status != 'RECRUITING'}"
