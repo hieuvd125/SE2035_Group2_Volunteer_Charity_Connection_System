@@ -8,11 +8,6 @@
 
 <div id="project-content" class="container-fluid py-3">
 
-    <div class="p-4 mb-4 bg-primary text-white border">
-        <h2>Hệ Thống Quản Lý Dự Án Tình Nguyện VCPCS</h2>
-        <p class="mb-0">Tìm kiếm và đăng ký tham gia các hoạt động tình nguyện trên toàn quốc.</p>
-    </div>
-
     <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage} != ''">
         <span th:text="${successMessage}">Thông báo thành công!</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -63,16 +58,16 @@
         </div>
 
         <div class="col" th:each="p : ${projectList}">
-            <div class="card h-100 border">
+            <div class="card h-100 border d-flex flex-column">
 
-                <div class="bg-secondary text-white text-center" style="height: 160px; overflow: hidden;">
+                <div class="bg-secondary text-white text-center" style="height: 160px; overflow: hidden; flex-shrink: 0;">
                     <img th:src="${p.imageUrl != null and !#strings.isEmpty(p.imageUrl)} ? ${p.imageUrl} : 'https://via.placeholder.com/300x160?text=No+Image'"
                          class="w-100 h-100"
                          style="object-fit: cover;"
                          onerror="this.onerror=null;this.src='https://via.placeholder.com/300x160?text=No+Image';">
                 </div>
 
-                <div class="card-body">
+                <div class="card-body d-flex flex-column p-3">
                     <div class="mb-2">
                         <span class="badge bg-secondary" th:text="${p.category != null ? p.category.name : 'Khác'}">Lĩnh vực</span>
                         <span class="badge"
@@ -81,17 +76,25 @@
                         </span>
                     </div>
 
-                    <h6 class="card-title text-primary" th:text="${p.title}">Tên dự án</h6>
-                    <p class="card-text small text-muted" th:text="${p.description}">Mô tả ngắn...</p>
-                    <hr>
+                    <h6 class="card-title text-primary fw-bold"
+                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.5rem;"
+                        th:text="${p.title}">
+                        Tên dự án
+                    </h6>
 
-                    <div class="small">
-                        <p class="mb-1"><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
+                    <p class="card-text small text-muted mb-3"
+                       style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 3.6rem;"
+                       th:text="${p.description}">
+                        Mô tả ngắn...
+                    </p>
+
+                    <div class="mt-auto pt-2 border-top small text-muted">
+                        <p class="mb-1 text-truncate"><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
                         <p class="mb-0"><strong>Số lượng TNV:</strong> <span th:text="${p.targetVolunteers}">0</span> người</p>
                     </div>
                 </div>
 
-                <div class="card-footer bg-white border-top-0">
+                <div class="card-footer bg-white border-top-0 pt-0">
                     <a th:href="@{/projects/detail/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary w-100 mb-2">
                         Xem chi tiết
                     </a>
