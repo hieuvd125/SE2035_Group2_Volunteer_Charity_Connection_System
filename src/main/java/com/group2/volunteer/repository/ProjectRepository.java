@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
@@ -27,8 +26,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         AND (:location IS NULL OR :location = '' OR LOWER(p.location) LIKE LOWER(CONCAT('%', :location, '%')))
         AND (:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId)
     """)
-    List<Project> searchProjects(
+    Page<Project> searchProjects(
             @Param("title") String title,
             @Param("location") String location,
-            @Param("categoryId") Long categoryId);
+            @Param("categoryId") Long categoryId,
+            Pageable pageable);
 }

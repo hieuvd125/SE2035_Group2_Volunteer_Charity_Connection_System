@@ -36,5 +36,19 @@
         <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
             <a th:href="@{/saved-projects/my}">Dự án đã lưu</a>
         </li>
+        <th:block th:if="${session.user == null}">
+            <li class="mb-2">
+                <a th:href="@{/projects/homepage}">Trang Chủ Dự Án</a>
+            </li>
+            <li class="mb-2">
+                <a th:href="@{/login}">Đăng Nhập</a>
+            </li>
+            <li class="mb-2">
+                <a th:href="@{/register/volunteer}">Đăng Ký Tình Nguyện</a>
+            </li>
+            <li class="mb-2">
+                <a th:href="@{/register/organizer}">Đăng Ký Tổ Chức</a>
+            </li>
+        </th:block>
     </ul>
 </div>

@@ -2,43 +2,43 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::#project-content})}">
 <head>
-    <title>Trang Chủ - Bộ Lọc Dự Án Tình Nguyện</title>
+    <title>Trang Chủ - Hệ Thống Tình Nguyện</title>
 </head>
 <body>
 
-<div id="project-content" class="container-fluid py-4">
+<div id="project-content" class="container-fluid py-3">
 
-    <div class="row mb-3" th:if="${successMessage} != ''">
-        <div class="col-12">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <span th:text="${successMessage}">Thông báo thành công!</span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
+    <div class="p-4 mb-4 bg-primary text-white border">
+        <h2>Hệ Thống Quản Lý Dự Án Tình Nguyện VCPCS</h2>
+        <p class="mb-0">Tìm kiếm và đăng ký tham gia các hoạt động tình nguyện trên toàn quốc.</p>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title text-primary mb-3"><i class="bi bi-funnel-fill me-2"></i>Bộ Lọc Tìm Kiếm Dự Án</h5>
+    <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage} != ''">
+        <span th:text="${successMessage}">Thông báo thành công!</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
+    <div class="card mb-4 border">
+        <div class="card-header bg-light">
+            <strong>BỘ LỌC TÌM KIẾM</strong>
+        </div>
+        <div class="card-body">
             <form th:action="@{/projects/homepage}" th:object="${criteria}" method="get" class="row g-3">
                 <div class="col-md-4">
-                    <label for="title" class="form-label font-weight-bold">Tên dự án</label>
-                    <input type="text" th:field="*{title}" id="title" class="form-control" placeholder="Nhập tên dự án cần tìm...">
+                    <label for="title" class="form-label">Tên dự án:</label>
+                    <input type="text" th:field="*{title}" id="title" class="form-control" placeholder="Nhập tên dự án...">
                 </div>
 
                 <div class="col-md-3">
-                    <label for="location" class="form-label font-weight-bold">Khu vực / Địa điểm</label>
-                    <input type="text" th:field="*{location}" id="location" class="form-control" placeholder="Nhập tỉnh thành (Ví dụ: Hà Giang...)">
+                    <label for="location" class="form-label">Địa điểm:</label>
+                    <input type="text" th:field="*{location}" id="location" class="form-control" placeholder="Nhập địa điểm...">
                 </div>
 
                 <div class="col-md-3">
-                    <label for="categoryId" class="form-label font-weight-bold">Lĩnh vực hoạt động</label>
+                    <label for="categoryId" class="form-label">Lĩnh vực:</label>
                     <select th:field="*{categoryId}" id="categoryId" class="form-select">
-                        <option value="">-- Tất cả lĩnh vực --</option>
-                        <option
-                                th:each="c : ${categories}"
+                        <option value="">-- Tất cả --</option>
+                        <option th:each="c : ${categories}"
                                 th:value="${c.id}"
                                 th:text="${c.name}">
                         </option>
@@ -46,57 +46,104 @@
                 </div>
 
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-2"></i>Tìm kiếm</button>
+                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <h4 class="mb-3 text-secondary">Danh Sách Dự Án</h4>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <h5 class="mb-3">Danh sách dự án</h5>
 
-        <div class="col-12 text-center py-5" th:if="${#lists.isEmpty(projectList)}">
-            <div class="alert alert-warning d-inline-block px-5">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> Không tìm thấy dự án nào phù hợp với bộ lọc hiện tại!
+    <div class="row row-cols-1 row-cols-md-3 g-3">
+
+        <div class="col-12 text-center py-4" th:if="${#lists.isEmpty(projectList)}">
+            <div class="alert alert-warning">
+                Không tìm thấy dự án nào!
             </div>
         </div>
 
         <div class="col" th:each="p : ${projectList}">
-            <div class="card h-100 shadow-sm border-0 transition-card">
-                <div class="card-body">
-                    <h5 class="card-title text-dark font-weight-bold" th:text="${p.title}">Tên dự án</h5>
-                    <p class="card-text text-muted text-truncate-2" th:text="${p.description}">Mô tả ngắn gọn về chương trình...</p>
-                    <hr>
-                    <div class="small mb-3">
-                        <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger me-2"></i><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
-                        <p class="mb-0"><i class="bi bi-people-fill text-success me-2"></i><strong>Mục tiêu:</strong> <span th:text="${p.targetVolunteers}">0</span> tình nguyện viên</p>
-                        <p class="mb-2">
-                            <strong>Trạng thái:</strong>
+            <div class="card h-100 border">
 
-                            <span
-                                    class="badge"
-                                    th:classappend="
-            ${p.status == 'RECRUITING'} ? 'bg-success' :
-            (${p.status == 'PENDING'} ? 'bg-warning text-dark' :
-            'bg-secondary')"
-                                    th:text="${p.status}">
-    </span>
-                        </p>
+                <div class="bg-secondary text-white text-center" style="height: 160px; overflow: hidden;">
+                    <img th:src="${p.imageUrl != null and !#strings.isEmpty(p.imageUrl)} ? ${p.imageUrl} : 'https://via.placeholder.com/300x160?text=No+Image'"
+                         class="w-100 h-100"
+                         style="object-fit: cover;"
+                         onerror="this.onerror=null;this.src='https://via.placeholder.com/300x160?text=No+Image';">
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-2">
+                        <span class="badge bg-secondary" th:text="${p.category != null ? p.category.name : 'Khác'}">Lĩnh vực</span>
+                        <span class="badge"
+                              th:classappend="${p.status == 'RECRUITING'} ? 'bg-success' : 'bg-warning text-dark'"
+                              th:text="${p.status}">
+                        </span>
+                    </div>
+
+                    <h6 class="card-title text-primary" th:text="${p.title}">Tên dự án</h6>
+                    <p class="card-text small text-muted" th:text="${p.description}">Mô tả ngắn...</p>
+                    <hr>
+
+                    <div class="small">
+                        <p class="mb-1"><strong>Địa điểm:</strong> <span th:text="${p.location}">Địa điểm</span></p>
+                        <p class="mb-0"><strong>Số lượng TNV:</strong> <span th:text="${p.targetVolunteers}">0</span> người</p>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-0 pt-0 pb-3">
-                    <a th:href="@{/projects/detail/{id}(id=${p.id})}" class="btn btn-outline-primary w-100">
-                        Xem Chi Tiết & Đăng Ký <i class="bi bi-arrow-right ms-1"></i>
+
+                <div class="card-footer bg-white border-top-0">
+                    <a th:href="@{/projects/detail/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                        Xem chi tiết
                     </a>
                     <form th:action="@{/saved-projects/save}" method="post">
                         <input type="hidden" name="projectId" th:value="${p.id}" />
-                        <button type="submit" title="Lưu dự án"> Lưu dự án</button>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary w-100">
+                            Lưu dự án
+                        </button>
                     </form>
                 </div>
+
             </div>
         </div>
 
     </div>
+
+    <!-- Phân trang cơ bản -->
+    <div class="row my-4" th:if="${projectPage != null and projectPage.totalPages > 1}">
+        <div class="col-12 d-flex justify-content-center">
+            <ul class="pagination pagination-sm">
+
+                <li class="page-item" th:classappend="${projectPage.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/projects/homepage(page=${projectPage.number - 1}, title=${criteria.title}, location=${criteria.location}, categoryId=${criteria.categoryId})}">
+                        Trước
+                    </a>
+                </li>
+
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, projectPage.totalPages - 1)}"
+                    th:classappend="${i == projectPage.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/projects/homepage(page=${i}, title=${criteria.title}, location=${criteria.location}, categoryId=${criteria.categoryId})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${projectPage.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/projects/homepage(page=${projectPage.number + 1}, title=${criteria.title}, location=${criteria.location}, categoryId=${criteria.categoryId})}">
+                        Sau
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer đơn giản -->
+    <footer class="mt-5 p-3 bg-light border text-center small text-muted">
+        <p class="mb-0">Hệ Thống Quản Lý Hoạt Động Tình Nguyện - Group 2</p>
+    </footer>
+
 </div>
 
 </body>

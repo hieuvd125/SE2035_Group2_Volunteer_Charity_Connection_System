@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import com.group2.volunteer.service.DonationService;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 @RequestMapping("/projects")
@@ -24,16 +25,26 @@ public class ProjectController {
     private final ProjectQueryService projectQueryService;
     private final CategoryRepository categoryRepository;
     private final DonationService donationService;
-
     @GetMapping("/homepage")
-    public String showHomepage(@ModelAttribute("criteria") ProjectSearchCriteria criteria, Model model) {
-        List<Project> projects = projectQueryService.getAvailableProjects(criteria);
-        model.addAttribute("projectList", projects);
+    public String showHomepage(
+            @ModelAttribute("criteria") ProjectSearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Project> projectPage =
+                projectQueryService.getAvailableProjects(criteria, pageable);
+
+        model.addAttribute("projectPage", projectPage);
+        model.addAttribute("projectList", projectPage.getContent());
         model.addAttribute("categories", categoryRepository.findAll());
 
         if (!model.containsAttribute("successMessage")) {
             model.addAttribute("successMessage", "");
         }
+
         return "common/homepage";
     }
 
