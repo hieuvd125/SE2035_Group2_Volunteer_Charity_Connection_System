@@ -1,6 +1,5 @@
 package com.group2.volunteer.dto;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -16,35 +15,35 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCreationDTO {
-    @NotBlank(message = "Project title is required")
+    @NotBlank(message = "Tên dự án không được để trống")
     private String title;
 
-    @NotBlank(message = "Description is required")
+    @NotBlank(message = "Mô tả không được để trống")
     private String description;
 
     private String imageUrl;
 
-    @NotBlank(message = "Location is required")
+    @NotBlank(message = "Địa điểm không được để trống")
     private String location;
 
-    @NotNull(message = "Start date is required")
-    @FutureOrPresent(message = "Start date must be today or in the future")
+    @NotNull(message = "Ngày bắt đầu không được để trống")
+    @FutureOrPresent(message = "Ngày bắt đầu phải là hôm nay hoặc trong tương lai")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
-    @NotNull(message = "End date is required")
-    @FutureOrPresent(message = "End date must be today or in the future")
+    @NotNull(message = "Ngày kết thúc không được để trống")
+    @FutureOrPresent(message = "Ngày kết thúc phải là hôm nay hoặc trong tương lai")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @NotNull(message = "Target volunteers is required")
-    @Min(value = 1, message = "Target volunteers must be at least 1")
+    @NotNull(message = "Số lượng tình nguyện viên không được để trống")
+    @Min(value = 1, message = "Số lượng tình nguyện viên phải ít nhất là 1")
     private Integer targetVolunteers;
 
-    @NotNull(message = "Target donation is required")
-    @DecimalMin(value = "0.0", message = "Target donation must be greater than or equal to 0")
-    private Double targetDonation;
+    @NotNull(message = "Mục tiêu quyên góp không được để trống")
+    @Min(value = 0, message = "Mục tiêu quyên góp phải lớn hơn hoặc bằng 0")
+    private Long targetDonation;
 
-    @NotNull(message = "Category is required")
+    @NotNull(message = "Danh mục không được để trống")
     private Long categoryId;
 }

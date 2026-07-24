@@ -22,7 +22,7 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "image_url", length = 255)
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(length = 255)
@@ -38,10 +38,14 @@ public class Project {
     private Integer targetVolunteers;
 
     @Column(name = "target_donation", nullable = false)
-    private Double targetDonation;
+    private Long targetDonation;
 
     @Column(nullable = false, length = 30)
     private String status = "PENDING";
+
+    @Column(name = "created_at", updatable = false,
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id", foreignKey = @ForeignKey(name = "fk_project_organizer"))
