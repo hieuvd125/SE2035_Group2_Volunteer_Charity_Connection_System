@@ -14,6 +14,8 @@ public interface AttendanceProofService {
 
     List<AttendanceProof> getProofsWaitingForVerificationByProject(Long projectId);
 
+    void validateProofSubmission(Long registrationId, Long volunteerId);
+
     AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage);
 
     ProjectRegistration verifyAttendanceForProject(Long proofId, Long projectId);
