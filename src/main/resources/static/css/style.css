@@ -150,3 +150,283 @@ background-color: #f1f5f9 !important;
         position: sticky !important;   /* Giữ trạng thái trôi theo màn hình nếu muốn */
         top: 0;                        /* Ghim ở sát mép trên màn hình khi cuộn */
     }
+
+    /* =========================================================
+       8. CẤU HÌNH BỘ LỌC TÌM KIẾM & BADGE TRẠNG THÁI
+       ========================================================= */
+
+    /* Khung bộ lọc */
+    .filter-card {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Đưa tất cả ô input, select và button về cùng chiều cao 38px */
+    .filter-form input[type="text"],
+    .filter-form select,
+    .filter-form .btn-search,
+    .filter-form .btn-reset {
+        height: 38px !important;
+        margin: 0 !important; /* Bỏ margin thừa làm xô lệch hàng */
+        box-sizing: border-box;
+    }
+
+    /* Thu gọn nút Tìm kiếm & Nút Xóa bộ lọc */
+    .btn-search {
+        padding: 0 16px !important;
+        font-size: 14px;
+        white-space: nowrap;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .btn-search:hover {
+        background-color: #0b5ed7;
+    }
+
+    .btn-reset {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+        font-size: 14px;
+        color: #495057;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .btn-reset:hover {
+        background-color: #dee2e6;
+        color: #212529;
+        text-decoration: none;
+    }
+
+    /* MÀU BADGE TRẠNG THÁI (Nền nhạt - Chữ màu đậm rõ nét) */
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    /* Hoạt động: Nền xanh lá nhạt, chữ xanh đậm */
+    .badge-active {
+        background-color: #d1e7dd !important;
+        color: #0f5132 !important;
+    }
+
+    /* Chờ duyệt: Nền vàng nhạt, chữ nâu vàng đậm */
+    .badge-pending {
+        background-color: #fff3cd !important;
+        color: #664d03 !important;
+    }
+
+    /* Đã khóa: Nền đỏ nhạt, chữ đỏ đậm */
+    .badge-blocked {
+        background-color: #f8d7da !important;
+        color: #842029 !important;
+    }
+
+/* =========================================================
+   9. GIAO DIỆN TRANG CHI TIẾT TÀI KHOẢN (USER DETAIL)
+   ========================================================= */
+
+/* Khung card chi tiết */
+.detail-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 800px;
+    margin: 20px auto;
+    border: 1px solid #e9ecef;
+}
+
+.detail-card .card-title {
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+/* Các hàng hiển thị thông tin */
+.info-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+    font-size: 15px;
+}
+
+.info-label {
+    width: 220px;
+    min-width: 220px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.info-value {
+    color: #1e293b;
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+/* Cụm nút bấm phía dưới */
+.btn-group-custom {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Định dạng nút bấm */
+.btn-back {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px !important;
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-back:hover {
+    background-color: #5a6268 !important;
+    color: #ffffff !important;
+}
+
+.btn-edit {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px !important;
+    background-color: #f39c12 !important; /* Màu cam nổi bật cho Chỉnh sửa */
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-edit:hover {
+    background-color: #d68910 !important;
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   10. GIAO DIỆN TRANG CHỈNH SỬA TÀI KHOẢN (USER EDIT)
+   ========================================================= */
+
+/* Khung card chứa form chỉnh sửa */
+.edit-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 650px;
+    margin: 20px auto;
+    border: 1px solid #e9ecef;
+}
+
+.edit-card .card-title {
+    color: #1e293b;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+/* Định dạng từng nhóm input */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Đảm bảo ô input/select chiếm 100% chiều rộng khung form */
+.edit-card input[type="text"],
+.edit-card input[type="email"],
+.edit-card select {
+    width: 100% !important;
+    height: 42px;
+    padding: 8px 14px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+/* Ô input readonly (không cho chỉnh sửa) */
+.edit-card input[readonly] {
+    background-color: #f1f5f9 !important;
+    color: #64748b;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+}
+
+/* Nút Lưu thay đổi */
+.edit-card .btn-save {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px !important;
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.edit-card .btn-save:hover {
+    background-color: #0b5ed7 !important;
+}
+
+/* Khung thông báo kiểu dáng mới */
+.alert-message {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid #badbcc;
+}
+/* Thêm textarea vào selector ô nhập liệu của .edit-card */
+.edit-card input[type="text"],
+.edit-card input[type="email"],
+.edit-card select,
+.edit-card textarea {
+    width: 100% !important;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}

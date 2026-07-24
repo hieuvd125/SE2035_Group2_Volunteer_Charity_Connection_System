@@ -64,5 +64,9 @@
            th:href="@{/admin/categories}" class="list-group-item list-group-item-action border-0 rounded mb-1">
             Quản lý Danh mục dự án
         </a>
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/users/review}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Tài khoản chờ duyệt
+        </a>
     </div>
 </div>

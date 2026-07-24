@@ -7,26 +7,27 @@
 </head>
 <body>
 
-<div class="container">
-    <p th:if="${message}" th:text="${message}" style="color: green; font-weight: bold; background: #e8f8f5; padding: 10px; border-radius: 4px;"></p>
+<div class="container py-3">
 
-    <div class="card">
+    <div class="edit-card">
         <h2 class="card-title">Chỉnh sửa thông tin tài khoản</h2>
+
+        <p th:if="${message}" th:text="${message}" class="alert-message"></p>
 
         <form th:action="@{/admin/users/edit/{id}(id=${user.id})}" th:object="${user}" method="POST">
 
             <div class="form-group">
-                <label>Tên đăng nhập:</label>
+                <label>Tên đăng nhập (chỉ đọc):</label>
                 <input type="text" th:field="*{username}" readonly>
             </div>
 
             <div class="form-group">
-                <label>Họ và Tên / Tên tổ chức:</label>
+                <label>Họ và Tên / Tên tổ chức <span style="color: #dc3545;">*</span>:</label>
                 <input type="text" th:field="*{fullName}" required>
             </div>
 
             <div class="form-group">
-                <label>Email liên hệ:</label>
+                <label>Email liên hệ <span style="color: #dc3545;">*</span>:</label>
                 <input type="email" th:field="*{email}" required>
             </div>
 
@@ -36,16 +37,16 @@
             </div>
 
             <div class="form-group">
-                <label>Vai trò hệ thống:</label>
+                <label>Vai trò hệ thống <span style="color: #dc3545;">*</span>:</label>
                 <select th:field="*{role}" required>
-                    <option value="VOLUNTEER">VOLUNTEER</option>
-                    <option value="ORGANIZER">ORGANIZER</option>
-                    <option value="ADMIN">ADMIN</option>
+                    <option value="VOLUNTEER">Tình nguyện viên (VOLUNTEER)</option>
+                    <option value="ORGANIZER">Tổ chức (ORGANIZER)</option>
+                    <option value="ADMIN">Quản trị viên (ADMIN)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Trạng thái tài khoản:</label>
+                <label>Trạng thái tài khoản <span style="color: #dc3545;">*</span>:</label>
                 <select th:field="*{status}" required>
                     <option value="ACTIVE">Hoạt động</option>
                     <option value="PENDING">Chờ duyệt</option>
@@ -53,9 +54,9 @@
                 </select>
             </div>
 
-            <div class="btn-group">
-                <button type="submit" class="btn btn-save">Lưu thay đổi</button>
-                <a th:href="@{/admin/users}" class="btn btn-back">Hủy bỏ</a>
+            <div class="btn-group-custom">
+                <button type="submit" class="btn-save">Lưu thay đổi</button>
+                <a th:href="@{/admin/users}" class="btn-back">Hủy bỏ</a>
             </div>
         </form>
     </div>

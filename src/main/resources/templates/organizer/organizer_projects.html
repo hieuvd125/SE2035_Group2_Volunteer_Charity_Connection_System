@@ -6,74 +6,105 @@
     <title>Danh sách dự án của tôi</title>
 </head>
 <body>
-<section class="project-list-page">
-    <div class="page-heading">
+
+<div class="container-fluid py-3">
+
+    <div style="display: flex; justify-content: space-between; align-items: center;" class="mb-3">
         <div>
-            <p class="page-kicker">Organizer</p>
-            <h2>Danh sách dự án của tôi</h2>
-            <p>Theo dõi trạng thái và quản lý các dự án bạn đã tạo.</p>
+            <h2 style="color: #2c3e50; margin: 0;">Danh sách dự án của tôi</h2>
+            <p style="color: #6c757d; margin: 4px 0 0 0; font-size: 14px;">Theo dõi trạng thái và quản lý các dự án bạn đã tạo.</p>
         </div>
-        <a class="create-project-link" th:href="@{/organizer/projects/create}">+ Tạo dự án</a>
+        <a th:href="@{/organizer/projects/create}" class="btn-search" style="text-decoration: none; font-weight: 600;">
+            + Tạo dự án
+        </a>
     </div>
 
-<form class="project-filter" method="get" th:action="@{/organizer/projects}">
-    <input type="text" name="title" placeholder="Tìm theo tên" th:value="${filterTitle}"/>
-    <input type="text" name="location" placeholder="Tìm theo địa điểm" th:value="${filterLocation}"/>
-    <select name="status">
-        <option value="">Tất cả trạng thái</option>
-        <option value="PENDING"    th:selected="${filterStatus == 'PENDING'}">Chờ duyệt</option>
-        <option value="PLANNING"   th:selected="${filterStatus == 'PLANNING'}">Đang kế hoạch</option>
-        <option value="RECRUITING" th:selected="${filterStatus == 'RECRUITING'}">Đang tuyển</option>
-        <option value="RECRUITMENT_CLOSED" th:selected="${filterStatus == 'RECRUITMENT_CLOSED'}">Đã đóng ứng tuyển</option>
-        <option value="ONGOING"    th:selected="${filterStatus == 'ONGOING'}">Đang tiến hành</option>
-        <option value="REJECTED"   th:selected="${filterStatus == 'REJECTED'}">Từ chối</option>
-        <option value="COMPLETED"  th:selected="${filterStatus == 'COMPLETED'}">Đã hoàn thành</option>
-    </select>
+    <div class="filter-card">
+        <form th:action="@{/organizer/projects}" method="GET" class="filter-form">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <input type="text" name="title" th:value="${filterTitle}"
+                       placeholder="Tìm theo tên..." style="width: 250px;">
 
-    <button type="submit">Tìm kiếm</button>
-    <a class="filter-reset" th:href="@{/organizer/projects}">Xóa lọc</a>
-</form>
+                <input type="text" name="location" th:value="${filterLocation}"
+                       placeholder="Tìm theo địa điểm..." style="width: 200px;">
 
-<div class="project-table-card" th:if="${projects != null and not #lists.isEmpty(projects)}">
-    <div class="table-responsive">
-    <table class="project-list-table">
+                <select name="status" style="width: auto;">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="PENDING"            th:selected="${filterStatus == 'PENDING'}">Chờ duyệt</option>
+                    <option value="PLANNING"           th:selected="${filterStatus == 'PLANNING'}">Đang kế hoạch</option>
+                    <option value="RECRUITING"         th:selected="${filterStatus == 'RECRUITING'}">Đang tuyển</option>
+                    <option value="RECRUITMENT_CLOSED" th:selected="${filterStatus == 'RECRUITMENT_CLOSED'}">Đã đóng ứng tuyển</option>
+                    <option value="ONGOING"            th:selected="${filterStatus == 'ONGOING'}">Đang tiến hành</option>
+                    <option value="REJECTED"           th:selected="${filterStatus == 'REJECTED'}">Từ chối</option>
+                    <option value="COMPLETED"          th:selected="${filterStatus == 'COMPLETED'}">Đã hoàn thành</option>
+                </select>
+
+                <button type="submit" class="btn-search">Tìm kiếm</button>
+                <a th:href="@{/organizer/projects}" class="btn-reset">Xóa lọc</a>
+            </div>
+        </form>
+    </div>
+
+    <table>
+        <thead>
         <tr>
-            <th>ID</th>
+            <th style="width: 80px;">ID</th>
             <th>Tên chiến dịch</th>
-            <th>Địa điểm</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
+            <th style="width: 220px;">Địa điểm</th>
+            <th style="width: 180px;">Trạng thái</th>
+            <th style="width: 130px;">Hành động</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="p : ${projects}">
-            <td th:text="${p.id}"></td>
-            <td th:text="${p.title}"></td>
-            <td th:text="${p.location}"></td>
+            <td th:text="${p.id}">1</td>
+            <td><strong th:text="${p.title}">Tên chiến dịch</strong></td>
+            <td th:text="${p.location}">Địa điểm</td>
             <td>
-                <span class="status-badge" th:classappend="${' status-' + p.status}" th:text="${p.status}"></span>
+                <span th:switch="${p.status}">
+                    <span th:case="'PENDING'"            class="badge badge-pending">Chờ duyệt</span>
+                    <span th:case="'PLANNING'"           class="badge" style="background: #e2e8f0; color: #475569;">Đang kế hoạch</span>
+                    <span th:case="'RECRUITING'"         class="badge badge-active">Đang tuyển</span>
+                    <span th:case="'RECRUITMENT_CLOSED'" class="badge" style="background: #e2e8f0; color: #475569;">Đã đóng ứng tuyển</span>
+                    <span th:case="'ONGOING'"            class="badge badge-active">Đang tiến hành</span>
+                    <span th:case="'REJECTED'"           class="badge badge-blocked">Từ chối</span>
+                    <span th:case="'COMPLETED'"          class="badge" style="background: #d1e7dd; color: #0f5132;">Đã hoàn thành</span>
+                    <span th:case="*"                    class="badge" th:text="${p.status}">Status</span>
+                </span>
             </td>
-            <td><a class="table-link" th:href="@{/organizer/projects/{id}(id=${p.id})}">Xem chi tiết</a></td>
+            <td>
+                <a th:href="@{/organizer/projects/{id}(id=${p.id})}" class="action-link">Xem chi tiết</a>
+            </td>
         </tr>
+        <tr th:if="${projects == null or #lists.isEmpty(projects)}">
+            <td colspan="5" style="text-align: center; color: #7f8c8d; padding: 20px;">
+                Không tìm thấy dự án nào phù hợp!
+            </td>
+        </tr>
+        </tbody>
     </table>
+
+    <div th:if="${totalPage > 1}" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+        <div style="display: flex; gap: 6px; align-items: center;">
+            <a th:if="${currentPage > 0}" class="btn-reset" style="height: 32px; padding: 0 12px;"
+               th:href="@{/organizer/projects(pageNumber=${currentPage - 1}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}">Trước</a>
+            <span th:if="${currentPage == 0}" class="btn-reset" style="height: 32px; padding: 0 12px; opacity: 0.5; pointer-events: none;">Trước</span>
+
+            <a th:each="i : ${#numbers.sequence(0, totalPage - 1)}"
+               th:href="@{/organizer/projects(pageNumber=${i}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}"
+               th:text="${i + 1}"
+               class="btn-reset"
+               th:style="${i == currentPage} ? 'height: 32px; padding: 0 12px; background-color: #0d6efd; color: white; border-color: #0d6efd;' : 'height: 32px; padding: 0 12px;'"></a>
+
+            <a th:if="${currentPage < totalPage - 1}" class="btn-reset" style="height: 32px; padding: 0 12px;"
+               th:href="@{/organizer/projects(pageNumber=${currentPage + 1}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}">Sau</a>
+            <span th:if="${currentPage >= totalPage - 1}" class="btn-reset" style="height: 32px; padding: 0 12px; opacity: 0.5; pointer-events: none;">Sau</span>
+        </div>
+
+        <span style="color: #6c757d; font-size: 14px;">Trang <b th:text="${currentPage + 1}"></b> / <b th:text="${totalPage}"></b></span>
     </div>
 
-    <div class="pagination" th:if="${totalPage > 1}" aria-label="Phân trang">
-        <a th:if="${currentPage > 0}"
-           th:href="@{/organizer/projects(pageNumber=${currentPage - 1}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}">Trước</a>
-        <span th:if="${currentPage == 0}">Trước</span>
-        <a th:each="i : ${#numbers.sequence(0, totalPage - 1)}"
-           th:href="@{/organizer/projects(pageNumber=${i}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}"
-           th:text="${i + 1}"
-           th:classappend="${i == currentPage} ? 'active' : ''"></a>
-        <a th:if="${currentPage < totalPage - 1}"
-           th:href="@{/organizer/projects(pageNumber=${currentPage + 1}, title=${filterTitle}, location=${filterLocation}, status=${filterStatus})}">Sau</a>
-        <span th:if="${currentPage >= totalPage - 1}">Sau</span>
-        <span class="summary">Trang <b th:text="${currentPage + 1}"></b>/<b th:text="${totalPage}"></b></span>
-    </div>
 </div>
 
-<div class="empty-state" th:if="${projects == null or #lists.isEmpty(projects)}">
-    <p>Không có dự án phù hợp.</p>
-</div>
-</section>
 </body>
 </html>

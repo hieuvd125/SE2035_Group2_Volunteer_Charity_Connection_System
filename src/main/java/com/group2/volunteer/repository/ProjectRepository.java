@@ -38,4 +38,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     long countByStatus(String status);
 
     List<Project> findByStatus(String status);
+
+    boolean existsByCategory_Id(Long categoryId);
 }

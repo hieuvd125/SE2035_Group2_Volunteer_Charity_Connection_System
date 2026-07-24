@@ -27,7 +27,7 @@ public class AdminController {
         long totalOrganizers = userRepository.countByRole("ORGANIZER");
         long totalUsers = totalVolunteers + totalOrganizers;
 
-        long pendingUsers = userRepository.countByRole("PENDING");
+        long pendingUsers = userRepository.countByStatus("PENDING");
         long pendingProjectCount = projectRepository.countByStatus("PENDING");
         long totalProjects = projectRepository.count();
         long totalCategories = categoryRepository.count();
