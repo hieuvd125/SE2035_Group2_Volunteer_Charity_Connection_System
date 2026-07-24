@@ -6,9 +6,17 @@
     <title>Danh sách dự án của tôi</title>
 </head>
 <body>
-<h2>Danh sách dự án của tôi</h2>
+<section class="project-list-page">
+    <div class="page-heading">
+        <div>
+            <p class="page-kicker">Organizer</p>
+            <h2>Danh sách dự án của tôi</h2>
+            <p>Theo dõi trạng thái và quản lý các dự án bạn đã tạo.</p>
+        </div>
+        <a class="create-project-link" th:href="@{/organizer/projects/create}">+ Tạo dự án</a>
+    </div>
 
-<form method="get" th:action="@{/organizer/projects}">
+<form class="project-filter" method="get" th:action="@{/organizer/projects}">
     <input type="text" name="title" placeholder="Tìm theo tên" th:value="${filterTitle}"/>
     <input type="text" name="location" placeholder="Tìm theo địa điểm" th:value="${filterLocation}"/>
     <select name="status">
@@ -23,11 +31,12 @@
     </select>
 
     <button type="submit">Tìm kiếm</button>
-    <a th:href="@{/organizer/projects}">Clear</a>
+    <a class="filter-reset" th:href="@{/organizer/projects}">Xóa lọc</a>
 </form>
 
-<div th:if="${projects != null and not #lists.isEmpty(projects)}">
-    <table>
+<div class="project-table-card" th:if="${projects != null and not #lists.isEmpty(projects)}">
+    <div class="table-responsive">
+    <table class="project-list-table">
         <tr>
             <th>ID</th>
             <th>Tên chiến dịch</th>
@@ -39,10 +48,13 @@
             <td th:text="${p.id}"></td>
             <td th:text="${p.title}"></td>
             <td th:text="${p.location}"></td>
-            <td th:text="${p.status}"></td>
-            <td><a th:href="@{/organizer/projects/{id}(id=${p.id})}">Xem chi tiết</a></td>
+            <td>
+                <span class="status-badge" th:classappend="${' status-' + p.status}" th:text="${p.status}"></span>
+            </td>
+            <td><a class="table-link" th:href="@{/organizer/projects/{id}(id=${p.id})}">Xem chi tiết</a></td>
         </tr>
     </table>
+    </div>
 
     <div class="pagination" th:if="${totalPage > 1}" aria-label="Phân trang">
         <a th:if="${currentPage > 0}"
@@ -59,8 +71,9 @@
     </div>
 </div>
 
-<div th:if="${projects == null or #lists.isEmpty(projects)}">
-    <p>Không có dự án nào.</p>
+<div class="empty-state" th:if="${projects == null or #lists.isEmpty(projects)}">
+    <p>Không có dự án phù hợp.</p>
 </div>
+</section>
 </body>
 </html>

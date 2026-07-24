@@ -6,60 +6,81 @@
     <title>Tạo dự án mới</title>
 </head>
 <body>
-<h2>
-    Tạo dự án mới
-</h2>
-<div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-bottom: 15px;"></div>
-<form th:action="@{/organizer/projects}" th:object="${projectDTO}" method="post">
-    <div>
-        <label>Tên dự án</label>
-        <input type="text" th:field="*{title}">
-        <span th:errors="*{title}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Mô tả</label>
-        <textarea th:field="*{description}"></textarea>
-        <span th:errors="*{description}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Địa điểm</label>
-        <input type="text" th:field="*{location}"></input>
-        <span th:errors="*{location}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Hình ảnh</label>
-        <input type="text" th:field="*{imageUrl}"></input>
-    </div>
-    <div>
-        <label>Ngày bắt đầu</label>
-        <input type="date" th:field="*{startDate}"></input>
-        <span th:errors="*{startDate}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Ngày kết thúc</label>
-        <input type="date" th:field="*{endDate}"></input>
-        <span th:errors="*{endDate}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Số lượng tình nguyện viên</label>
-        <input type="number" th:field="*{targetVolunteers}"></input>
-        <span th:errors="*{targetVolunteers}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Số tiền quyên góp mục tiêu</label>
-        <input type="number" min="0" step="1000" th:field="*{targetDonation}"></input>
-        <span th:errors="*{targetDonation}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Loại</label>
-        <select th:field="*{categoryId}">
-            <option value="">-- Chọn --</option>
-            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-        </select>
-        <span th:errors="*{categoryId}" style="color:red"></span>
+<section class="project-form-page">
+    <div class="page-heading">
+        <div>
+            <p class="page-kicker">Organizer</p>
+            <h2>Tạo dự án mới</h2>
+            <p>Điền đầy đủ thông tin để gửi dự án chờ Admin phê duyệt.</p>
+        </div>
     </div>
 
-    <button type="submit">Tạo dự án</button>
-</form>
+    <div class="page-alert error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <form class="project-form-card" th:action="@{/organizer/projects}" th:object="${projectDTO}" method="post">
+        <div class="project-form-grid">
+            <div class="form-field full-width">
+                <label for="title">Tên dự án</label>
+                <input id="title" type="text" th:field="*{title}" placeholder="Ví dụ: Mùa hè xanh 2026">
+                <span class="field-error" th:errors="*{title}"></span>
+            </div>
+
+            <div class="form-field full-width">
+                <label for="description">Mô tả</label>
+                <textarea id="description" th:field="*{description}" placeholder="Mô tả mục tiêu, hoạt động và đối tượng thụ hưởng của dự án"></textarea>
+                <span class="field-error" th:errors="*{description}"></span>
+            </div>
+
+            <div class="form-field">
+                <label for="location">Địa điểm</label>
+                <input id="location" type="text" th:field="*{location}" placeholder="Quận/Huyện, Tỉnh/Thành phố">
+                <span class="field-error" th:errors="*{location}"></span>
+            </div>
+
+            <div class="form-field">
+                <label for="categoryId">Danh mục</label>
+                <select id="categoryId" th:field="*{categoryId}">
+                    <option value="">-- Chọn danh mục --</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </select>
+                <span class="field-error" th:errors="*{categoryId}"></span>
+            </div>
+
+            <div class="form-field full-width">
+                <label for="imageUrl">URL hình ảnh</label>
+                <input id="imageUrl" type="url" th:field="*{imageUrl}" placeholder="https://example.com/project-image.jpg">
+            </div>
+
+            <div class="form-field">
+                <label for="startDate">Ngày bắt đầu</label>
+                <input id="startDate" type="date" th:field="*{startDate}">
+                <span class="field-error" th:errors="*{startDate}"></span>
+            </div>
+
+            <div class="form-field">
+                <label for="endDate">Ngày kết thúc</label>
+                <input id="endDate" type="date" th:field="*{endDate}">
+                <span class="field-error" th:errors="*{endDate}"></span>
+            </div>
+
+            <div class="form-field">
+                <label for="targetVolunteers">Số lượng tình nguyện viên</label>
+                <input id="targetVolunteers" type="number" min="1" step="1" th:field="*{targetVolunteers}" placeholder="Ví dụ: 20">
+                <span class="field-error" th:errors="*{targetVolunteers}"></span>
+            </div>
+
+            <div class="form-field">
+                <label for="targetDonation">Mục tiêu quyên góp (VNĐ)</label>
+                <input id="targetDonation" type="number" min="0" step="1000" th:field="*{targetDonation}" placeholder="Ví dụ: 50000000">
+                <span class="field-error" th:errors="*{targetDonation}"></span>
+            </div>
+        </div>
+
+        <div class="project-form-actions">
+            <a class="detail-back-link" th:href="@{/organizer/projects}">← Quay lại danh sách</a>
+            <button type="submit">Tạo dự án</button>
+        </div>
+    </form>
+</section>
 </body>
 </html>
