@@ -19,7 +19,7 @@ input[type="email"],
 input[type="url"],
 select,
 textarea {
-width: 100%;
+width: 50%%;
 padding: 8px 12px;
 font-size: 14px;
 border: 1px solid #ced4da;
@@ -131,4 +131,22 @@ background-color: #f1f5f9 !important;
     border: 0;
     border-top: 1px solid #e2e8f0;
     margin: 1.5rem 0;
+    }
+
+    html, body {
+        height: 100%;
+    }
+
+    .app-layout-wrapper {
+        display: flex;
+        min-height: calc(100vh - [chiều-cao-header-nếu-có]px); /* Hoặc dùng min-height: 100vh nếu không có header cố định */
+        align-items: stretch; /* Ép các phần tử con kéo dài bằng nhau */
+    }
+
+    #sidebar {
+        height: auto !important;       /* Hủy bỏ chiều cao cũ */
+        min-height: 100%;              /* Kéo dài hết cỡ theo khung bao ngoài */
+        flex-shrink: 0;                /* Không bị bóp méo khung */
+        position: sticky !important;   /* Giữ trạng thái trôi theo màn hình nếu muốn */
+        top: 0;                        /* Ghim ở sát mép trên màn hình khi cuộn */
     }
