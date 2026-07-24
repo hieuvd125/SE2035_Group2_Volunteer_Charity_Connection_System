@@ -25,10 +25,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         WHERE (:title IS NULL OR :title = '' OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))
         AND (:location IS NULL OR :location = '' OR LOWER(p.location) LIKE LOWER(CONCAT('%', :location, '%')))
         AND (:categoryId IS NULL OR :categoryId = 0 OR p.category.id = :categoryId)
-    """)
-    Page<Project> searchProjects(
+        AND p.status NOT IN ('PENDING', 'REJECTED')
+        """)
+    List<Project> searchProjects(
             @Param("title") String title,
             @Param("location") String location,
-            @Param("categoryId") Long categoryId,
-            Pageable pageable);
+            @Param("categoryId") Long categoryId);
+
+    long countByStatus(String status);
+
+    List<Project> findByStatus(String status);
 }

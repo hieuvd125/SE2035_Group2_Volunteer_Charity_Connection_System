@@ -1,7 +1,10 @@
 package com.group2.volunteer.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -11,25 +14,24 @@ import java.nio.file.Paths;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Autowired
-    private RoleInterceptor roleInterceptor;
 
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/uploads/**")
-//                .addResourceLocations("file:uploads/");
-//    }
+    @Autowired
+    private AuthInterceptor authInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(roleInterceptor)
-                .addPathPatterns(
-                        "/admin/**",
-                        "/projects/create/**",
-                        "/organizer/**",
-                        "/volunteer/**"
-                )
-                .excludePathPatterns("/login", "/logout", "/", "/css/**", "/js/**");
+
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/donations/**", "/saved-projects/**");
+
+        registry.addInterceptor(new RoleInterceptor("ADMIN"))
+                .addPathPatterns("/admin/**");
+
+        registry.addInterceptor(new RoleInterceptor("ORGANIZER"))
+                .addPathPatterns("/organizer/**", "/projects/create/**", "/attendance/verify/**");
+
+        registry.addInterceptor(new RoleInterceptor("VOLUNTEER"))
+                .addPathPatterns("/volunteer/**", "/projects/apply/**", "/attendance/submit/**", "/profile/**");
     }
 
     @Override

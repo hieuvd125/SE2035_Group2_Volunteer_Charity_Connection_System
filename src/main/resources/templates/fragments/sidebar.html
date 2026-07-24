@@ -1,47 +1,14 @@
-<div th:fragment="sidebar_fragment" id="sidebar" style="display: block; width: 200px; margin-right: 20px;">
-    <h4>Navigation</h4>
-    <ul>
-        <li th:if="${session.user != null and (session.user.role == 'ORGANIZER')}">
-            <a th:href="@{/organizer/projects/create}">Tạo dự án</a>
-        </li>
-        <li th:if="${session.user != null and (session.user.role == 'ORGANIZER')}">
-            <a th:href="@{/organizer/projects}">Dự án của tôi</a>
-        </li>
-        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
-            <a th:href="@{/volunteer/attendance/submit}">Nộp minh chứng</a>
-        </li>
-        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
-            <a th:href="@{/volunteer/my-activities}">Hoạt động của tôi</a>
-        </li>
-        <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
-            <a th:href="@{/admin/projects/review}">Duyệt dự án</a>
-        </li>
-        <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
-            <a th:href="@{/admin/users}">Quản lý tài khoản</a>
-        </li>
-        <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
-            <a th:href="@{/admin/users/review}">Duyệt tài khoản</a>
-        </li>
-        <li th:if="${session.user != null and session.user.role == 'ADMIN'}">
-            <a th:href="@{/admin/categories}">Quản lý danh mục</a>
-        </li>
+<div th:fragment="sidebar_fragment" id="sidebar" class="bg-white p-3 rounded shadow-sm border"
+     style="width: 250px; min-width: 250px; height: fit-content; align-self: flex-start; position: sticky; top: 20px;">
 
-        <li th:if="${session.user != null and session.user.role == 'VOLUNTEER'}">
-            <a th:href="@{/volunteer/profile}">Trang cá nhân</a>
-        </li>
+    <h6 class="text-uppercase text-muted fw-bold mb-3 small">
+        Điều Hướng
+    </h6>
 
-        <li th:if="${session.user != null and session.user.role == 'ORGANIZER'}">
-            <a th:href="@{/organizer/profile}">Trang cá nhân</a>
-        </li>
-        <li th:if="${session.user != null and (session.user.role == 'VOLUNTEER')}">
-            <a th:href="@{/saved-projects/my}">Dự án đã lưu</a>
-        </li>
+    <div class="list-group list-group-flush">
         <th:block th:if="${session.user == null}">
             <li class="mb-2">
                 <a th:href="@{/projects/homepage}">Trang Chủ Dự Án</a>
-            </li>
-            <li class="mb-2">
-                <a th:href="@{/login}">Đăng Nhập</a>
             </li>
             <li class="mb-2">
                 <a th:href="@{/register/volunteer}">Đăng Ký Tình Nguyện</a>
@@ -50,5 +17,49 @@
                 <a th:href="@{/register/organizer}">Đăng Ký Tổ Chức</a>
             </li>
         </th:block>
-    </ul>
+      
+        <a th:if="${session.user != null and session.user.role == 'ORGANIZER'}"
+           th:href="@{/organizer/projects/create}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Tạo dự án mới
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'ORGANIZER'}"
+           th:href="@{/organizer/projects}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Dự án của tôi
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'ORGANIZER'}"
+           th:href="@{/organizer/profile}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Trang cá nhân
+        </a>
+
+        <a th:if="${session.user != null and session.user.role == 'VOLUNTEER'}"
+           th:href="@{/volunteer/attendance/submit}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Nộp minh chứng
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'VOLUNTEER'}"
+           th:href="@{/volunteer/my-activities}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Hoạt động của tôi
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'VOLUNTEER'}"
+           th:href="@{/saved-projects/my}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Dự án đã lưu
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'VOLUNTEER'}"
+           th:href="@{/volunteer/profile}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Trang cá nhân
+        </a>
+
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/dashboard}" class="list-group-item list-group-item-action border-0 rounded mb-1 fw-bold text-primary bg-light">
+            Dashboard Quản Trị
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/projects/review}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Duyệt dự án
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/users}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Quản lý tài khoản
+        </a>
+
+    </div>
 </div>
