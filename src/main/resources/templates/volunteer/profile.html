@@ -45,22 +45,10 @@
     <p>Số dự án đã tham gia: <span th:text="${attendedProjectCount}"></span></p>
 
     <h2>Danh hiệu</h2>
-    <div th:if="${attendedProjectCount >= 10}">
-        <h3>Community Hero</h3>
-        <p>Huy hiệu: Anh hùng cộng đồng</p>
-    </div>
-
-    <div th:if="${attendedProjectCount >= 3 && attendedProjectCount < 10}">
-        <h3>Kind Heart</h3>
-        <p>Huy hiệu: Trái tim nhân ái</p>
-    </div>
-
-    <div th:if="${attendedProjectCount < 3}">
-        <h3>New Volunteer</h3>
-        <p>Huy hiệu: Tình nguyện viên mới</p>
-    </div>
-
-    <p>Danh hiệu hiện tại: <span th:text="${badgeName}"></span></p>
+    <h3 th:text="${badgeName}"></h3>
+    <p th:if="${badgeName == 'Community Hero'}">Huy hiệu: Anh hùng cộng đồng</p>
+    <p th:if="${badgeName == 'Kind Heart'}">Huy hiệu: Trái tim nhân ái</p>
+    <p th:if="${badgeName == 'New Volunteer'}">Huy hiệu: Tình nguyện viên mới</p>
 
     <a th:href="@{/volunteer/profile/edit}">Cập nhật hồ sơ</a>
 </div>

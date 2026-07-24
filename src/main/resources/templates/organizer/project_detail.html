@@ -6,87 +6,143 @@
     <title>Chi tiết dự án</title>
 </head>
 <body>
-<div style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; line-height: 1.6;">
-    <h2 th:text="${project.title}">Tên dự án</h2>
-    <hr/>
-    <p><strong>Mô tả:</strong> <span th:text="${project.description}">Mô tả</span></p>
-    <p><strong>Địa điểm:</strong> <span th:text="${project.location}">Địa điểm</span></p>
-    <p><strong>Ngày bắt đầu:</strong>
-        <span th:text="${#temporals.format(project.startDate, 'dd/MM/yyyy')}"></span>
-    </p>
-    <p><strong>Ngày kết thúc:</strong>
-        <span th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></span>
-    </p>
-    <p><strong>Số lượng tình nguyện viên cần tuyển:</strong>
-        <span th:text="${project.targetVolunteers}">0</span>
-    </p>
-    <p><strong>Số lượng ứng viên đã ứng tuyển:</strong>
-        <span th:text="${applicantCount}">0</span>
-    </p>
-    <p><strong>Mục tiêu quyên góp:</strong>
-        <span th:text="${project.targetDonation != null ? #numbers.formatDecimal(project.targetDonation, 0, 'POINT', 0, 'COMMA') + ' VNĐ' : '0 VNĐ'}">0 VNĐ</span>
-    </p>
-    <p><strong>Danh mục:</strong>
-        <span th:text="${project.category != null ? project.category.name : 'Không có'}"></span>
-    </p>
-    <p><strong>Người đăng:</strong>
-        <span th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}"></span>
-    </p>
-    <p><strong>Trạng thái:</strong> <span th:text="${project.status}"></span></p>
+<section class="organizer-project-detail">
+    <header class="detail-hero">
+        <div class="detail-title-row">
+            <div>
+                <p class="page-kicker">Organizer project</p>
+                <h2 th:text="${project.title}">Tên dự án</h2>
+            </div>
+            <span class="status-badge detail-status"
+                  th:classappend="${' status-' + project.status}"
+                  th:text="${project.status}"></span>
+        </div>
+        <img class="detail-cover"
+             th:if="${project.imageUrl != null and !project.imageUrl.isBlank()}"
+             th:src="${project.imageUrl}"
+             th:alt="${project.title}"/>
+    </header>
 
-    <div th:if="${message}" th:text="${message}"></div>
-    <div th:if="${error}" th:text="${error}"></div>
+    <section class="detail-card">
+        <div class="detail-description">
+            <h3>Mô tả dự án</h3>
+            <p th:text="${project.description}">Mô tả</p>
+        </div>
 
-    <form th:if="${project.status == 'RECRUITING'}"
-          th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Đóng ứng tuyển</button>
-    </form>
-    <form th:if="${project.status == 'RECRUITMENT_CLOSED'}"
-          th:action="@{/organizer/projects/{id}/start_project(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Tiến hành dự án</button>
-    </form>
-    <form th:if="${project.status == 'ONGOING'}"
-          th:action="@{/organizer/projects/{id}/complete_project(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Hoàn thành dự án</button>
-    </form>
-    <a th:href="@{/organizer/projects/{id}/edit(id=${project.id})}">Update</a>
+        <div class="detail-info-grid">
+            <div class="detail-info-item">
+                <span>Địa điểm</span>
+                <strong th:text="${project.location}"></strong>
+            </div>
+            <div class="detail-info-item">
+                <span>Danh mục</span>
+                <strong th:text="${project.category != null ? project.category.name : 'Không có'}"></strong>
+            </div>
+            <div class="detail-info-item">
+                <span>Ngày bắt đầu</span>
+                <strong th:text="${#temporals.format(project.startDate, 'dd/MM/yyyy')}"></strong>
+            </div>
+            <div class="detail-info-item">
+                <span>Ngày kết thúc</span>
+                <strong th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></strong>
+            </div>
+            <div class="detail-info-item">
+                <span>Ngày tạo</span>
+                <strong th:text="${project.createdAt != null ? #temporals.format(project.createdAt, 'dd/MM/yyyy HH:mm') : 'Chưa có dữ liệu'}"></strong>
+            </div>
+            <div class="detail-info-item">
+                <span>Người đăng</span>
+                <strong th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}"></strong>
+            </div>
+        </div>
 
-    <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
-    <hr/>
-    <h3>Duyệt minh chứng tham gia</h3>
-    <p th:if="${#lists.isEmpty(proofs)}">Chưa có minh chứng nào cần xác nhận cho dự án này.</p>
-    <table th:if="${!#lists.isEmpty(proofs)}" border="1" cellpadding="6" style="width:100%; border-collapse:collapse">
-        <thead>
-        <tr>
-            <th>Volunteer</th>
-            <th>Báo cáo</th>
-            <th>Ảnh minh chứng</th>
-            <th>Thao tác</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="proof : ${proofs}">
-            <td th:text="${proof.registration.volunteer.fullName}"></td>
-            <td th:text="${proof.reportText}"></td>
-            <td>
-                <a th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
-                   th:href="${proof.proofImage}" target="_blank" rel="noopener">Xem ảnh</a>
-                <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
-            </td>
-            <td>
-                <form th:action="@{/organizer/projects/{projectId}/proofs/{proofId}/verify(projectId=${project.id}, proofId=${proof.id})}"
-                      method="post">
-                    <button type="submit">Xác nhận tham gia</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <div class="detail-metrics">
+            <div class="detail-metric">
+                <span>TNV cần tuyển</span>
+                <strong th:text="${project.targetVolunteers}">0</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Đơn ứng tuyển</span>
+                <strong th:text="${applicantCount}">0</strong>
+            </div>
+            <div class="detail-metric">
+                <span>Mục tiêu quyên góp</span>
+                <strong th:text="${project.targetDonation != null ? #numbers.formatDecimal(project.targetDonation, 0, 'POINT', 0, 'COMMA') + ' VNĐ' : '0 VNĐ'}">0 VNĐ</strong>
+            </div>
+        </div>
+    </section>
 
-    <a th:href="@{/organizer/projects}">Quay lại danh sách</a>
-</div>
+    <div class="page-alert success" th:if="${message}" th:text="${message}"></div>
+    <div class="page-alert error" th:if="${error}" th:text="${error}"></div>
+
+    <div class="project-state-actions">
+        <form th:if="${project.status == 'RECRUITING'}"
+              th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}"
+              method="post">
+            <button class="warning-action" type="submit">Đóng ứng tuyển</button>
+        </form>
+        <form th:if="${project.status == 'RECRUITMENT_CLOSED'}"
+              th:action="@{/organizer/projects/{id}/start_project(id=${project.id})}"
+              method="post">
+            <button class="primary-action" type="submit">Tiến hành dự án</button>
+        </form>
+        <form th:if="${project.status == 'ONGOING'}"
+              th:action="@{/organizer/projects/{id}/complete_project(id=${project.id})}"
+              method="post">
+            <button class="success-action" type="submit">Hoàn thành dự án</button>
+        </form>
+    </div>
+
+    <div class="project-management-actions">
+        <a class="detail-link" th:href="@{/organizer/projects/{id}/edit(id=${project.id})}">Cập nhật dự án</a>
+        <a class="detail-link" th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
+    </div>
+
+    <section class="proof-section">
+        <div class="proof-heading">
+            <div>
+                <p class="page-kicker">Attendance</p>
+                <h3>Duyệt minh chứng tham gia</h3>
+            </div>
+        </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(proofs)}">
+            <p>Chưa có minh chứng nào cần xác nhận cho dự án này.</p>
+        </div>
+        <div class="project-table-card" th:if="${!#lists.isEmpty(proofs)}">
+            <div class="table-responsive">
+                <table class="project-list-table proof-table">
+                    <thead>
+                    <tr>
+                        <th>Volunteer</th>
+                        <th>Báo cáo</th>
+                        <th>Ảnh minh chứng</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="proof : ${proofs}">
+                        <td th:text="${proof.registration.volunteer.fullName}"></td>
+                        <td th:text="${proof.reportText}"></td>
+                        <td>
+                            <a class="table-link"
+                               th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
+                               th:href="${proof.proofImage}" target="_blank" rel="noopener">Xem ảnh</a>
+                            <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
+                        </td>
+                        <td>
+                            <form th:action="@{/organizer/projects/{projectId}/proofs/{proofId}/verify(projectId=${project.id}, proofId=${proof.id})}"
+                                  method="post">
+                                <button type="submit">Xác nhận tham gia</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <a class="detail-back-link" th:href="@{/organizer/projects}">← Quay lại danh sách dự án</a>
+</section>
 </body>
 </html>

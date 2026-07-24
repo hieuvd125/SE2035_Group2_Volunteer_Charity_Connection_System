@@ -10,11 +10,12 @@
 <p th:if="${message}" th:text="${message}"></p>
 <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
-<p th:if="${#lists.isEmpty(registrations)}">Bạn chưa được duyệt tham gia dự án nào để nộp minh chứng.</p>
+<p th:if="${#lists.isEmpty(registrations)}">Bạn chưa có dự án đã hoàn thành để nộp minh chứng.</p>
 
-<form th:if="${!#lists.isEmpty(registrations)}" th:action="@{/volunteer/attendance/submit}" method="post">
+<form th:if="${!#lists.isEmpty(registrations)}" th:action="@{/volunteer/attendance/submit}"
+      method="post" enctype="multipart/form-data">
     <div>
-        <label for="registrationId">Chọn dự án đã được duyệt tham gia</label>
+        <label for="registrationId">Chọn dự án đã hoàn thành</label>
         <select id="registrationId" name="registrationId" required>
             <option th:each="registration : ${registrations}"
                     th:value="${registration.id}"
@@ -26,12 +27,13 @@
     <div>
         <label for="reportText">Báo cáo sau sự kiện</label><br>
         <textarea id="reportText" name="reportText" rows="6" cols="70"
-                  placeholder="Nhập nội dung báo cáo, công việc đã tham gia, kết quả hỗ trợ..."></textarea>
+                  placeholder="Nhập nội dung báo cáo, công việc đã tham gia, kết quả hỗ trợ..."
+                  required></textarea>
     </div>
 
     <div>
-        <label for="proofImage">Đường dẫn ảnh minh chứng</label>
-        <input id="proofImage" type="text" name="proofImage" placeholder="Ví dụ: https://.../anh-minh-chung.jpg">
+        <label for="proofImage">Ảnh minh chứng</label>
+        <input id="proofImage" type="file" name="proofImage" accept="image/*" required>
     </div>
 
     <button type="submit">Nộp minh chứng</button>
