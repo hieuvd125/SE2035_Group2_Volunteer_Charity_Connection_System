@@ -2,7 +2,9 @@ package com.group2.volunteer.controller;
 
 import com.group2.volunteer.dto.CategoryRequest;
 import com.group2.volunteer.entity.Category;
+import com.group2.volunteer.repository.ProjectRepository;
 import com.group2.volunteer.service.CategoryService;
+import com.group2.volunteer.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final ProjectRepository projectRepository;
 
     @GetMapping
     public String listCategories(Model model) {
@@ -59,8 +62,15 @@ public class CategoryController {
 
     @GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        categoryService.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "Đã xóa danh mục!");
+        boolean isUsedInProjects = projectRepository.existsByCategory_Id(id);
+
+        if (isUsedInProjects) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa danh mục này vì đang có dự án thuộc danh mục!");
+        } else {
+            categoryService.deleteById(id);
+            redirectAttributes.addFlashAttribute("message", "Đã xóa danh mục thành công!");
+        }
+
         return "redirect:/admin/categories";
     }
 }

@@ -6,8 +6,10 @@
     <title th:text="${category.id == null ? 'Thêm mới danh mục' : 'Chỉnh sửa danh mục'}">Danh mục</title>
 </head>
 <body>
-<div class="container">
-    <div class="card">
+
+<div class="container py-3">
+
+    <div class="edit-card">
         <h2 class="card-title" th:text="${category.id == null ? 'Thêm mới danh mục' : 'Chỉnh sửa danh mục'}">Quản lý Danh mục</h2>
 
         <form th:action="@{/admin/categories/save}" th:object="${category}" method="POST">
@@ -15,22 +17,23 @@
             <input type="hidden" th:field="*{id}" />
 
             <div class="form-group">
-                <label>Tên danh mục: </label>
+                <label>Tên danh mục <span style="color: #dc3545;">*</span>:</label>
                 <input type="text" th:field="*{name}" placeholder="Nhập tên danh mục (vd: Giáo dục, Môi trường...)" required>
-                <span th:errors="*{name}" style="color: red; font-size: 13px;"></span>
+                <span th:errors="*{name}" style="color: #dc3545; font-size: 13px; display: block; margin-top: 4px;"></span>
             </div>
 
             <div class="form-group">
-                <label>Mô tả chi tiết: </label>
+                <label>Mô tả chi tiết:</label>
                 <textarea th:field="*{description}" rows="4" placeholder="Nhập mô tả ngắn cho danh mục này..."></textarea>
             </div>
 
-            <div class="btn-group">
-                <button type="submit" class="btn btn-save">Lưu lại</button>
-                <a th:href="@{/admin/categories}" class="btn btn-back">Hủy bỏ</a>
+            <div class="btn-group-custom">
+                <button type="submit" class="btn-save">Lưu lại</button>
+                <a th:href="@{/admin/categories}" class="btn-back">Hủy bỏ</a>
             </div>
         </form>
     </div>
+
 </div>
 
 </body>

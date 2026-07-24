@@ -6,87 +6,192 @@
     <title>Chi tiết dự án</title>
 </head>
 <body>
-<div style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; line-height: 1.6;">
-    <h2 th:text="${project.title}">Tên dự án</h2>
-    <hr/>
-    <p><strong>Mô tả:</strong> <span th:text="${project.description}">Mô tả</span></p>
-    <p><strong>Địa điểm:</strong> <span th:text="${project.location}">Địa điểm</span></p>
-    <p><strong>Ngày bắt đầu:</strong>
-        <span th:text="${#temporals.format(project.startDate, 'dd/MM/yyyy')}"></span>
-    </p>
-    <p><strong>Ngày kết thúc:</strong>
-        <span th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}"></span>
-    </p>
-    <p><strong>Số lượng tình nguyện viên cần tuyển:</strong>
-        <span th:text="${project.targetVolunteers}">0</span>
-    </p>
-    <p><strong>Số lượng ứng viên đã ứng tuyển:</strong>
-        <span th:text="${applicantCount}">0</span>
-    </p>
-    <p><strong>Mục tiêu quyên góp:</strong>
-        <span th:text="${project.targetDonation != null ? #numbers.formatDecimal(project.targetDonation, 0, 'POINT', 0, 'COMMA') + ' VNĐ' : '0 VNĐ'}">0 VNĐ</span>
-    </p>
-    <p><strong>Danh mục:</strong>
-        <span th:text="${project.category != null ? project.category.name : 'Không có'}"></span>
-    </p>
-    <p><strong>Người đăng:</strong>
-        <span th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}"></span>
-    </p>
-    <p><strong>Trạng thái:</strong> <span th:text="${project.status}"></span></p>
 
-    <div th:if="${message}" th:text="${message}"></div>
-    <div th:if="${error}" th:text="${error}"></div>
+<div class="container py-3">
 
-    <form th:if="${project.status == 'RECRUITING'}"
-          th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Đóng ứng tuyển</button>
-    </form>
-    <form th:if="${project.status == 'RECRUITMENT_CLOSED'}"
-          th:action="@{/organizer/projects/{id}/start_project(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Tiến hành dự án</button>
-    </form>
-    <form th:if="${project.status == 'ONGOING'}"
-          th:action="@{/organizer/projects/{id}/complete_project(id=${project.id})}"
-          method="post" style="display:inline">
-        <button type="submit">Hoàn thành dự án</button>
-    </form>
-    <a th:href="@{/organizer/projects/{id}/edit(id=${project.id})}">Update</a>
+    <div class="detail-card" style="max-width: 900px;">
 
-    <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}">Xem danh sách ứng viên</a>
-    <hr/>
-    <h3>Duyệt minh chứng tham gia</h3>
-    <p th:if="${#lists.isEmpty(proofs)}">Chưa có minh chứng nào cần xác nhận cho dự án này.</p>
-    <table th:if="${!#lists.isEmpty(proofs)}" border="1" cellpadding="6" style="width:100%; border-collapse:collapse">
-        <thead>
-        <tr>
-            <th>Volunteer</th>
-            <th>Báo cáo</th>
-            <th>Ảnh minh chứng</th>
-            <th>Thao tác</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="proof : ${proofs}">
-            <td th:text="${proof.registration.volunteer.fullName}"></td>
-            <td th:text="${proof.reportText}"></td>
-            <td>
-                <a th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
-                   th:href="${proof.proofImage}" target="_blank" rel="noopener">Xem ảnh</a>
-                <span th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
-            </td>
-            <td>
-                <form th:action="@{/organizer/projects/{projectId}/proofs/{proofId}/verify(projectId=${project.id}, proofId=${proof.id})}"
-                      method="post">
-                    <button type="submit">Xác nhận tham gia</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <!-- THANH TIÊU ĐỀ & TRẠNG THÁI -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+            <div>
+                <p style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0;">ORGANIZER PROJECT</p>
+                <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 700;" th:text="${project.title}">Tên dự án</h2>
+            </div>
+            <div>
+                <span th:switch="${project.status}">
+                    <span th:case="'PENDING'"            class="badge badge-pending">Chờ duyệt</span>
+                    <span th:case="'PLANNING'"           class="badge" style="background: #e2e8f0; color: #475569;">Đang kế hoạch</span>
+                    <span th:case="'RECRUITING'"         class="badge badge-active">Đang tuyển</span>
+                    <span th:case="'RECRUITMENT_CLOSED'" class="badge" style="background: #e2e8f0; color: #475569;">Đã đóng ứng tuyển</span>
+                    <span th:case="'ONGOING'"            class="badge badge-active">Đang tiến hành</span>
+                    <span th:case="'REJECTED'"           class="badge badge-blocked">Từ chối</span>
+                    <span th:case="'COMPLETED'"          class="badge" style="background: #d1e7dd; color: #0f5132;">Đã hoàn thành</span>
+                    <span th:case="*"                    class="badge" th:text="${project.status}">Status</span>
+                </span>
+            </div>
+        </div>
 
-    <a th:href="@{/organizer/projects}">Quay lại danh sách</a>
+        <!-- THÔNG BÁO TỪ SYSTEM (THÀNH CÔNG / LỖI) -->
+        <p th:if="${message}" th:text="${message}" class="alert-message"></p>
+        <p th:if="${error}" th:text="${error}" class="alert-message"
+           style="background-color: #f8d7da !important; color: #842029 !important; border-color: #f5c2c7 !important;"></p>
+
+        <!-- ẢNH BÌA DỰ ÁN (NẾU CÓ) -->
+        <div th:if="${project.imageUrl != null and !project.imageUrl.isBlank()}" class="mb-4">
+            <img th:src="${project.imageUrl}" th:alt="${project.title}"
+                 style="width: 100%; max-height: 380px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0;"/>
+        </div>
+
+        <!-- MÔ TẢ DỰ ÁN -->
+        <div style="margin-bottom: 25px;">
+            <h4 style="color: #334155; font-size: 15px; font-weight: 700; margin-bottom: 8px;">Mô tả dự án:</h4>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 6px; color: #334155; line-height: 1.6; border: 1px solid #e2e8f0; white-space: pre-line;"
+                 th:text="${project.description}">Mô tả dự án...</div>
+        </div>
+
+        <!-- THÔNG TIN CHI TIẾT -->
+        <div class="info-group">
+            <span class="info-label">Địa điểm:</span>
+            <span class="info-value" th:text="${project.location}">Hà Nội</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Danh mục:</span>
+            <span class="info-value" th:text="${project.category != null ? project.category.name : 'Không có'}">Giáo dục</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Ngày bắt đầu:</span>
+            <span class="info-value" th:text="${#temporals.format(project.startDate, 'dd/MM/yyyy')}">01/01/2026</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Ngày kết thúc:</span>
+            <span class="info-value" th:text="${#temporals.format(project.endDate, 'dd/MM/yyyy')}">31/12/2026</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Ngày tạo dự án:</span>
+            <span class="info-value" th:text="${project.createdAt != null ? #temporals.format(project.createdAt, 'dd/MM/yyyy HH:mm') : 'Chưa có dữ liệu'}">01/01/2026 00:00</span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Người đăng bài:</span>
+            <span class="info-value" th:text="${project.organizer != null ? project.organizer.fullName : 'Không rõ'}">Tổ chức A</span>
+        </div>
+
+        <!-- CÁC HỘP CHỈ SỐ (METRICS) -->
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 20px 0;">
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center;">
+                <span style="display: block; font-size: 13px; color: #64748b; font-weight: 600; margin-bottom: 4px;">TNV CẦN TUYỂN</span>
+                <strong style="font-size: 22px; color: #0d6efd;" th:text="${project.targetVolunteers}">0</strong>
+            </div>
+            <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center;">
+                <span style="display: block; font-size: 13px; color: #64748b; font-weight: 600; margin-bottom: 4px;">ĐƠN ỨNG TUYỂN</span>
+                <strong style="font-size: 22px; color: #198754;" th:text="${applicantCount}">0</strong>
+            </div>
+            <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center;">
+                <span style="display: block; font-size: 13px; color: #64748b; font-weight: 600; margin-bottom: 4px;">MỤC TIÊU QUYÊN GÓP</span>
+                <strong style="font-size: 18px; color: #d68910;" th:text="${project.targetDonation != null ? #numbers.formatDecimal(project.targetDonation, 0, 'POINT', 0, 'COMMA') + ' VNĐ' : '0 VNĐ'}">0 VNĐ</strong>
+            </div>
+        </div>
+
+        <!-- THANH CÔNG CỤ / NÚT CHUYỂN TRẠNG THÁI & THAO TÁC QUẢN LÝ -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 15px; background: #fafafa; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+
+            <!-- Nút đổi trạng thái (Form post) -->
+            <form th:if="${project.status == 'RECRUITING'}"
+                  th:action="@{/organizer/projects/{id}/close_recruitment(id=${project.id})}" method="post">
+                <button type="submit" style="background-color: #ffc107; color: #000; border: none; padding: 9px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Đóng ứng tuyển
+                </button>
+            </form>
+
+            <form th:if="${project.status == 'RECRUITMENT_CLOSED'}"
+                  th:action="@{/organizer/projects/{id}/start_project(id=${project.id})}" method="post">
+                <button type="submit" style="background-color: #0d6efd; color: white; border: none; padding: 9px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Tiến hành dự án
+                </button>
+            </form>
+
+            <form th:if="${project.status == 'ONGOING'}"
+                  th:action="@{/organizer/projects/{id}/complete_project(id=${project.id})}" method="post">
+                <button type="submit" style="background-color: #198754; color: white; border: none; padding: 9px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                    Hoàn thành dự án
+                </button>
+            </form>
+
+            <!-- Các nút chuyển hướng quản lý -->
+            <a th:href="@{/organizer/projects/{id}/edit(id=${project.id})}" class="btn-edit" style="text-decoration: none; height: 38px; display: inline-flex; align-items: center;">
+                Cập nhật dự án
+            </a>
+
+            <a th:href="@{/organizer/projects/{id}/registrations(id=${project.id})}" class="btn-search" style="text-decoration: none; height: 38px; display: inline-flex; align-items: center;">
+                Xem danh sách ứng viên
+            </a>
+
+            <!-- NÚT 1: DANH SÁCH NHÀ HẢO TÂM (ĐÃ CHỈNH SỬA) -->
+            <a th:href="@{/donations/list(projectId=${project.id})}"
+               style="border: 1px solid #198754; color: #198754; background-color: #ffffff; padding: 0 16px; height: 38px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box;">
+                <i class="bi bi-list-stars"></i> Danh Sách Nhà Hảo Tâm
+            </a>
+
+            <!-- NÚT 2: DÒNG SỰ KIỆN (ĐÃ CHỈNH SỬA) -->
+            <a th:href="@{/projects/{id}/events(id=${project.id})}"
+               style="border: 1px solid #0dcaf0; color: #0aa2c0; background-color: #ffffff; padding: 0 16px; height: 38px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box;">
+                <i class="bi bi-calendar-event"></i> Dòng Sự Kiện
+            </a>
+
+        </div>
+
+        <!-- PHẦN DUYỆT MINH CHỨNG THAM GIA -->
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 25px 0;">
+
+        <div style="margin-bottom: 15px;">
+            <p style="color: #6c757d; font-size: 13px; font-weight: 600; text-transform: uppercase; margin: 0 0 4px 0;">ATTENDANCE</p>
+            <h3 style="color: #1e293b; margin: 0; font-size: 18px; font-weight: 700;">Duyệt minh chứng tham gia</h3>
+        </div>
+
+        <table style="margin-bottom: 25px;">
+            <thead>
+            <tr>
+                <th>Tình nguyện viên</th>
+                <th>Báo cáo</th>
+                <th style="width: 140px;">Ảnh minh chứng</th>
+                <th style="width: 180px;">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="proof : ${proofs}">
+                <td><strong th:text="${proof.registration.volunteer.fullName}">Nguyễn Văn A</strong></td>
+                <td th:text="${proof.reportText}">Báo cáo công việc...</td>
+                <td>
+                    <a class="action-link"
+                       th:if="${proof.proofImage != null && !proof.proofImage.isBlank()}"
+                       th:href="${proof.proofImage}" target="_blank" rel="noopener">Xem ảnh</a>
+                    <span style="color: #a0aec0;" th:if="${proof.proofImage == null || proof.proofImage.isBlank()}">Không có ảnh</span>
+                </td>
+                <td>
+                    <form th:action="@{/organizer/projects/{projectId}/proofs/{proofId}/verify(projectId=${project.id}, proofId=${proof.id})}" method="post">
+                        <button type="submit" style="background-color: #198754; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                            Xác nhận tham gia
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(proofs)}">
+                <td colspan="4" style="text-align: center; color: #7f8c8d; padding: 20px;">
+                    Chưa có minh chứng nào cần xác nhận cho dự án này.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- NÚT QUAY LẠI -->
+        <div class="btn-group-custom">
+            <a th:href="@{/organizer/projects}" class="btn-back">← Quay lại danh sách dự án</a>
+        </div>
+
+    </div>
+
 </div>
+
 </body>
 </html>

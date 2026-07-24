@@ -7,32 +7,35 @@
 </head>
 <body>
 
-<div class="container">
-    <h2 style="color: #2c3e50;">Danh sách tài khoản hệ thống</h2>
+<div class="container-fluid py-3">
+    <h2 style="color: #2c3e50;" class="mb-3">Danh sách tài khoản hệ thống</h2>
 
     <p th:if="${message}" th:text="${message}" style="color: green; font-weight: bold;"></p>
 
     <div class="filter-card">
         <form th:action="@{/admin/users}" method="GET" class="filter-form">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <input type="text" name="keyword" th:value="${keyword}"
+                       placeholder="Nhập tên, username hoặc email..."
+                       style="width: 280px;">
 
-            <input type="text" name="keyword" th:value="${keyword}" placeholder="Nhập tên, username hoặc email..." style="width: 250px;">
+                <select name="role" style="width: auto;">
+                    <option value="">-- Tất cả Vai trò --</option>
+                    <option value="VOLUNTEER" th:selected="${role == 'VOLUNTEER'}">Tình nguyện viên</option>
+                    <option value="ORGANIZER" th:selected="${role == 'ORGANIZER'}">Tổ chức</option>
+                    <option value="ADMIN" th:selected="${role == 'ADMIN'}">Quản trị viên</option>
+                </select>
 
-            <select name="role">
-                <option value="">-- Tất cả Vai trò --</option>
-                <option value="VOLUNTEER" th:selected="${role == 'VOLUNTEER'}">Tình nguyện viên</option>
-                <option value="ORGANIZER" th:selected="${role == 'ORGANIZER'}">Tổ chức</option>
-                <option value="ADMIN" th:selected="${role == 'ADMIN'}">Quản trị viên</option>
-            </select>
+                <select name="status" style="width: auto;">
+                    <option value="">-- Tất cả Trạng thái --</option>
+                    <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">Hoạt động</option>
+                    <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ duyệt</option>
+                    <option value="BLOCKED" th:selected="${status == 'BLOCKED'}">Đã khóa</option>
+                </select>
 
-            <select name="status">
-                <option value="">-- Tất cả Trạng thái --</option>
-                <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">Hoạt động</option>
-                <option value="PENDING" th:selected="${status == 'PENDING'}">Chờ duyệt</option>
-                <option value="BLOCKED" th:selected="${status == 'BLOCKED'}">Đã khóa</option>
-            </select>
-
-            <button type="submit" class="btn-search">Tìm kiếm</button>
-            <a th:href="@{/admin/users}" class="btn-reset">Xóa bộ lọc</a>
+                <button type="submit" class="btn-search">Tìm kiếm</button>
+                <a th:href="@{/admin/users}" class="btn-reset">Xóa bộ lọc</a>
+            </div>
         </form>
     </div>
 
@@ -62,7 +65,7 @@
             </td>
             <td>
                 <a th:href="@{/admin/users/detail/{id}(id=${user.id})}" class="action-link">Xem chi tiết</a>
-                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="action-link" style="color: #e67e22;">Chỉnh sửa</a>
+                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="action-link" style="color: #e67e22; margin-left: 8px;">Chỉnh sửa</a>
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(users)}">

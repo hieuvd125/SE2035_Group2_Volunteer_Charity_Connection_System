@@ -6,18 +6,18 @@
     </h6>
 
     <div class="list-group list-group-flush">
-        <th:block th:if="${session.user == null}">
-            <li class="mb-2">
-                <a th:href="@{/projects/homepage}">Trang Chủ Dự Án</a>
-            </li>
-            <li class="mb-2">
-                <a th:href="@{/register/volunteer}">Đăng Ký Tình Nguyện</a>
-            </li>
-            <li class="mb-2">
-                <a th:href="@{/register/organizer}">Đăng Ký Tổ Chức</a>
-            </li>
-        </th:block>
-      
+        <a th:if="${session.user == null}"
+           th:href="@{/projects/homepage}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Trang Chủ Dự Án
+        </a>
+        <a th:if="${session.user == null}"
+           th:href="@{/register/volunteer}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Đăng Ký Tình Nguyện
+        </a>
+        <a th:if="${session.user == null}"
+           th:href="@{/register/organizer}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Đăng Ký Tổ Chức
+        </a>
         <a th:if="${session.user != null and session.user.role == 'ORGANIZER'}"
            th:href="@{/organizer/projects/create}" class="list-group-item list-group-item-action border-0 rounded mb-1">
             Tạo dự án mới
@@ -60,6 +60,13 @@
            th:href="@{/admin/users}" class="list-group-item list-group-item-action border-0 rounded mb-1">
             Quản lý tài khoản
         </a>
-
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/categories}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Quản lý Danh mục dự án
+        </a>
+        <a th:if="${session.user != null and session.user.role == 'ADMIN'}"
+           th:href="@{/admin/users/review}" class="list-group-item list-group-item-action border-0 rounded mb-1">
+            Tài khoản chờ duyệt
+        </a>
     </div>
 </div>

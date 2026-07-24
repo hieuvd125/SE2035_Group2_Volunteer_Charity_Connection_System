@@ -7,14 +7,8 @@
 </head>
 <body>
 
-<header>
-    <a th:href="@{/}" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold;">
-        VCPCS - Admin Panel
-    </a>
-</header>
-
-<div class="container">
-    <div class="card">
+<div class="container py-3">
+    <div class="detail-card">
         <h2 class="card-title">Thông tin chi tiết tài khoản</h2>
 
         <div class="info-group">
@@ -33,12 +27,8 @@
                 <span th:if="${user.status == 'BLOCKED'}" class="badge badge-blocked">Đã khóa</span>
             </span>
         </div>
-        <div class="info-group">
-            <span class="info-label">Ngày tạo tài khoản:</span>
-            <span class="info-value" th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026</span>
-        </div>
 
-        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+        <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 20px 0;">
 
         <div class="info-group">
             <span class="info-label">Họ và Tên / Tên tổ chức:</span>
@@ -62,7 +52,7 @@
         </div>
 
         <div th:if="${user.role == 'VOLUNTEER'}">
-            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 20px 0;">
             <div class="info-group">
                 <span class="info-label">Ngày sinh:</span>
                 <span class="info-value" th:text="${user.dateOfBirth != null ? #temporals.format(user.dateOfBirth, 'dd/MM/yyyy') : 'Chưa cập nhật'}">01/01/2000</span>
@@ -78,7 +68,7 @@
         </div>
 
         <div th:if="${user.role == 'ORGANIZER'}">
-            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 15px 0;">
+            <hr style="border: 0; border-top: 1px solid #ecf0f1; margin: 20px 0;">
             <div class="info-group">
                 <span class="info-label">Website / Fanpage:</span>
                 <span class="info-value">
@@ -92,9 +82,9 @@
             </div>
         </div>
 
-        <div class="btn-group">
-            <a th:href="@{/admin/users}" class="btn btn-back">Quay lại danh sách</a>
-            <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-edit">Chỉnh sửa tài khoản này</a>
+        <div class="btn-group-custom">
+            <a th:href="@{/admin/users}" class="btn-back">Quay lại danh sách</a>
+            <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn-edit">Chỉnh sửa tài khoản này</a>
         </div>
     </div>
 </div>

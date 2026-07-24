@@ -63,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = getProjectById(projectId);
         if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
-            throw new InvalidProjectStateException("You are not allowed to update this project");
+            throw new InvalidProjectStateException("Bạn không có quyền cập nhật dự án này");
         }
 
         Category category = categoryRepository.findById(dto.getCategoryId())
@@ -107,10 +107,10 @@ public class ProjectServiceImpl implements ProjectService {
     public void closeRecruitment(Long projectId, Long organizerId) {
         Project project = getProjectById(projectId);
         if (project.getOrganizer() == null || !project.getOrganizer().getId().equals(organizerId)) {
-            throw new InvalidProjectStateException("You are not allowed to close this project recruitment");
+            throw new InvalidProjectStateException("Bạn không có quyền đóng tuyển dự án này");
         }
         if (!ProjectStatus.RECRUITING.equals(project.getStatus())) {
-            throw new InvalidProjectStateException("Project is not recruiting");
+            throw new InvalidProjectStateException("Dự án không ở trạng thái tuyển tình nguyện viên");
         }
         project.setStatus(ProjectStatus.RECRUITMENT_CLOSED);
         projectRepository.save(project);

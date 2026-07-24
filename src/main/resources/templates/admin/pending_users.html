@@ -4,52 +4,229 @@
 <head>
     <meta charset="UTF-8">
     <title>Phê duyệt tài khoản</title>
+
+    <!-- CSS TÙY CHỈNH CHỐNG BỊ ÉP CỘT TRONG BẢNG -->
+    <style>
+        .admin-card {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+        }
+
+        .page-kicker {
+            color: #6c757d;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        .page-heading h2 {
+            color: #1e293b;
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* KHUNG CHỨA BẢNG TỰ ĐỘNG CUỘN KHÔNG BỊ ÉP DỮ LIỆU */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+        }
+
+        /* ĐIỀU CHỈNH KÍCH THƯỚC VÀ NỐI NỐI CỘT BẢNG */
+        table {
+            width: 100% !important;
+            border-collapse: collapse;
+            margin-bottom: 0 !important;
+        }
+
+        table th, table td {
+            white-space: nowrap; /* Giữ chữ trên 1 hàng, không bị ép vỡ dòng */
+            padding: 12px 16px !important;
+            vertical-align: middle;
+        }
+
+        /* Đặt độ rộng tối thiểu hợp lý cho từng loại dữ liệu */
+        .col-stt { width: 60px; text-align: center; }
+        .col-username { min-width: 150px; font-weight: 700; color: #1e293b; }
+        .col-fullname { min-width: 180px; }
+        .col-email { min-width: 200px; }
+        .col-role { min-width: 130px; text-align: center; }
+        .col-action { min-width: 190px; text-align: right; }
+
+        /* TRẠNG THÁI TRỐNG (EMPTY STATE) */
+        .empty-state {
+            text-align: center;
+            padding: 45px 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 15px;
+            border: 1px dashed #cbd5e1;
+            margin-top: 10px;
+        }
+
+        .empty-state i {
+            font-size: 36px;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* BADGE PHÂN LOẠI VAI TRÒ */
+        .role-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .role-volunteer {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .role-organizer {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        .role-default {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+
+        /* CỤM NÚT THAO TÁC KHÔNG BỊ VỠ HÀNG */
+        .btn-action-group {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn-action-group form {
+            margin: 0;
+            display: inline-block;
+        }
+
+        .btn-approve, .btn-reject {
+            white-space: nowrap;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-approve {
+            background-color: #198754;
+            color: #ffffff;
+        }
+
+        .btn-approve:hover {
+            background-color: #157347;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+
+        .btn-reject:hover {
+            background-color: #bb2d3b;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Danh sách tài khoản chờ phê duyệt</h2>
+<div class="container py-3">
 
-    <div th:if="${message}" class="alert-success" th:text="${message}"></div>
+    <div class="detail-card admin-card">
 
-    <div th:if="${#lists.isEmpty(pendingUsers)}" class="empty-state">
-      Hiện tại không có tài khoản nào đang chờ phê duyệt.
+        <!-- TIÊU ĐỀ TRANG -->
+        <div class="page-heading">
+            <h2>Phê duyệt tài khoản</h2>
+            <p>Danh sách các tài khoản người dùng đang chờ phê duyệt tham gia hệ thống.</p>
+        </div>
+
+        <!-- THÔNG BÁO HỆ THỐNG -->
+        <div th:if="${message}" class="alert-message" th:text="${message}"></div>
+
+        <!-- TRẠNG THÁI TRỐNG (NẾU KHÔNG CÓ TÀI KHOẢN NÀO CHỜ DUYỆT) -->
+        <div th:if="${#lists.isEmpty(pendingUsers)}" class="empty-state">
+            <i class="bi bi-check2-circle"></i>
+            <div>Hiện tại không có tài khoản nào đang chờ phê duyệt.</div>
+        </div>
+
+        <!-- BẢNG DANH SÁCH BỌC TRONG KHUNG LÊN LAYOUT RỘNG -->
+        <div th:if="${!#lists.isEmpty(pendingUsers)}" class="table-responsive">
+            <table>
+                <thead>
+                <tr>
+                    <th class="col-stt">STT</th>
+                    <th class="col-username">Tên đăng nhập</th>
+                    <th class="col-fullname">Họ và tên</th>
+                    <th class="col-email">Email</th>
+                    <th class="col-role">Vai trò</th>
+                    <th class="col-action">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, stat : ${pendingUsers}">
+                    <td class="col-stt" th:text="${stat.count}">1</td>
+                    <td class="col-username" th:text="${user.username}">nguyen_van_a</td>
+                    <td class="col-fullname" th:text="${user.fullName}">Nguyễn Văn A</td>
+                    <td class="col-email" th:text="${user.email}">a@gmail.com</td>
+                    <td class="col-role">
+                            <span th:switch="${user.role}">
+                                <span th:case="'VOLUNTEER'" class="role-badge role-volunteer">TNV</span>
+                                <span th:case="'ORGANIZER'" class="role-badge role-organizer">Tổ chức</span>
+                                <span th:case="*" class="role-badge role-default" th:text="${user.role}">ROLE</span>
+                            </span>
+                    </td>
+                    <td class="col-action">
+                        <div class="btn-action-group">
+                            <form th:action="@{/admin/users/approve/{id}(id=${user.id})}" method="POST">
+                                <button type="submit" class="btn-approve">
+                                    <i class="bi bi-check-lg"></i> Duyệt
+                                </button>
+                            </form>
+
+                            <form th:action="@{/admin/users/reject/{id}(id=${user.id})}" method="POST">
+                                <button type="submit" class="btn-reject" onclick="return confirm('Bạn có chắc chắn muốn từ chối tài khoản này?');">
+                                    <i class="bi bi-x-lg"></i> Từ chối
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-
-    <table th:if="${!#lists.isEmpty(pendingUsers)}">
-        <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên đăng nhập</th>
-                <th>Họ và tên</th>
-                <th>Email</th>
-                <th>Vai trò</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user, stat : ${pendingUsers}">
-                <td th:text="${stat.count}">1</td>
-                <td th:text="${user.username}" style="font-weight: bold;">nguyen_van_a</td>
-                <td th:text="${user.fullName}">Nguyễn Văn A</td>
-                <td th:text="${user.email}">a@gmail.com</td>
-                <td>
-                    <span class="role-badge" th:text="${user.role}">VOLUNTEER</span>
-                </td>
-                <td>
-                    <div class="btn-action-group">
-                        <form th:action="@{/admin/users/approve/{id}(id=${user.id})}" method="POST">
-                          <button type="submit" class="btn-approve">Phê duyệt</button>
-                        </form>
-
-                        <form th:action="@{/admin/users/reject/{id}(id=${user.id})}" method="POST">
-                          <button type="submit" class="btn-reject" onclick="return confirm('Bạn có chắc chắn muốn từ chối tài khoản này?');">Từ chối</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
 </div>
 

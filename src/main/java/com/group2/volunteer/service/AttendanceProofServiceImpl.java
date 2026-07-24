@@ -1,6 +1,7 @@
 package com.group2.volunteer.service;
 
 import com.group2.volunteer.constant.RegistrationStatus;
+import com.group2.volunteer.constant.ProjectStatus;
 import com.group2.volunteer.entity.AttendanceProof;
 import com.group2.volunteer.entity.ProjectRegistration;
 import com.group2.volunteer.exception.BadRequestException;
@@ -28,7 +29,8 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
     @Override
     public List<ProjectRegistration> getApprovedRegistrationsByVolunteer(Long volunteerId) {
         return projectRegistrationRepository
-                .findByVolunteerIdAndStatusOrderByRegistrationDateDesc(volunteerId, RegistrationStatus.APPROVED);
+                .findByVolunteerIdAndStatusAndProject_StatusOrderByRegistrationDateDesc(
+                        volunteerId, RegistrationStatus.APPROVED, ProjectStatus.COMPLETED);
     }
 
     @Override
@@ -44,14 +46,19 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
     }
 
     @Override
-    @Transactional
-    public AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage) {
+    public void validateProofSubmission(Long registrationId, Long volunteerId) {
+        getValidatedRegistration(registrationId, volunteerId);
+    }
+
+    private ProjectRegistration getValidatedRegistration(Long registrationId, Long volunteerId) {
         ProjectRegistration registration = projectRegistrationRepository.findById(registrationId)
                 .orElseThrow(() -> new InvalidAttendanceProofException(
                         "Không tìm thấy thông tin tham gia dự án."));
 
-        if (registration.getVolunteer() == null || !registration.getVolunteer().getId().equals(volunteerId)) {
-            throw new InvalidAttendanceProofException("Không thể nộp minh chứng cho Volunteer khác.");
+        if (registration.getVolunteer() == null
+                || !registration.getVolunteer().getId().equals(volunteerId)) {
+            throw new InvalidAttendanceProofException(
+                    "Không thể nộp minh chứng cho Volunteer khác.");
         }
 
         if (!RegistrationStatus.APPROVED.equals(registration.getStatus())) {
@@ -59,8 +66,26 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
                     "Chỉ Volunteer đã được duyệt tham gia dự án mới có thể nộp minh chứng.");
         }
 
-        if ((reportText == null || reportText.isBlank()) && (proofImage == null || proofImage.isBlank())) {
-            throw new InvalidAttendanceProofException("Cần nhập báo cáo hoặc đường dẫn ảnh minh chứng.");
+        if (registration.getProject() == null
+                || !ProjectStatus.COMPLETED.equals(registration.getProject().getStatus())) {
+            throw new InvalidAttendanceProofException(
+                    "Chỉ có thể nộp minh chứng sau khi dự án hoàn thành.");
+        }
+
+        return registration;
+    }
+
+    @Override
+    @Transactional
+    public AttendanceProof submitProof(Long registrationId, Long volunteerId, String reportText, String proofImage) {
+        ProjectRegistration registration = getValidatedRegistration(registrationId, volunteerId);
+
+        if (reportText == null || reportText.isBlank()) {
+            throw new InvalidAttendanceProofException("Cần nhập nội dung báo cáo.");
+        }
+
+        if (proofImage == null || proofImage.isBlank()) {
+            throw new InvalidAttendanceProofException("Cần tải lên ảnh minh chứng.");
         }
 
         AttendanceProof proof = attendanceProofRepository.findByRegistrationId(registrationId)
@@ -86,6 +111,11 @@ public class AttendanceProofServiceImpl implements AttendanceProofService {
         if (!RegistrationStatus.APPROVED.equals(registration.getStatus())) {
             throw new BadRequestException(
                     "Chỉ có thể xác nhận Volunteer đã được duyệt tham gia dự án.");
+        }
+        if (registration.getProject() == null
+                || !ProjectStatus.COMPLETED.equals(registration.getProject().getStatus())) {
+            throw new BadRequestException(
+                    "Chỉ có thể xác nhận tham gia sau khi dự án hoàn thành.");
         }
         registration.setStatus(RegistrationStatus.ATTENDED);
         return projectRegistrationRepository.save(registration);

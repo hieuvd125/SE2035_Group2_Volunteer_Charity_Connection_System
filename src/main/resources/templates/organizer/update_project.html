@@ -3,62 +3,254 @@
       th:replace="~{layout/main-layout :: page_layout(~{::title}, ~{::body})}">
 <head>
     <meta charset="UTF-8">
-    <title>Update project</title>
+    <title>Cập nhật dự án</title>
+
+    <!-- CSS TÙY CHỈNH DÀNH RIÊNG CHO FORM CẬP NHẬT DỰ ÁN -->
+    <style>
+        .project-form-card {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 16px;
+        }
+
+        .page-kicker {
+            color: #6c757d;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        .page-heading h2 {
+            color: #1e293b;
+            margin: 0 0 6px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .project-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-field label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e293b;
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+        }
+
+        .field-error {
+            color: #dc3545;
+            font-size: 12.5px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background-color: #f8d7da !important;
+            color: #842029 !important;
+            border-color: #f5c2c7 !important;
+            margin-bottom: 20px;
+        }
+
+        .project-form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn-submit-update {
+            background-color: #0d6efd;
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit-update:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* Responsive trên thiết bị di động */
+        @media (max-width: 640px) {
+            .project-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .project-form-actions {
+                flex-direction: column-reverse;
+                gap: 12px;
+                align-items: stretch;
+            }
+            .project-form-actions a,
+            .project-form-actions button {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-<h2>Update project</h2>
-<div th:if="${errorMessage}" th:text="${errorMessage}" style="color:red; margin-bottom: 15px;"></div>
-<form th:action="@{/organizer/projects/{id}/update(id=${project.id})}" th:object="${projectDTO}" method="post">
-    <div>
-        <label>Tên dự án</label>
-        <input type="text" th:field="*{title}">
-        <span th:errors="*{title}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Mô tả</label>
-        <textarea th:field="*{description}"></textarea>
-        <span th:errors="*{description}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Địa điểm</label>
-        <input type="text" th:field="*{location}">
-        <span th:errors="*{location}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Hình ảnh</label>
-        <input type="text" th:field="*{imageUrl}">
-    </div>
-    <div>
-        <label>Ngày bắt đầu</label>
-        <input type="date" th:field="*{startDate}">
-        <span th:errors="*{startDate}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Ngày kết thúc</label>
-        <input type="date" th:field="*{endDate}">
-        <span th:errors="*{endDate}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Số lượng tình nguyện viên</label>
-        <input type="number" th:field="*{targetVolunteers}">
-        <span th:errors="*{targetVolunteers}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Số tiền quyên góp mục tiêu</label>
-        <input type="number" min="0" step="1000" th:field="*{targetDonation}">
-        <span th:errors="*{targetDonation}" style="color:red"></span>
-    </div>
-    <div>
-        <label>Loại</label>
-        <select th:field="*{categoryId}">
-            <option value="">-- Chọn --</option>
-            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
-        </select>
-        <span th:errors="*{categoryId}" style="color:red"></span>
+
+<div class="container py-3">
+
+    <div class="detail-card project-form-card">
+
+        <!-- TIÊU ĐỀ TRANG -->
+        <div class="page-heading">
+            <p class="page-kicker">ORGANIZER PROJECT</p>
+            <h2>Cập nhật dự án</h2>
+            <p>Chỉnh sửa các thông tin cần thiết và lưu lại thay đổi cho dự án.</p>
+        </div>
+
+        <!-- THÔNG BÁO LỖI HỆ THỐNG (NẾU CÓ) -->
+        <div class="alert-message alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+        <!-- FORM CẬP NHẬT DỰ ÁN -->
+        <form th:action="@{/organizer/projects/{id}/update(id=${project.id})}" th:object="${projectDTO}" method="post">
+
+            <div class="project-form-grid">
+
+                <!-- Tên dự án -->
+                <div class="form-field full-width">
+                    <label for="title">Tên dự án <span style="color: #dc3545;">*</span></label>
+                    <input id="title" type="text" th:field="*{title}" placeholder="Nhập tên dự án">
+                    <span class="field-error" th:errors="*{title}"></span>
+                </div>
+
+                <!-- Mô tả dự án -->
+                <div class="form-field full-width">
+                    <label for="description">Mô tả dự án <span style="color: #dc3545;">*</span></label>
+                    <textarea id="description" th:field="*{description}" placeholder="Mô tả mục tiêu, hoạt động và đối tượng thụ hưởng..."></textarea>
+                    <span class="field-error" th:errors="*{description}"></span>
+                </div>
+
+                <!-- Địa điểm -->
+                <div class="form-field">
+                    <label for="location">Địa điểm <span style="color: #dc3545;">*</span></label>
+                    <input id="location" type="text" th:field="*{location}" placeholder="Quận/Huyện, Tỉnh/Thành phố">
+                    <span class="field-error" th:errors="*{location}"></span>
+                </div>
+
+                <!-- Danh mục -->
+                <div class="form-field">
+                    <label for="categoryId">Loại dự án / Danh mục <span style="color: #dc3545;">*</span></label>
+                    <select id="categoryId" th:field="*{categoryId}">
+                        <option value="">-- Chọn danh mục --</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                    </select>
+                    <span class="field-error" th:errors="*{categoryId}"></span>
+                </div>
+
+                <!-- URL Hình ảnh -->
+                <div class="form-field full-width">
+                    <label for="imageUrl">URL hình ảnh bìa</label>
+                    <input id="imageUrl" type="text" th:field="*{imageUrl}" placeholder="https://example.com/project-image.jpg">
+                </div>
+
+                <!-- Ngày bắt đầu -->
+                <div class="form-field">
+                    <label for="startDate">Ngày bắt đầu <span style="color: #dc3545;">*</span></label>
+                    <input id="startDate" type="date" th:field="*{startDate}">
+                    <span class="field-error" th:errors="*{startDate}"></span>
+                </div>
+
+                <!-- Ngày kết thúc -->
+                <div class="form-field">
+                    <label for="endDate">Ngày kết thúc <span style="color: #dc3545;">*</span></label>
+                    <input id="endDate" type="date" th:field="*{endDate}">
+                    <span class="field-error" th:errors="*{endDate}"></span>
+                </div>
+
+                <!-- Số lượng TNV -->
+                <div class="form-field">
+                    <label for="targetVolunteers">Số lượng tình nguyện viên <span style="color: #dc3545;">*</span></label>
+                    <input id="targetVolunteers" type="number" min="1" step="1" th:field="*{targetVolunteers}" placeholder="Ví dụ: 20">
+                    <span class="field-error" th:errors="*{targetVolunteers}"></span>
+                </div>
+
+                <!-- Mục tiêu quyên góp -->
+                <div class="form-field">
+                    <label for="targetDonation">Số tiền quyên góp mục tiêu (VNĐ)</label>
+                    <input id="targetDonation" type="number" min="0" step="1000" th:field="*{targetDonation}" placeholder="Ví dụ: 50000000">
+                    <span class="field-error" th:errors="*{targetDonation}"></span>
+                </div>
+
+            </div>
+
+            <!-- THANH THAO TÁC / NÚT BẤM -->
+            <div class="project-form-actions">
+                <a class="btn-back" th:href="@{/organizer/projects/{id}(id=${project.id})}" style="text-decoration: none;">
+                    <i class="bi bi-x-circle me-1"></i> Hủy
+                </a>
+                <button type="submit" class="btn-submit-update">
+                    <i class="bi bi-check-circle me-1"></i> Lưu thay đổi
+                </button>
+            </div>
+
+        </form>
+
     </div>
 
-    <button type="submit">Update</button>
-    <a th:href="@{/organizer/projects/{id}(id=${project.id})}">Cancel</a>
-</form>
+</div>
+
 </body>
 </html>
