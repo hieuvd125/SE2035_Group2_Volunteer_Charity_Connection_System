@@ -9,6 +9,8 @@ import com.group2.volunteer.entity.User;
 import com.group2.volunteer.repository.ProjectRepository;
 import com.group2.volunteer.repository.ProjectRegistrationRepository;
 import com.group2.volunteer.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -20,12 +22,6 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
     private final ProjectRepository projectRepository;
     private final ProjectRegistrationRepository registrationRepository;
     private final UserRepository userRepository;
-    @Override
-    public List<Project> getAvailableProjects(ProjectSearchCriteria criteria) {
-        String title = (criteria.getTitle() == null || criteria.getTitle().trim().isEmpty()) ? null : criteria.getTitle().trim();
-        String loc = (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) ? null : criteria.getLocation().trim();
-        return projectRepository.searchProjects(title, loc, criteria.getCategoryId());
-    }
 
     @Override
     public Project getProjectById(Long id) {
@@ -81,5 +77,24 @@ public class ProjectQueryServiceImpl implements ProjectQueryService {
         return registrationRepository
                 .existsByProjectIdAndVolunteerId(projectId, userId);
 
+    }
+    @Override
+    public Page<Project> getAvailableProjects(ProjectSearchCriteria criteria,
+                                              Pageable pageable) {
+
+        String title = (criteria.getTitle() == null || criteria.getTitle().trim().isEmpty())
+                ? null
+                : criteria.getTitle().trim();
+
+        String location = (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty())
+                ? null
+                : criteria.getLocation().trim();
+
+        return projectRepository.searchProjects(
+                title,
+                location,
+                criteria.getCategoryId(),
+                pageable
+        );
     }
 }

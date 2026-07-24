@@ -21,5 +21,4 @@ public interface ProjectService {
     Page<Project> getOrganizerProjects(Long organizerId, String title, String location, String status, Pageable pageable);
     Project getProjectById(Long projectId);
 
-    List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
 }

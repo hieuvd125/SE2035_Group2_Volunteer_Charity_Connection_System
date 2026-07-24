@@ -2,12 +2,20 @@ package com.group2.volunteer.service;
 import com.group2.volunteer.dto.ProjectSearchCriteria;
 import com.group2.volunteer.dto.RegistrationRequest;
 import com.group2.volunteer.entity.Project;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 public interface ProjectQueryService {
-    List<Project> getAvailableProjects(ProjectSearchCriteria criteria);
+
+    Page<Project> getAvailableProjects(ProjectSearchCriteria criteria,
+                                       Pageable pageable);
+
     Project getProjectById(Long id);
+
     void applyToProject(RegistrationRequest request) throws Exception;
+
     Long getApprovedVolunteerCount(Long projectId);
+
     boolean hasApplied(Long projectId, Long userId);
 }

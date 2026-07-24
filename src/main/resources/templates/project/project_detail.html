@@ -34,7 +34,6 @@
                     <span>Đã nhận: <strong class="text-primary" th:text="${#numbers.formatDecimal(currentDonated, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</strong></span>
                     <span>Mục tiêu: <strong th:text="${#numbers.formatDecimal(project.targetDonation, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</strong></span>
                 </div>
-                <!-- Thanh Progress Bar động của Bootstrap -->
                 <div class="progress" style="height: 15px;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning text-dark font-weight-bold"
                          role="progressbar"

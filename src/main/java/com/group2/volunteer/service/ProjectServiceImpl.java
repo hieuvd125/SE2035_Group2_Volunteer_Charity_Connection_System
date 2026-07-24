@@ -168,12 +168,4 @@ public class ProjectServiceImpl implements ProjectService {
             throw new InvalidProjectStateException("Ngày kết thúc phải sau ngày bắt đầu");
         }
     }
-
-    @Override
-    public List<Project> getAvailableProjects(ProjectSearchCriteria criteria) {
-        String title = (criteria.getTitle() == null || criteria.getTitle().trim().isEmpty()) ? null : criteria.getTitle().trim();
-        String loc = (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) ? null : criteria.getLocation().trim();
-
-        return projectRepository.searchProjects(title, loc, criteria.getCategoryId());
-    }
 }
